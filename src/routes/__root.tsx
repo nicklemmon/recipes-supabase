@@ -1,5 +1,6 @@
 import { Link, Outlet, createRootRoute } from '@tanstack/react-router'
 import { TanStackRouterDevtools } from '@tanstack/router-devtools'
+import "../styles.css"
 
 export const Route = createRootRoute({
   component: RootComponent,
@@ -16,19 +17,12 @@ function RootComponent() {
           }}
           activeOptions={{ exact: true }}
         >
-          Home
-        </Link>{' '}
-        <Link
-          to="/about"
-          activeProps={{
-            className: 'font-bold',
-          }}
-        >
-          About
+          Nick &amp; Laurie's Recipe Collection
         </Link>
       </div>
-      <hr />
+
       <Outlet />
+
       <TanStackRouterDevtools position="bottom-right" />
     </>
   )

@@ -1,6 +1,6 @@
 import { createFileRoute } from '@tanstack/react-router'
 
-export const Route = createFileRoute('/$categoryId/')({
+export const Route = createFileRoute('/recipes/$categoryId/')({
   component: RouteComponent,
   loader: async ({ params }) => {
     console.log(params.categoryId)

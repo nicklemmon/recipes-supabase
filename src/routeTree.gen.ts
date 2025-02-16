@@ -14,11 +14,10 @@ import { Route as rootRoute } from './routes/__root'
 import { Route as LogoutImport } from './routes/logout'
 import { Route as LoginImport } from './routes/login'
 import { Route as AuthImport } from './routes/auth'
-import { Route as AboutImport } from './routes/about'
 import { Route as IndexImport } from './routes/index'
-import { Route as CategoryIdIndexImport } from './routes/$categoryId/index'
-import { Route as CategoryIdSubcategoryIdIndexImport } from './routes/$categoryId/$subcategoryId/index'
-import { Route as CategoryIdSubcategoryIdRecipeIdImport } from './routes/$categoryId/$subcategoryId/$recipeId'
+import { Route as RecipesCategoryIdIndexImport } from './routes/recipes/$categoryId/index'
+import { Route as RecipesCategoryIdSubcategoryIdIndexImport } from './routes/recipes/$categoryId/$subcategoryId/index'
+import { Route as RecipesCategoryIdSubcategoryIdRecipeIdImport } from './routes/recipes/$categoryId/$subcategoryId/$recipeId'
 
 // Create/Update Routes
 
@@ -40,35 +39,29 @@ const AuthRoute = AuthImport.update({
   getParentRoute: () => rootRoute,
 } as any)
 
-const AboutRoute = AboutImport.update({
-  id: '/about',
-  path: '/about',
-  getParentRoute: () => rootRoute,
-} as any)
-
 const IndexRoute = IndexImport.update({
   id: '/',
   path: '/',
   getParentRoute: () => rootRoute,
 } as any)
 
-const CategoryIdIndexRoute = CategoryIdIndexImport.update({
-  id: '/$categoryId/',
-  path: '/$categoryId/',
+const RecipesCategoryIdIndexRoute = RecipesCategoryIdIndexImport.update({
+  id: '/recipes/$categoryId/',
+  path: '/recipes/$categoryId/',
   getParentRoute: () => rootRoute,
 } as any)
 
-const CategoryIdSubcategoryIdIndexRoute =
-  CategoryIdSubcategoryIdIndexImport.update({
-    id: '/$categoryId/$subcategoryId/',
-    path: '/$categoryId/$subcategoryId/',
+const RecipesCategoryIdSubcategoryIdIndexRoute =
+  RecipesCategoryIdSubcategoryIdIndexImport.update({
+    id: '/recipes/$categoryId/$subcategoryId/',
+    path: '/recipes/$categoryId/$subcategoryId/',
     getParentRoute: () => rootRoute,
   } as any)
 
-const CategoryIdSubcategoryIdRecipeIdRoute =
-  CategoryIdSubcategoryIdRecipeIdImport.update({
-    id: '/$categoryId/$subcategoryId/$recipeId',
-    path: '/$categoryId/$subcategoryId/$recipeId',
+const RecipesCategoryIdSubcategoryIdRecipeIdRoute =
+  RecipesCategoryIdSubcategoryIdRecipeIdImport.update({
+    id: '/recipes/$categoryId/$subcategoryId/$recipeId',
+    path: '/recipes/$categoryId/$subcategoryId/$recipeId',
     getParentRoute: () => rootRoute,
   } as any)
 
@@ -81,13 +74,6 @@ declare module '@tanstack/react-router' {
       path: '/'
       fullPath: '/'
       preLoaderRoute: typeof IndexImport
-      parentRoute: typeof rootRoute
-    }
-    '/about': {
-      id: '/about'
-      path: '/about'
-      fullPath: '/about'
-      preLoaderRoute: typeof AboutImport
       parentRoute: typeof rootRoute
     }
     '/auth': {
@@ -111,25 +97,25 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof LogoutImport
       parentRoute: typeof rootRoute
     }
-    '/$categoryId/': {
-      id: '/$categoryId/'
-      path: '/$categoryId'
-      fullPath: '/$categoryId'
-      preLoaderRoute: typeof CategoryIdIndexImport
+    '/recipes/$categoryId/': {
+      id: '/recipes/$categoryId/'
+      path: '/recipes/$categoryId'
+      fullPath: '/recipes/$categoryId'
+      preLoaderRoute: typeof RecipesCategoryIdIndexImport
       parentRoute: typeof rootRoute
     }
-    '/$categoryId/$subcategoryId/$recipeId': {
-      id: '/$categoryId/$subcategoryId/$recipeId'
-      path: '/$categoryId/$subcategoryId/$recipeId'
-      fullPath: '/$categoryId/$subcategoryId/$recipeId'
-      preLoaderRoute: typeof CategoryIdSubcategoryIdRecipeIdImport
+    '/recipes/$categoryId/$subcategoryId/$recipeId': {
+      id: '/recipes/$categoryId/$subcategoryId/$recipeId'
+      path: '/recipes/$categoryId/$subcategoryId/$recipeId'
+      fullPath: '/recipes/$categoryId/$subcategoryId/$recipeId'
+      preLoaderRoute: typeof RecipesCategoryIdSubcategoryIdRecipeIdImport
       parentRoute: typeof rootRoute
     }
-    '/$categoryId/$subcategoryId/': {
-      id: '/$categoryId/$subcategoryId/'
-      path: '/$categoryId/$subcategoryId'
-      fullPath: '/$categoryId/$subcategoryId'
-      preLoaderRoute: typeof CategoryIdSubcategoryIdIndexImport
+    '/recipes/$categoryId/$subcategoryId/': {
+      id: '/recipes/$categoryId/$subcategoryId/'
+      path: '/recipes/$categoryId/$subcategoryId'
+      fullPath: '/recipes/$categoryId/$subcategoryId'
+      preLoaderRoute: typeof RecipesCategoryIdSubcategoryIdIndexImport
       parentRoute: typeof rootRoute
     }
   }
@@ -139,92 +125,86 @@ declare module '@tanstack/react-router' {
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
-  '/about': typeof AboutRoute
   '/auth': typeof AuthRoute
   '/login': typeof LoginRoute
   '/logout': typeof LogoutRoute
-  '/$categoryId': typeof CategoryIdIndexRoute
-  '/$categoryId/$subcategoryId/$recipeId': typeof CategoryIdSubcategoryIdRecipeIdRoute
-  '/$categoryId/$subcategoryId': typeof CategoryIdSubcategoryIdIndexRoute
+  '/recipes/$categoryId': typeof RecipesCategoryIdIndexRoute
+  '/recipes/$categoryId/$subcategoryId/$recipeId': typeof RecipesCategoryIdSubcategoryIdRecipeIdRoute
+  '/recipes/$categoryId/$subcategoryId': typeof RecipesCategoryIdSubcategoryIdIndexRoute
 }
 
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
-  '/about': typeof AboutRoute
   '/auth': typeof AuthRoute
   '/login': typeof LoginRoute
   '/logout': typeof LogoutRoute
-  '/$categoryId': typeof CategoryIdIndexRoute
-  '/$categoryId/$subcategoryId/$recipeId': typeof CategoryIdSubcategoryIdRecipeIdRoute
-  '/$categoryId/$subcategoryId': typeof CategoryIdSubcategoryIdIndexRoute
+  '/recipes/$categoryId': typeof RecipesCategoryIdIndexRoute
+  '/recipes/$categoryId/$subcategoryId/$recipeId': typeof RecipesCategoryIdSubcategoryIdRecipeIdRoute
+  '/recipes/$categoryId/$subcategoryId': typeof RecipesCategoryIdSubcategoryIdIndexRoute
 }
 
 export interface FileRoutesById {
   __root__: typeof rootRoute
   '/': typeof IndexRoute
-  '/about': typeof AboutRoute
   '/auth': typeof AuthRoute
   '/login': typeof LoginRoute
   '/logout': typeof LogoutRoute
-  '/$categoryId/': typeof CategoryIdIndexRoute
-  '/$categoryId/$subcategoryId/$recipeId': typeof CategoryIdSubcategoryIdRecipeIdRoute
-  '/$categoryId/$subcategoryId/': typeof CategoryIdSubcategoryIdIndexRoute
+  '/recipes/$categoryId/': typeof RecipesCategoryIdIndexRoute
+  '/recipes/$categoryId/$subcategoryId/$recipeId': typeof RecipesCategoryIdSubcategoryIdRecipeIdRoute
+  '/recipes/$categoryId/$subcategoryId/': typeof RecipesCategoryIdSubcategoryIdIndexRoute
 }
 
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
   fullPaths:
     | '/'
-    | '/about'
     | '/auth'
     | '/login'
     | '/logout'
-    | '/$categoryId'
-    | '/$categoryId/$subcategoryId/$recipeId'
-    | '/$categoryId/$subcategoryId'
+    | '/recipes/$categoryId'
+    | '/recipes/$categoryId/$subcategoryId/$recipeId'
+    | '/recipes/$categoryId/$subcategoryId'
   fileRoutesByTo: FileRoutesByTo
   to:
     | '/'
-    | '/about'
     | '/auth'
     | '/login'
     | '/logout'
-    | '/$categoryId'
-    | '/$categoryId/$subcategoryId/$recipeId'
-    | '/$categoryId/$subcategoryId'
+    | '/recipes/$categoryId'
+    | '/recipes/$categoryId/$subcategoryId/$recipeId'
+    | '/recipes/$categoryId/$subcategoryId'
   id:
     | '__root__'
     | '/'
-    | '/about'
     | '/auth'
     | '/login'
     | '/logout'
-    | '/$categoryId/'
-    | '/$categoryId/$subcategoryId/$recipeId'
-    | '/$categoryId/$subcategoryId/'
+    | '/recipes/$categoryId/'
+    | '/recipes/$categoryId/$subcategoryId/$recipeId'
+    | '/recipes/$categoryId/$subcategoryId/'
   fileRoutesById: FileRoutesById
 }
 
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
-  AboutRoute: typeof AboutRoute
   AuthRoute: typeof AuthRoute
   LoginRoute: typeof LoginRoute
   LogoutRoute: typeof LogoutRoute
-  CategoryIdIndexRoute: typeof CategoryIdIndexRoute
-  CategoryIdSubcategoryIdRecipeIdRoute: typeof CategoryIdSubcategoryIdRecipeIdRoute
-  CategoryIdSubcategoryIdIndexRoute: typeof CategoryIdSubcategoryIdIndexRoute
+  RecipesCategoryIdIndexRoute: typeof RecipesCategoryIdIndexRoute
+  RecipesCategoryIdSubcategoryIdRecipeIdRoute: typeof RecipesCategoryIdSubcategoryIdRecipeIdRoute
+  RecipesCategoryIdSubcategoryIdIndexRoute: typeof RecipesCategoryIdSubcategoryIdIndexRoute
 }
 
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
-  AboutRoute: AboutRoute,
   AuthRoute: AuthRoute,
   LoginRoute: LoginRoute,
   LogoutRoute: LogoutRoute,
-  CategoryIdIndexRoute: CategoryIdIndexRoute,
-  CategoryIdSubcategoryIdRecipeIdRoute: CategoryIdSubcategoryIdRecipeIdRoute,
-  CategoryIdSubcategoryIdIndexRoute: CategoryIdSubcategoryIdIndexRoute,
+  RecipesCategoryIdIndexRoute: RecipesCategoryIdIndexRoute,
+  RecipesCategoryIdSubcategoryIdRecipeIdRoute:
+    RecipesCategoryIdSubcategoryIdRecipeIdRoute,
+  RecipesCategoryIdSubcategoryIdIndexRoute:
+    RecipesCategoryIdSubcategoryIdIndexRoute,
 }
 
 export const routeTree = rootRoute
@@ -238,20 +218,16 @@ export const routeTree = rootRoute
       "filePath": "__root.tsx",
       "children": [
         "/",
-        "/about",
         "/auth",
         "/login",
         "/logout",
-        "/$categoryId/",
-        "/$categoryId/$subcategoryId/$recipeId",
-        "/$categoryId/$subcategoryId/"
+        "/recipes/$categoryId/",
+        "/recipes/$categoryId/$subcategoryId/$recipeId",
+        "/recipes/$categoryId/$subcategoryId/"
       ]
     },
     "/": {
       "filePath": "index.tsx"
-    },
-    "/about": {
-      "filePath": "about.tsx"
     },
     "/auth": {
       "filePath": "auth.tsx"
@@ -262,14 +238,14 @@ export const routeTree = rootRoute
     "/logout": {
       "filePath": "logout.tsx"
     },
-    "/$categoryId/": {
-      "filePath": "$categoryId/index.tsx"
+    "/recipes/$categoryId/": {
+      "filePath": "recipes/$categoryId/index.tsx"
     },
-    "/$categoryId/$subcategoryId/$recipeId": {
-      "filePath": "$categoryId/$subcategoryId/$recipeId.tsx"
+    "/recipes/$categoryId/$subcategoryId/$recipeId": {
+      "filePath": "recipes/$categoryId/$subcategoryId/$recipeId.tsx"
     },
-    "/$categoryId/$subcategoryId/": {
-      "filePath": "$categoryId/$subcategoryId/index.tsx"
+    "/recipes/$categoryId/$subcategoryId/": {
+      "filePath": "recipes/$categoryId/$subcategoryId/index.tsx"
     }
   }
 }
