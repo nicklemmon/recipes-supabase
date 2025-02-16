@@ -2,13 +2,9 @@ import { createFileRoute } from '@tanstack/react-router'
 
 export const Route = createFileRoute('/recipes/$categoryId/$subcategoryId/')({
   component: RouteComponent,
-  loader: async ({ params }) => {
-    console.log(params.subcategoryId)
-  }
+  loader: async ({ params }) => {},
 })
 
 function RouteComponent() {
-  const { subcategoryId } = Route.useParams()
-
-  return <div>Hello {subcategoryId}!</div>
+  return <div></div>
 }
