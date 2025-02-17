@@ -23,10 +23,12 @@
     "@supabase/supabase-js": "2.48.1",
     "@tanstack/react-router": "^1.105.0",
     "@tanstack/router-devtools": "^1.105.0",
+    "clsx": "2.1.1",
     "dompurify": "3.2.4",
     "markdown-it": "14.1.0",
     "react": "^19.0.0",
     "react-dom": "^19.0.0",
+    "tailwind-merge": "3.0.1",
     "tailwindcss": "4.0.6",
     "valibot": "1.0.0-rc.0"
   }

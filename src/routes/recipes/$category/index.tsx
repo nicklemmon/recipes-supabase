@@ -18,11 +18,11 @@ export const Route = createFileRoute('/recipes/$category/')({
 
 function RouteComponent() {
   const { category, subcategories } = Route.useLoaderData()
-  console.log('subcategories', subcategories)
 
   return (
     <div>
       <h1 className="text-3xl">{category.title}</h1>
+      <Link to="/">Back home</Link>
 
       <ul>
         {subcategories.map((subcategory) => {
@@ -32,6 +32,10 @@ function RouteComponent() {
             </li>
           )
         })}
+
+        <li>
+          <Link to={`/recipes/favorites`}>Favorites</Link>
+        </li>
       </ul>
     </div>
   )

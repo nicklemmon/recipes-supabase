@@ -28,19 +28,24 @@ function RouteComponent() {
 
   return (
     <div>
-      <h1>{subcategory.title}</h1>
+      <h1 className="text-3xl">{subcategory.title}</h1>
+      <Link to={`/recipes/${category.slug}`}>Back to {category.title}</Link>
 
-      <ul>
-        {recipes.map((recipe) => {
-          return (
-            <li key={recipe.id}>
-              <Link to={`/recipes/${categorySlug}/${subcategorySlug}/${recipe.slug}`}>
-                {recipe.title}
-              </Link>
-            </li>
-          )
-        })}
-      </ul>
+      {recipes.length === 0 ? (
+        <div>No recipes yet.</div>
+      ) : (
+        <ul>
+          {recipes.map((recipe) => {
+            return (
+              <li key={recipe.id}>
+                <Link to={`/recipes/${categorySlug}/${subcategorySlug}/${recipe.slug}`}>
+                  {recipe.title}
+                </Link>
+              </li>
+            )
+          })}
+        </ul>
+      )}
     </div>
   )
 }

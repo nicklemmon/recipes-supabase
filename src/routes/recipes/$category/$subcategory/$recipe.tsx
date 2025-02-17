@@ -1,4 +1,4 @@
-import { createFileRoute } from '@tanstack/react-router'
+import { createFileRoute, Link } from '@tanstack/react-router'
 import markdownit from 'markdown-it'
 import DOMPurify from 'dompurify'
 import { getCategoryBySlug } from '../../../../api/categories'
@@ -28,6 +28,7 @@ export const Route = createFileRoute('/recipes/$category/$subcategory/$recipe')(
 })
 
 function RouteComponent() {
+  const { subcategory: subcategorySlug, category: categorySlug } = Route.useParams()
   const { recipe, category, subcategory } = Route.useLoaderData()
   const ingredients = md.render(recipe.ingredients_md)
   const directions = md.render(recipe.directions_md)
@@ -35,6 +36,7 @@ function RouteComponent() {
   return (
     <div>
       <h1>{recipe.title}</h1>
+      <Link to={`/recipes/${categorySlug}/${subcategorySlug}`}>Back to {subcategory.title}</Link>
 
       <h2>Ingredients</h2>
 
