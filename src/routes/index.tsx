@@ -11,8 +11,6 @@ export const Route = createFileRoute('/')({
 function HomeComponent() {
   const categories = Route.useLoaderData()
 
-  console.log('categories', categories)
-
   return (
     <div>
       <h1>Home</h1>

@@ -3,10 +3,10 @@ import { createFileRoute } from '@tanstack/react-router'
 import { getSubcategories } from '../../../api/subcategories'
 import { getCategoryBySlug } from '../../../api/categories'
 
-export const Route = createFileRoute('/recipes/$categoryId/')({
+export const Route = createFileRoute('/recipes/$category/')({
   component: RouteComponent,
   loader: async ({ params }) => {
-    const category = await getCategoryBySlug(params.categoryId)
+    const category = await getCategoryBySlug(params.category)
     const subcategories = await getSubcategories(category.id)
 
     return {
