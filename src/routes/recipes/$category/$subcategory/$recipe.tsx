@@ -36,7 +36,15 @@ function RouteComponent() {
   return (
     <div>
       <h1>{recipe.title}</h1>
-      <Link to={`/recipes/${categorySlug}/${subcategorySlug}`}>Back to {subcategory.title}</Link>
+      <Link
+        to="/recipes/$category/$subcategory"
+        params={{
+          category: categorySlug,
+          subcategory: subcategorySlug,
+        }}
+      >
+        Back to {subcategory.title}
+      </Link>
 
       <h2>Ingredients</h2>
 

@@ -5,6 +5,7 @@ export const SubcategorySchema = v.object({
   created_at: v.string(),
   title: v.string(),
   slug: v.string(),
+  emoji: v.string(),
   category_id: v.number(),
 })
 

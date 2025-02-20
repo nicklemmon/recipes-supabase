@@ -2,6 +2,10 @@ import { Link } from '@tanstack/react-router'
 import { createFileRoute } from '@tanstack/react-router'
 import { getSubcategories } from '../../../api/subcategories'
 import { getCategoryBySlug } from '../../../api/categories'
+import { CategoryLink } from '../../../components/category-link'
+import { Stack } from '../../../components/stack'
+import { PageHeading } from '../../../components/page-heading'
+import { PageHeader } from '../../../components/page-header'
 
 export const Route = createFileRoute('/recipes/$category/')({
   component: RouteComponent,
@@ -21,21 +25,30 @@ function RouteComponent() {
 
   return (
     <div>
-      <h1 className="text-3xl">{category.title}</h1>
-      <Link to="/">Back home</Link>
+      <PageHeader>
+        <PageHeading>{category.title}</PageHeading>
+        <Link to="/">Back home</Link>
+      </PageHeader>
 
-      <ul>
+      <ul className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-6">
         {subcategories.map((subcategory) => {
           return (
             <li key={subcategory.id}>
-              <Link to={`/recipes/${category.slug}/${subcategory.slug}`}>{subcategory.title}</Link>
+              <CategoryLink
+                to="/recipes/$category/$subcategory"
+                params={{
+                  category: category.slug,
+                  subcategory: subcategory.slug,
+                }}
+              >
+                <Stack spacing="xs" align="center">
+                  <div>{subcategory.emoji}</div>
+                  <div>{subcategory.title}</div>
+                </Stack>
+              </CategoryLink>
             </li>
           )
         })}
-
-        <li>
-          <Link to={`/recipes/favorites`}>Favorites</Link>
-        </li>
       </ul>
     </div>
   )
