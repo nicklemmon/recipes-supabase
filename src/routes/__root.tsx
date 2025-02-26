@@ -11,10 +11,10 @@ export const Route = createRootRoute({
 function RootComponent() {
   return (
     <>
-      <header className="py-4 flex gap-2 bg-indigo-50 text-indigo-800 text-sm">
+      <header className="py-4 flex gap-2 bg-slate-800 text-slate-300 text-sm">
         <Container>
           <div className="flex justify-between items-center gap-4">
-            <Link to="/" className="font-semibold">
+            <Link to="/" className="font-semibold text-slate-100">
               Nick &amp; Laurie's Recipe Collection
             </Link>
 
@@ -26,15 +26,15 @@ function RootComponent() {
               <Link to="/logout" className="font-medium">
                 Log out
               </Link>
+
+              <button>Search</button>
             </Inline>
           </div>
         </Container>
       </header>
 
       <main>
-        <Container>
-          <Outlet />
-        </Container>
+        <Outlet />
       </main>
 
       <footer>

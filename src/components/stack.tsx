@@ -5,7 +5,7 @@ import { cn } from '../helpers/dom'
 type AlignProp = 'left' | 'center' | 'right'
 
 type StackProps = {
-  children: React.ReactNode
+  children?: React.ReactNode
   spacing?: SpacingProp
   align?: AlignProp
   className?: string

@@ -4,6 +4,7 @@ import { CategoryLink } from '../components/category-link'
 import { Stack } from '../components/stack'
 import { PageHeader } from '../components/page-header'
 import { PageHeading } from '../components/page-heading'
+import { PageBody } from '../components/page-body'
 
 export const Route = createFileRoute('/')({
   component: HomeComponent,
@@ -21,29 +22,31 @@ function HomeComponent() {
         <PageHeading>Categories</PageHeading>
       </PageHeader>
 
-      <ul className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-6">
-        {categories.map((category) => {
-          return (
-            <li key={category.id}>
-              <CategoryLink to="/recipes/$category" params={{ category: category.slug }}>
-                <Stack spacing="xs" align="center">
-                  <div>{category.emoji}</div>
-                  <div>{category.title}</div>
-                </Stack>
-              </CategoryLink>
-            </li>
-          )
-        })}
+      <PageBody>
+        <ul className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-6">
+          {categories.map((category) => {
+            return (
+              <li key={category.id}>
+                <CategoryLink to="/recipes/$category" params={{ category: category.slug }}>
+                  <Stack spacing="xs" align="center">
+                    <div>{category.emoji}</div>
+                    <div>{category.title}</div>
+                  </Stack>
+                </CategoryLink>
+              </li>
+            )
+          })}
 
-        <li>
-          <CategoryLink to={`/recipes/favorites`}>
-            <Stack spacing="xs" align="center">
-              <div>⭐</div>
-              <div>Favorites</div>
-            </Stack>
-          </CategoryLink>
-        </li>
-      </ul>
+          <li>
+            <CategoryLink to={`/recipes/favorites`}>
+              <Stack spacing="xs" align="center">
+                <div>⭐</div>
+                <div>Favorites</div>
+              </Stack>
+            </CategoryLink>
+          </li>
+        </ul>
+      </PageBody>
     </div>
   )
 }

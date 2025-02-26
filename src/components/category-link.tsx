@@ -1,11 +1,12 @@
 import { Link, LinkProps } from '@tanstack/react-router'
 import { cn } from '../helpers/dom'
 
-export function CategoryLink(props: LinkProps<'a'>) {
+export function CategoryLink({ className, ...props }: { className?: string } & LinkProps<'a'>) {
   return (
     <Link
       className={cn(
-        'justify-center items-center border border-indigo-50 bg-white p-8 inline-flex w-full h-40 rounded-xl shadow-sm shadow-indigo-200 font-medium text-indigo-700 hover:bg-indigo-50 hover:shadow-indigo-500 transition',
+        'h-52 w-full justify-center items-center bg-gradient-to-b to-indigo-200 from-indigo-100 hover:from-indigo-200 text-indigo-600 shadow-md shadow-indigo-100/50 border border-indigo-200 p-8 focus-visible:inset-ring-4  inset-ring-indigo-700 inline-flex rounded-2xl text-lg font-semibold transition',
+        className,
       )}
       {...props}
     />

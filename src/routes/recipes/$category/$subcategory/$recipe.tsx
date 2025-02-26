@@ -4,6 +4,11 @@ import DOMPurify from 'dompurify'
 import { getCategoryBySlug } from '../../../../api/categories'
 import { getSubcategoryBySlug } from '../../../../api/subcategories'
 import { getRecipeBySlug } from '../../../../api/recipes'
+import { PageHeader } from '../../../../components/page-header'
+import { PageHeading } from '../../../../components/page-heading'
+import { PageBackLink } from '../../../../components/page-back-link'
+import { PageBody } from '../../../../components/page-body'
+import { Stack } from '../../../../components/stack'
 
 const md = markdownit()
 
@@ -35,24 +40,41 @@ function RouteComponent() {
 
   return (
     <div>
-      <h1>{recipe.title}</h1>
-      <Link
-        to="/recipes/$category/$subcategory"
-        params={{
-          category: categorySlug,
-          subcategory: subcategorySlug,
-        }}
-      >
-        Back to {subcategory.title}
-      </Link>
+      <PageHeader>
+        <PageHeading>{recipe.title}</PageHeading>
 
-      <h2>Ingredients</h2>
+        <PageBackLink
+          to="/recipes/$category/$subcategory"
+          params={{
+            category: categorySlug,
+            subcategory: subcategorySlug,
+          }}
+        >
+          Back to {subcategory.title}
+        </PageBackLink>
+      </PageHeader>
 
-      <div dangerouslySetInnerHTML={{ __html: DOMPurify.sanitize(ingredients) }} />
+      <PageBody>
+        <Stack>
+          <Stack spacing="xs">
+            <h2 className="text-lg md:text-2xl font-bold text-slate-700">Ingredients</h2>
 
-      <h2>Directions</h2>
+            <div
+              className="prose text-slate-600"
+              dangerouslySetInnerHTML={{ __html: DOMPurify.sanitize(ingredients) }}
+            />
+          </Stack>
 
-      <div dangerouslySetInnerHTML={{ __html: DOMPurify.sanitize(directions) }} />
+          <Stack spacing="xs">
+            <h2 className="text-lg md:text-2xl font-bold text-slate-700">Directions</h2>
+
+            <div
+              className="prose text-slate-600"
+              dangerouslySetInnerHTML={{ __html: DOMPurify.sanitize(directions) }}
+            />
+          </Stack>
+        </Stack>
+      </PageBody>
     </div>
   )
 }
