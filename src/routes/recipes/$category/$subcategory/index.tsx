@@ -56,7 +56,7 @@ function RouteComponent() {
               <tbody>
                 {recipes.map((recipe) => {
                   return (
-                    <tr key={recipe.id} className="border-b-1 border-slate-200">
+                    <tr key={recipe.id} className="border-b border-slate-200">
                       <td className="p-4">
                         <Link
                           className="text-indigo-700 font-medium"

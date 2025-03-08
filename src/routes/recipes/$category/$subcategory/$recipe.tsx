@@ -55,25 +55,52 @@ function RouteComponent() {
       </PageHeader>
 
       <PageBody>
-        <Stack>
-          <Stack spacing="xs">
-            <h2 className="text-lg md:text-2xl font-bold text-slate-700">Ingredients</h2>
+        <div className="grid grid-cols-1 md:grid-cols-[2fr_1fr] gap-4">
+          <div>
+            <Stack>
+              <Stack spacing="xs">
+                <h2 className="text-lg md:text-2xl font-bold text-slate-700">Ingredients</h2>
 
-            <div
-              className="prose text-slate-600"
-              dangerouslySetInnerHTML={{ __html: DOMPurify.sanitize(ingredients) }}
-            />
-          </Stack>
+                <div
+                  className="prose text-slate-600"
+                  dangerouslySetInnerHTML={{ __html: DOMPurify.sanitize(ingredients) }}
+                />
+              </Stack>
 
-          <Stack spacing="xs">
-            <h2 className="text-lg md:text-2xl font-bold text-slate-700">Directions</h2>
+              <Stack spacing="xs">
+                <h2 className="text-lg md:text-2xl font-bold text-slate-700">Directions</h2>
 
-            <div
-              className="prose text-slate-600"
-              dangerouslySetInnerHTML={{ __html: DOMPurify.sanitize(directions) }}
-            />
-          </Stack>
-        </Stack>
+                <div
+                  className="prose text-slate-600"
+                  dangerouslySetInnerHTML={{ __html: DOMPurify.sanitize(directions) }}
+                />
+              </Stack>
+            </Stack>
+          </div>
+
+          <div>
+            <div className="rounded-lg bg-indigo-100 p-6 border border-indigo-200">
+              <Stack spacing="md">
+                <Stack spacing="xs">
+                  <div className="text-md font-semibold text-indigo-700">Source</div>
+                  <div className="text-indigo-600">{recipe.source}</div>
+                </Stack>
+                <Stack spacing="xs">
+                  <div className="text-md font-semibold text-indigo-700">Rating</div>
+                  <div className="text-indigo-600">{recipe.rating}</div>
+                </Stack>
+                <Stack spacing="xs">
+                  <div className="text-md font-semibold text-indigo-700">Date added</div>
+                  <div className="text-indigo-600">{recipe.created_at}</div>
+                </Stack>
+                <Stack spacing="xs">
+                  <div className="text-md font-semibold text-indigo-700">Dietary preferences</div>
+                  <div className="text-indigo-600">{recipe.dietary_pref.map((pref) => pref)}</div>
+                </Stack>
+              </Stack>
+            </div>
+          </div>
+        </div>
       </PageBody>
     </div>
   )
