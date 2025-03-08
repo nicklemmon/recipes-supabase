@@ -1,4 +1,4 @@
-import { Link, LinkProps } from '@tanstack/react-router'
+import { Link, type LinkProps } from '@tanstack/react-router'
 import { ArrowLeft } from 'lucide-react'
 import { cn } from '../helpers/dom'
 import { Inline } from './inline'
