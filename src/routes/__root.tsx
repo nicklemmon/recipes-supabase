@@ -1,11 +1,20 @@
 import { Link, Outlet, createRootRoute } from '@tanstack/react-router'
 import { TanStackRouterDevtools } from '@tanstack/router-devtools'
-import '../styles.css'
+import { Toaster } from 'sonner'
 import { Container } from '../components/container'
 import { Inline } from '../components/inline'
+import { supabase } from '../constants/supabase'
+import '../styles.css'
 
 export const Route = createRootRoute({
   component: RootComponent,
+  loader: async () => {
+    const {
+      data: { session },
+    } = await supabase.auth.getSession()
+
+    return { session }
+  },
 })
 
 function RootComponent() {
@@ -41,6 +50,7 @@ function RootComponent() {
         <Container></Container>
       </footer>
 
+      <Toaster richColors />
       <TanStackRouterDevtools position="bottom-right" />
     </>
   )

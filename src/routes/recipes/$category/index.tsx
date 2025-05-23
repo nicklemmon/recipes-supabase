@@ -45,7 +45,7 @@ function RouteComponent() {
                   }}
                 >
                   <Stack spacing="xs" align="center">
-                    <div>{subcategory.emoji}</div>
+                    <div className="text-xl">{subcategory.emoji}</div>
                     <div>{subcategory.title}</div>
                   </Stack>
                 </CategoryLink>

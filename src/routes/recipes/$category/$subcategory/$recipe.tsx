@@ -14,7 +14,8 @@ const md = markdownit()
 
 export const Route = createFileRoute('/recipes/$category/$subcategory/$recipe')({
   component: RouteComponent,
-  loader: async ({ params }) => {
+  loader: async ({ params, context }) => {
+    console.log('context', context)
     const { subcategory: subcategorySlug, category: categorySlug, recipe: recipeSlug } = params
     const category = await getCategoryBySlug(categorySlug)
     const subcategory = await getSubcategoryBySlug(subcategorySlug)
@@ -34,7 +35,7 @@ export const Route = createFileRoute('/recipes/$category/$subcategory/$recipe')(
 
 function RouteComponent() {
   const { subcategory: subcategorySlug, category: categorySlug } = Route.useParams()
-  const { recipe, category, subcategory } = Route.useLoaderData()
+  const { recipe, subcategory } = Route.useLoaderData()
   const ingredients = md.render(recipe.ingredients_md)
   const directions = md.render(recipe.directions_md)
 
@@ -79,23 +80,23 @@ function RouteComponent() {
           </div>
 
           <div>
-            <div className="rounded-lg bg-indigo-100 p-6 border border-indigo-200">
+            <div className="rounded-lg bg-slate-800 text-slate-100 p-6 border border-slate-600">
               <Stack spacing="md">
                 <Stack spacing="xs">
-                  <div className="text-md font-semibold text-indigo-700">Source</div>
-                  <div className="text-indigo-600">{recipe.source}</div>
+                  <div className="text-md font-semibold text-slate-50">Source</div>
+                  <div className="text-slate-300">{recipe.source}</div>
                 </Stack>
                 <Stack spacing="xs">
-                  <div className="text-md font-semibold text-indigo-700">Rating</div>
-                  <div className="text-indigo-600">{recipe.rating}</div>
+                  <div className="text-md font-semibold text-slate-50">Rating</div>
+                  <div className="text-slate-300">{recipe.rating}</div>
                 </Stack>
                 <Stack spacing="xs">
-                  <div className="text-md font-semibold text-indigo-700">Date added</div>
-                  <div className="text-indigo-600">{recipe.created_at}</div>
+                  <div className="text-md font-semibold text-slate-50">Date added</div>
+                  <div className="text-slate-300">{recipe.created_at}</div>
                 </Stack>
                 <Stack spacing="xs">
-                  <div className="text-md font-semibold text-indigo-700">Dietary preferences</div>
-                  <div className="text-indigo-600">{recipe.dietary_pref.map((pref) => pref)}</div>
+                  <div className="text-md font-semibold text-slate-50">Dietary preferences</div>
+                  <div className="text-slate-300">{recipe.dietary_pref.map((pref) => pref)}</div>
                 </Stack>
               </Stack>
             </div>

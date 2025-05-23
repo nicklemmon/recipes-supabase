@@ -6,6 +6,10 @@ import { routeTree } from './routeTree.gen'
 const router = createRouter({
   routeTree,
   defaultPreload: 'intent',
+  context: {
+    session: undefined,
+    user: undefined,
+  },
 })
 
 // Register things for type safety
@@ -19,6 +23,6 @@ const rootElement = document.getElementById('app')!
 
 if (!rootElement.innerHTML) {
   const root = ReactDOM.createRoot(rootElement)
-  
+
   root.render(<RouterProvider router={router} />)
 }
