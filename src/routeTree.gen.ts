@@ -16,6 +16,7 @@ import { Route as LoginImport } from './routes/login'
 import { Route as AuthImport } from './routes/_auth'
 import { Route as IndexImport } from './routes/index'
 import { Route as RecipesFavoritesImport } from './routes/recipes/favorites'
+import { Route as AuthProfileImport } from './routes/_auth.profile'
 import { Route as RecipesCategoryIndexImport } from './routes/recipes/$category/index'
 import { Route as RecipesAuthAddImport } from './routes/recipes/_auth.add'
 import { Route as RecipesCategorySubcategoryIndexImport } from './routes/recipes/$category/$subcategory/index'
@@ -50,6 +51,12 @@ const RecipesFavoritesRoute = RecipesFavoritesImport.update({
   id: '/recipes/favorites',
   path: '/recipes/favorites',
   getParentRoute: () => rootRoute,
+} as any)
+
+const AuthProfileRoute = AuthProfileImport.update({
+  id: '/profile',
+  path: '/profile',
+  getParentRoute: () => AuthRoute,
 } as any)
 
 const RecipesCategoryIndexRoute = RecipesCategoryIndexImport.update({
@@ -110,6 +117,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof LogoutImport
       parentRoute: typeof rootRoute
     }
+    '/_auth/profile': {
+      id: '/_auth/profile'
+      path: '/profile'
+      fullPath: '/profile'
+      preLoaderRoute: typeof AuthProfileImport
+      parentRoute: typeof AuthImport
+    }
     '/recipes/favorites': {
       id: '/recipes/favorites'
       path: '/recipes/favorites'
@@ -150,11 +164,22 @@ declare module '@tanstack/react-router' {
 
 // Create and export the route tree
 
+interface AuthRouteChildren {
+  AuthProfileRoute: typeof AuthProfileRoute
+}
+
+const AuthRouteChildren: AuthRouteChildren = {
+  AuthProfileRoute: AuthProfileRoute,
+}
+
+const AuthRouteWithChildren = AuthRoute._addFileChildren(AuthRouteChildren)
+
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
-  '': typeof AuthRoute
+  '': typeof AuthRouteWithChildren
   '/login': typeof LoginRoute
   '/logout': typeof LogoutRoute
+  '/profile': typeof AuthProfileRoute
   '/recipes/favorites': typeof RecipesFavoritesRoute
   '/recipes/add': typeof RecipesAuthAddRoute
   '/recipes/$category': typeof RecipesCategoryIndexRoute
@@ -164,9 +189,10 @@ export interface FileRoutesByFullPath {
 
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
-  '': typeof AuthRoute
+  '': typeof AuthRouteWithChildren
   '/login': typeof LoginRoute
   '/logout': typeof LogoutRoute
+  '/profile': typeof AuthProfileRoute
   '/recipes/favorites': typeof RecipesFavoritesRoute
   '/recipes/add': typeof RecipesAuthAddRoute
   '/recipes/$category': typeof RecipesCategoryIndexRoute
@@ -177,9 +203,10 @@ export interface FileRoutesByTo {
 export interface FileRoutesById {
   __root__: typeof rootRoute
   '/': typeof IndexRoute
-  '/_auth': typeof AuthRoute
+  '/_auth': typeof AuthRouteWithChildren
   '/login': typeof LoginRoute
   '/logout': typeof LogoutRoute
+  '/_auth/profile': typeof AuthProfileRoute
   '/recipes/favorites': typeof RecipesFavoritesRoute
   '/recipes/_auth/add': typeof RecipesAuthAddRoute
   '/recipes/$category/': typeof RecipesCategoryIndexRoute
@@ -194,6 +221,7 @@ export interface FileRouteTypes {
     | ''
     | '/login'
     | '/logout'
+    | '/profile'
     | '/recipes/favorites'
     | '/recipes/add'
     | '/recipes/$category'
@@ -205,6 +233,7 @@ export interface FileRouteTypes {
     | ''
     | '/login'
     | '/logout'
+    | '/profile'
     | '/recipes/favorites'
     | '/recipes/add'
     | '/recipes/$category'
@@ -216,6 +245,7 @@ export interface FileRouteTypes {
     | '/_auth'
     | '/login'
     | '/logout'
+    | '/_auth/profile'
     | '/recipes/favorites'
     | '/recipes/_auth/add'
     | '/recipes/$category/'
@@ -226,7 +256,7 @@ export interface FileRouteTypes {
 
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
-  AuthRoute: typeof AuthRoute
+  AuthRoute: typeof AuthRouteWithChildren
   LoginRoute: typeof LoginRoute
   LogoutRoute: typeof LogoutRoute
   RecipesFavoritesRoute: typeof RecipesFavoritesRoute
@@ -238,7 +268,7 @@ export interface RootRouteChildren {
 
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
-  AuthRoute: AuthRoute,
+  AuthRoute: AuthRouteWithChildren,
   LoginRoute: LoginRoute,
   LogoutRoute: LogoutRoute,
   RecipesFavoritesRoute: RecipesFavoritesRoute,
@@ -273,13 +303,20 @@ export const routeTree = rootRoute
       "filePath": "index.tsx"
     },
     "/_auth": {
-      "filePath": "_auth.tsx"
+      "filePath": "_auth.tsx",
+      "children": [
+        "/_auth/profile"
+      ]
     },
     "/login": {
       "filePath": "login.tsx"
     },
     "/logout": {
       "filePath": "logout.tsx"
+    },
+    "/_auth/profile": {
+      "filePath": "_auth.profile.tsx",
+      "parent": "/_auth"
     },
     "/recipes/favorites": {
       "filePath": "recipes/favorites.tsx"

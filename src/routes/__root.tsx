@@ -1,10 +1,14 @@
 import { Link, Outlet, createRootRoute, useRouteContext } from '@tanstack/react-router'
 import { TanStackRouterDevtools } from '@tanstack/router-devtools'
+import { LogIn, LogOut, Plus, Search, User } from 'lucide-react'
 import { Toaster } from 'sonner'
 import { Container } from '../components/container'
 import { Inline } from '../components/inline'
 import { supabase } from '../constants/supabase'
 import '../styles.css'
+import { SrOnly } from '../components/sr-only'
+
+const NAV_ICON_SIZE = 19
 
 export const Route = createRootRoute({
   component: RootComponent,
@@ -27,29 +31,44 @@ function RootComponent() {
         <Container>
           <div className="flex justify-between items-center gap-4">
             <Link to="/" className="font-semibold text-slate-100">
-              Nick &amp; Laurie's Recipe Collection
+              Lemfamy Recipes
             </Link>
 
-            <Inline>
+            <Inline spacing="lg">
               {authed ? (
                 <>
                   <Link to="/recipes/add" className="font-medium">
-                    Add recipe
+                    <Plus size={NAV_ICON_SIZE} />
+                    <SrOnly>Add recipe</SrOnly>
                   </Link>
 
-                  <button>Search</button>
+                  <button>
+                    <Search size={NAV_ICON_SIZE} />
+                    <SrOnly>Search</SrOnly>
+                  </button>
+
+                  <Link to="/profile" className="font-medium">
+                    <User size={NAV_ICON_SIZE} />
+
+                    <SrOnly>Profile</SrOnly>
+                  </Link>
 
                   <Link to="/logout" className="font-medium" preload={false}>
-                    Log out
+                    <LogOut size={NAV_ICON_SIZE} />
+                    <SrOnly>Log out</SrOnly>
                   </Link>
                 </>
               ) : (
                 <>
                   <Link to="/login" className="font-medium">
-                    Log in
+                    <LogIn size={NAV_ICON_SIZE} />
+                    <SrOnly>Log in</SrOnly>
                   </Link>
 
-                  <button>Search</button>
+                  <button>
+                    <Search size={NAV_ICON_SIZE} />
+                    <SrOnly>Search</SrOnly>
+                  </button>
                 </>
               )}
             </Inline>
