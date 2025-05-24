@@ -1,4 +1,4 @@
-import { Link, Outlet, createRootRoute } from '@tanstack/react-router'
+import { Link, Outlet, createRootRoute, useRouteContext } from '@tanstack/react-router'
 import { TanStackRouterDevtools } from '@tanstack/router-devtools'
 import { Toaster } from 'sonner'
 import { Container } from '../components/container'
@@ -18,6 +18,9 @@ export const Route = createRootRoute({
 })
 
 function RootComponent() {
+  const loaderData = Route.useLoaderData()
+  const authed = Boolean(loaderData.session)
+
   return (
     <>
       <header className="py-4 flex gap-2 bg-slate-800 text-slate-300 text-sm">
@@ -28,15 +31,27 @@ function RootComponent() {
             </Link>
 
             <Inline>
-              <Link to="/login" className="font-medium">
-                Log in
-              </Link>
+              {authed ? (
+                <>
+                  <Link to="/recipes/add" className="font-medium">
+                    Add recipe
+                  </Link>
 
-              <Link to="/logout" className="font-medium">
-                Log out
-              </Link>
+                  <button>Search</button>
 
-              <button>Search</button>
+                  <Link to="/logout" className="font-medium" preload={false}>
+                    Log out
+                  </Link>
+                </>
+              ) : (
+                <>
+                  <Link to="/login" className="font-medium">
+                    Log in
+                  </Link>
+
+                  <button>Search</button>
+                </>
+              )}
             </Inline>
           </div>
         </Container>

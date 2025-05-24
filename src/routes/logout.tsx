@@ -1,9 +1,43 @@
-import { createFileRoute } from '@tanstack/react-router'
+import { createFileRoute, redirect } from '@tanstack/react-router'
+import { toast } from 'sonner'
+import { signOut } from '../api/auth'
 
 export const Route = createFileRoute('/logout')({
   component: RouteComponent,
+  preload: false,
+  // Use beforeLoad to handle logout logic before rendering
+  beforeLoad: async ({ context }) => {
+    try {
+      // Sign out from Supabase
+      const { error } = await signOut()
+
+      if (error) {
+        console.error('Error signing out:', error)
+
+        throw error
+      }
+    } catch (err) {
+      console.error('Unexpected error during logout:', err)
+
+      throw err
+    }
+
+    toast.success('Successfully logged out')
+
+    // Redirect to home or login page after logout
+    throw redirect({
+      to: '/login',
+      replace: true,
+    })
+  },
 })
 
 function RouteComponent() {
-  return <div>Hello "/logout"!</div>
+  return (
+    <div className="flex items-center justify-center min-h-screen">
+      <div className="text-center">
+        <p>Logging out...</p>
+      </div>
+    </div>
+  )
 }

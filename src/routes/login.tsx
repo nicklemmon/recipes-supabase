@@ -15,13 +15,6 @@ export const Route = createFileRoute('/login')({
   validateSearch: z.object({
     redirect: z.string().optional().catch(''),
   }),
-  beforeLoad: async ({ context }) => {
-    console.log('context', context)
-    if (context?.session) {
-      throw redirect({ to: '/' })
-    }
-    return {}
-  },
   component: RouteComponent,
 })
 
@@ -49,7 +42,6 @@ function RouteComponent() {
       setLoginStatus('loading')
 
       const res = await signIn({ email, password })
-      console.log('res', res)
 
       setLoginStatus('idle')
 
@@ -59,7 +51,10 @@ function RouteComponent() {
           session: res.session,
         },
       })
+
       await router.invalidate()
+
+      toast.success(`Signed in as ${res.user.email}`)
 
       await navigate({ to: search.redirect || FALLBACK_ROUTE })
     } catch (err) {
