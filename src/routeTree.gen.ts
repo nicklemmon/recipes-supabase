@@ -8,6 +8,8 @@
 // You should NOT make any changes in this file as it will be overwritten.
 // Additionally, you should also exclude this file from your linter and/or formatter to prevent it from being checked or modified.
 
+import { createFileRoute } from '@tanstack/react-router'
+
 // Import Routes
 
 import { Route as rootRoute } from './routes/__root'
@@ -16,13 +18,24 @@ import { Route as LoginImport } from './routes/login'
 import { Route as AuthImport } from './routes/_auth'
 import { Route as IndexImport } from './routes/index'
 import { Route as RecipesFavoritesImport } from './routes/recipes/favorites'
+import { Route as RecipesAuthImport } from './routes/recipes/_auth'
 import { Route as AuthProfileImport } from './routes/_auth.profile'
 import { Route as RecipesCategoryIndexImport } from './routes/recipes/$category/index'
 import { Route as RecipesAuthAddImport } from './routes/recipes/_auth.add'
 import { Route as RecipesCategorySubcategoryIndexImport } from './routes/recipes/$category/$subcategory/index'
 import { Route as RecipesCategorySubcategoryRecipeImport } from './routes/recipes/$category/$subcategory/$recipe'
 
+// Create Virtual Routes
+
+const RecipesImport = createFileRoute('/recipes')()
+
 // Create/Update Routes
+
+const RecipesRoute = RecipesImport.update({
+  id: '/recipes',
+  path: '/recipes',
+  getParentRoute: () => rootRoute,
+} as any)
 
 const LogoutRoute = LogoutImport.update({
   id: '/logout',
@@ -48,9 +61,14 @@ const IndexRoute = IndexImport.update({
 } as any)
 
 const RecipesFavoritesRoute = RecipesFavoritesImport.update({
-  id: '/recipes/favorites',
-  path: '/recipes/favorites',
-  getParentRoute: () => rootRoute,
+  id: '/favorites',
+  path: '/favorites',
+  getParentRoute: () => RecipesRoute,
+} as any)
+
+const RecipesAuthRoute = RecipesAuthImport.update({
+  id: '/_auth',
+  getParentRoute: () => RecipesRoute,
 } as any)
 
 const AuthProfileRoute = AuthProfileImport.update({
@@ -60,29 +78,29 @@ const AuthProfileRoute = AuthProfileImport.update({
 } as any)
 
 const RecipesCategoryIndexRoute = RecipesCategoryIndexImport.update({
-  id: '/recipes/$category/',
-  path: '/recipes/$category/',
-  getParentRoute: () => rootRoute,
+  id: '/$category/',
+  path: '/$category/',
+  getParentRoute: () => RecipesRoute,
 } as any)
 
 const RecipesAuthAddRoute = RecipesAuthAddImport.update({
-  id: '/recipes/_auth/add',
-  path: '/recipes/add',
-  getParentRoute: () => rootRoute,
+  id: '/add',
+  path: '/add',
+  getParentRoute: () => RecipesAuthRoute,
 } as any)
 
 const RecipesCategorySubcategoryIndexRoute =
   RecipesCategorySubcategoryIndexImport.update({
-    id: '/recipes/$category/$subcategory/',
-    path: '/recipes/$category/$subcategory/',
-    getParentRoute: () => rootRoute,
+    id: '/$category/$subcategory/',
+    path: '/$category/$subcategory/',
+    getParentRoute: () => RecipesRoute,
   } as any)
 
 const RecipesCategorySubcategoryRecipeRoute =
   RecipesCategorySubcategoryRecipeImport.update({
-    id: '/recipes/$category/$subcategory/$recipe',
-    path: '/recipes/$category/$subcategory/$recipe',
-    getParentRoute: () => rootRoute,
+    id: '/$category/$subcategory/$recipe',
+    path: '/$category/$subcategory/$recipe',
+    getParentRoute: () => RecipesRoute,
   } as any)
 
 // Populate the FileRoutesByPath interface
@@ -124,40 +142,54 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AuthProfileImport
       parentRoute: typeof AuthImport
     }
+    '/recipes': {
+      id: '/recipes'
+      path: '/recipes'
+      fullPath: '/recipes'
+      preLoaderRoute: typeof RecipesImport
+      parentRoute: typeof rootRoute
+    }
+    '/recipes/_auth': {
+      id: '/recipes/_auth'
+      path: '/recipes'
+      fullPath: '/recipes'
+      preLoaderRoute: typeof RecipesAuthImport
+      parentRoute: typeof RecipesRoute
+    }
     '/recipes/favorites': {
       id: '/recipes/favorites'
-      path: '/recipes/favorites'
+      path: '/favorites'
       fullPath: '/recipes/favorites'
       preLoaderRoute: typeof RecipesFavoritesImport
-      parentRoute: typeof rootRoute
+      parentRoute: typeof RecipesImport
     }
     '/recipes/_auth/add': {
       id: '/recipes/_auth/add'
-      path: '/recipes/add'
+      path: '/add'
       fullPath: '/recipes/add'
       preLoaderRoute: typeof RecipesAuthAddImport
-      parentRoute: typeof rootRoute
+      parentRoute: typeof RecipesAuthImport
     }
     '/recipes/$category/': {
       id: '/recipes/$category/'
-      path: '/recipes/$category'
+      path: '/$category'
       fullPath: '/recipes/$category'
       preLoaderRoute: typeof RecipesCategoryIndexImport
-      parentRoute: typeof rootRoute
+      parentRoute: typeof RecipesImport
     }
     '/recipes/$category/$subcategory/$recipe': {
       id: '/recipes/$category/$subcategory/$recipe'
-      path: '/recipes/$category/$subcategory/$recipe'
+      path: '/$category/$subcategory/$recipe'
       fullPath: '/recipes/$category/$subcategory/$recipe'
       preLoaderRoute: typeof RecipesCategorySubcategoryRecipeImport
-      parentRoute: typeof rootRoute
+      parentRoute: typeof RecipesImport
     }
     '/recipes/$category/$subcategory/': {
       id: '/recipes/$category/$subcategory/'
-      path: '/recipes/$category/$subcategory'
+      path: '/$category/$subcategory'
       fullPath: '/recipes/$category/$subcategory'
       preLoaderRoute: typeof RecipesCategorySubcategoryIndexImport
-      parentRoute: typeof rootRoute
+      parentRoute: typeof RecipesImport
     }
   }
 }
@@ -174,12 +206,44 @@ const AuthRouteChildren: AuthRouteChildren = {
 
 const AuthRouteWithChildren = AuthRoute._addFileChildren(AuthRouteChildren)
 
+interface RecipesAuthRouteChildren {
+  RecipesAuthAddRoute: typeof RecipesAuthAddRoute
+}
+
+const RecipesAuthRouteChildren: RecipesAuthRouteChildren = {
+  RecipesAuthAddRoute: RecipesAuthAddRoute,
+}
+
+const RecipesAuthRouteWithChildren = RecipesAuthRoute._addFileChildren(
+  RecipesAuthRouteChildren,
+)
+
+interface RecipesRouteChildren {
+  RecipesAuthRoute: typeof RecipesAuthRouteWithChildren
+  RecipesFavoritesRoute: typeof RecipesFavoritesRoute
+  RecipesCategoryIndexRoute: typeof RecipesCategoryIndexRoute
+  RecipesCategorySubcategoryRecipeRoute: typeof RecipesCategorySubcategoryRecipeRoute
+  RecipesCategorySubcategoryIndexRoute: typeof RecipesCategorySubcategoryIndexRoute
+}
+
+const RecipesRouteChildren: RecipesRouteChildren = {
+  RecipesAuthRoute: RecipesAuthRouteWithChildren,
+  RecipesFavoritesRoute: RecipesFavoritesRoute,
+  RecipesCategoryIndexRoute: RecipesCategoryIndexRoute,
+  RecipesCategorySubcategoryRecipeRoute: RecipesCategorySubcategoryRecipeRoute,
+  RecipesCategorySubcategoryIndexRoute: RecipesCategorySubcategoryIndexRoute,
+}
+
+const RecipesRouteWithChildren =
+  RecipesRoute._addFileChildren(RecipesRouteChildren)
+
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
   '': typeof AuthRouteWithChildren
   '/login': typeof LoginRoute
   '/logout': typeof LogoutRoute
   '/profile': typeof AuthProfileRoute
+  '/recipes': typeof RecipesAuthRouteWithChildren
   '/recipes/favorites': typeof RecipesFavoritesRoute
   '/recipes/add': typeof RecipesAuthAddRoute
   '/recipes/$category': typeof RecipesCategoryIndexRoute
@@ -193,6 +257,7 @@ export interface FileRoutesByTo {
   '/login': typeof LoginRoute
   '/logout': typeof LogoutRoute
   '/profile': typeof AuthProfileRoute
+  '/recipes': typeof RecipesAuthRouteWithChildren
   '/recipes/favorites': typeof RecipesFavoritesRoute
   '/recipes/add': typeof RecipesAuthAddRoute
   '/recipes/$category': typeof RecipesCategoryIndexRoute
@@ -207,6 +272,8 @@ export interface FileRoutesById {
   '/login': typeof LoginRoute
   '/logout': typeof LogoutRoute
   '/_auth/profile': typeof AuthProfileRoute
+  '/recipes': typeof RecipesRouteWithChildren
+  '/recipes/_auth': typeof RecipesAuthRouteWithChildren
   '/recipes/favorites': typeof RecipesFavoritesRoute
   '/recipes/_auth/add': typeof RecipesAuthAddRoute
   '/recipes/$category/': typeof RecipesCategoryIndexRoute
@@ -222,6 +289,7 @@ export interface FileRouteTypes {
     | '/login'
     | '/logout'
     | '/profile'
+    | '/recipes'
     | '/recipes/favorites'
     | '/recipes/add'
     | '/recipes/$category'
@@ -234,6 +302,7 @@ export interface FileRouteTypes {
     | '/login'
     | '/logout'
     | '/profile'
+    | '/recipes'
     | '/recipes/favorites'
     | '/recipes/add'
     | '/recipes/$category'
@@ -246,6 +315,8 @@ export interface FileRouteTypes {
     | '/login'
     | '/logout'
     | '/_auth/profile'
+    | '/recipes'
+    | '/recipes/_auth'
     | '/recipes/favorites'
     | '/recipes/_auth/add'
     | '/recipes/$category/'
@@ -259,11 +330,7 @@ export interface RootRouteChildren {
   AuthRoute: typeof AuthRouteWithChildren
   LoginRoute: typeof LoginRoute
   LogoutRoute: typeof LogoutRoute
-  RecipesFavoritesRoute: typeof RecipesFavoritesRoute
-  RecipesAuthAddRoute: typeof RecipesAuthAddRoute
-  RecipesCategoryIndexRoute: typeof RecipesCategoryIndexRoute
-  RecipesCategorySubcategoryRecipeRoute: typeof RecipesCategorySubcategoryRecipeRoute
-  RecipesCategorySubcategoryIndexRoute: typeof RecipesCategorySubcategoryIndexRoute
+  RecipesRoute: typeof RecipesRouteWithChildren
 }
 
 const rootRouteChildren: RootRouteChildren = {
@@ -271,11 +338,7 @@ const rootRouteChildren: RootRouteChildren = {
   AuthRoute: AuthRouteWithChildren,
   LoginRoute: LoginRoute,
   LogoutRoute: LogoutRoute,
-  RecipesFavoritesRoute: RecipesFavoritesRoute,
-  RecipesAuthAddRoute: RecipesAuthAddRoute,
-  RecipesCategoryIndexRoute: RecipesCategoryIndexRoute,
-  RecipesCategorySubcategoryRecipeRoute: RecipesCategorySubcategoryRecipeRoute,
-  RecipesCategorySubcategoryIndexRoute: RecipesCategorySubcategoryIndexRoute,
+  RecipesRoute: RecipesRouteWithChildren,
 }
 
 export const routeTree = rootRoute
@@ -292,11 +355,7 @@ export const routeTree = rootRoute
         "/_auth",
         "/login",
         "/logout",
-        "/recipes/favorites",
-        "/recipes/_auth/add",
-        "/recipes/$category/",
-        "/recipes/$category/$subcategory/$recipe",
-        "/recipes/$category/$subcategory/"
+        "/recipes"
       ]
     },
     "/": {
@@ -318,20 +377,42 @@ export const routeTree = rootRoute
       "filePath": "_auth.profile.tsx",
       "parent": "/_auth"
     },
+    "/recipes": {
+      "filePath": "recipes",
+      "children": [
+        "/recipes/_auth",
+        "/recipes/favorites",
+        "/recipes/$category/",
+        "/recipes/$category/$subcategory/$recipe",
+        "/recipes/$category/$subcategory/"
+      ]
+    },
+    "/recipes/_auth": {
+      "filePath": "recipes/_auth.tsx",
+      "parent": "/recipes",
+      "children": [
+        "/recipes/_auth/add"
+      ]
+    },
     "/recipes/favorites": {
-      "filePath": "recipes/favorites.tsx"
+      "filePath": "recipes/favorites.tsx",
+      "parent": "/recipes"
     },
     "/recipes/_auth/add": {
-      "filePath": "recipes/_auth.add.tsx"
+      "filePath": "recipes/_auth.add.tsx",
+      "parent": "/recipes/_auth"
     },
     "/recipes/$category/": {
-      "filePath": "recipes/$category/index.tsx"
+      "filePath": "recipes/$category/index.tsx",
+      "parent": "/recipes"
     },
     "/recipes/$category/$subcategory/$recipe": {
-      "filePath": "recipes/$category/$subcategory/$recipe.tsx"
+      "filePath": "recipes/$category/$subcategory/$recipe.tsx",
+      "parent": "/recipes"
     },
     "/recipes/$category/$subcategory/": {
-      "filePath": "recipes/$category/$subcategory/index.tsx"
+      "filePath": "recipes/$category/$subcategory/index.tsx",
+      "parent": "/recipes"
     }
   }
 }

@@ -18,7 +18,9 @@ export async function getUser() {
 
 /** Async sign out of the application */
 export async function signOut() {
-  return await supabase.auth.signOut()
+  const { error } = await supabase.auth.signOut()
+
+  if (error) throw error
 }
 
 /** Async sign up for the application */
@@ -32,7 +34,11 @@ export async function signUp({ email, password }: { email: string; password: str
 
 /** Returns the current user session */
 export async function getSession() {
-  return await supabase.auth.getSession()
+  const { data, error } = await supabase.auth.getSession()
+
+  if (error) throw error
+
+  return data
 }
 
 /** Responds to changes in auth state */

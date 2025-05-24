@@ -5,17 +5,9 @@ import { signOut } from '../api/auth'
 export const Route = createFileRoute('/logout')({
   component: RouteComponent,
   preload: false,
-  // Use beforeLoad to handle logout logic before rendering
-  beforeLoad: async ({ context }) => {
+  beforeLoad: async () => {
     try {
-      // Sign out from Supabase
-      const { error } = await signOut()
-
-      if (error) {
-        console.error('Error signing out:', error)
-
-        throw error
-      }
+      await signOut()
     } catch (err) {
       console.error('Unexpected error during logout:', err)
 
