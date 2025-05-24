@@ -4,6 +4,7 @@ import DOMPurify from 'dompurify'
 import { getCategoryBySlug } from '../../../../api/categories'
 import { getSubcategoryBySlug } from '../../../../api/subcategories'
 import { getRecipeBySlug } from '../../../../api/recipes'
+import { title } from '../../../../helpers/dom'
 import { PageHeader } from '../../../../components/page-header'
 import { PageHeading } from '../../../../components/page-heading'
 import { PageBackLink } from '../../../../components/page-back-link'
@@ -15,7 +16,6 @@ const md = markdownit()
 export const Route = createFileRoute('/recipes/$category/$subcategory/$recipe')({
   component: RouteComponent,
   loader: async ({ params, context }) => {
-    console.log('context', context)
     const { subcategory: subcategorySlug, category: categorySlug, recipe: recipeSlug } = params
     const category = await getCategoryBySlug(categorySlug)
     const subcategory = await getSubcategoryBySlug(subcategorySlug)
@@ -29,6 +29,19 @@ export const Route = createFileRoute('/recipes/$category/$subcategory/$recipe')(
       category,
       subcategory,
       recipe,
+    }
+  },
+  head: ({ loaderData }) => {
+    return {
+      meta: [
+        {
+          title: title([
+            loaderData?.recipe?.title,
+            loaderData?.subcategory?.title,
+            loaderData?.category?.title,
+          ]),
+        },
+      ],
     }
   },
 })

@@ -1,11 +1,10 @@
 import { createFileRoute, Outlet, redirect } from '@tanstack/react-router'
 import { getSession } from '../../api/auth'
 
-export const Route = createFileRoute('/recipes/_auth')({
+export const Route = createFileRoute('/recipes/_private')({
   preload: false,
   beforeLoad: async ({ location }) => {
     const { session } = await getSession()
-    console.log('session', session)
 
     if (!session) {
       console.log('No session')
@@ -21,9 +20,9 @@ export const Route = createFileRoute('/recipes/_auth')({
       session,
     }
   },
-  component: AuthLayout,
+  component: PrivateLayout,
 })
 
-function AuthLayout() {
+function PrivateLayout() {
   return <Outlet />
 }

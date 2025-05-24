@@ -1,17 +1,28 @@
-import { createFileRoute, useRouter, redirect, useRouteContext } from '@tanstack/react-router'
+import { createFileRoute, useRouter } from '@tanstack/react-router'
 import { useState } from 'react'
+import { z } from 'zod'
+import { toast } from 'sonner'
+import { Button } from '../components/button'
+import { FormControl } from '../components/form-control'
+import { FormInput } from '../components/form-input'
+import { FormLabel } from '../components/form-label'
 import { PageHeader } from '../components/page-header'
 import { PageBody } from '../components/page-body'
 import { PageHeading } from '../components/page-heading'
 import { Stack } from '../components/stack'
-import { toast } from 'sonner'
-import { cn } from '../helpers/dom'
+import { title } from '../helpers/dom'
 import { signIn } from '../api/auth'
-import { z } from 'zod'
 
 const FALLBACK_ROUTE = '/' as const
 
 export const Route = createFileRoute('/login')({
+  head: () => ({
+    meta: [
+      {
+        title: title('Log in'),
+      },
+    ],
+  }),
   validateSearch: z.object({
     redirect: z.string().optional().catch(''),
   }),
@@ -97,37 +108,10 @@ function RouteComponent() {
               />
             </FormControl>
 
-            <button
-              type="submit"
-              className="h-10 bg-gradient-to-b to-indigo-600 from-indigo-500 px-5 py-2 rounded-xl focus-visible:ring-3 ring-indigo-700 focus:outline-0 font-semibold text-sm cursor-pointer text-white transition"
-            >
-              Log in
-            </button>
+            <Button type="submit">Log in</Button>
           </Stack>
         </form>
       </PageBody>
     </div>
-  )
-}
-
-function FormControl({ className, ...props }: React.ComponentProps<'div'>) {
-  return <div className={cn('w-full flex gap-1 flex-col', className)} {...props} />
-}
-
-function FormInput({ className, ...props }: React.ComponentProps<'input'>) {
-  return (
-    <input
-      className={cn(
-        'h-10 text-sm flex w-full bg-white border border-slate-300 px-4 rounded-lg text-slate-700 focus:outline-0 focus-visible:ring-2 ring-indigo-700 transition',
-        className,
-      )}
-      {...props}
-    />
-  )
-}
-
-function FormLabel({ className, ...props }: React.ComponentProps<'label'>) {
-  return (
-    <label className={cn('flex text-sm font-semibold text-slate-900 00', className)} {...props} />
   )
 }

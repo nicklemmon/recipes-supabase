@@ -3,6 +3,7 @@ import { ChevronRight } from 'lucide-react'
 import { getCategoryBySlug } from '../../../../api/categories'
 import { getSubcategoryBySlug } from '../../../../api/subcategories'
 import { getRecipes } from '../../../../api/recipes'
+import { title } from '../../../../helpers/dom'
 import { PageBody } from '../../../../components/page-body'
 import { PageHeader } from '../../../../components/page-header'
 import { PageHeading } from '../../../../components/page-heading'
@@ -23,6 +24,15 @@ export const Route = createFileRoute('/recipes/$category/$subcategory/')({
         categoryId: category.id,
         subcategoryId: subcategory.id,
       }),
+    }
+  },
+  head: ({ loaderData }) => {
+    return {
+      meta: [
+        {
+          title: title([loaderData?.subcategory?.title, loaderData?.category?.title]),
+        },
+      ],
     }
   },
 })

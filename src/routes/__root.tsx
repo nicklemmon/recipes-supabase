@@ -1,16 +1,24 @@
-import { Link, Outlet, createRootRoute, useRouteContext } from '@tanstack/react-router'
+import { HeadContent, Link, Outlet, createRootRoute } from '@tanstack/react-router'
 import { TanStackRouterDevtools } from '@tanstack/router-devtools'
 import { LogIn, LogOut, Plus, Search, User } from 'lucide-react'
 import { Toaster } from 'sonner'
+import { title } from '../helpers/dom'
 import { Container } from '../components/container'
 import { Inline } from '../components/inline'
 import { supabase } from '../constants/supabase'
-import '../styles.css'
 import { SrOnly } from '../components/sr-only'
+import '../styles.css'
 
 const NAV_ICON_SIZE = 19
 
 export const Route = createRootRoute({
+  head: () => ({
+    meta: [
+      {
+        title: title(),
+      },
+    ],
+  }),
   component: RootComponent,
   loader: async () => {
     const {
@@ -27,6 +35,8 @@ function RootComponent() {
 
   return (
     <>
+      <HeadContent />
+
       <header className="py-4 flex gap-2 bg-slate-800 text-slate-300 text-sm">
         <Container>
           <div className="flex justify-between items-center gap-4">

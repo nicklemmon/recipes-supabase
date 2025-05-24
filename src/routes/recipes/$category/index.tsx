@@ -8,6 +8,7 @@ import { PageBody } from '../../../components/page-body'
 import { PageHeading } from '../../../components/page-heading'
 import { PageHeader } from '../../../components/page-header'
 import { PageBackLink } from '../../../components/page-back-link'
+import { title } from '../../../helpers/dom'
 
 export const Route = createFileRoute('/recipes/$category/')({
   component: RouteComponent,
@@ -18,6 +19,15 @@ export const Route = createFileRoute('/recipes/$category/')({
     return {
       category,
       subcategories,
+    }
+  },
+  head: ({ loaderData }) => {
+    return {
+      meta: [
+        {
+          title: title([loaderData?.category?.title]),
+        },
+      ],
     }
   },
 })
