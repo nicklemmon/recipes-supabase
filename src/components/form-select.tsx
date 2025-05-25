@@ -15,7 +15,7 @@ export function FormSelect({ className, children, ...props }: React.ComponentPro
       </select>
       <ChevronDown
         size={18}
-        className="absolute right-2.5 top-[50%] translate-y-[-50%] text-slate-700"
+        className="absolute right-2.5 top-[50%] translate-y-[-50%] text-indigo-500"
       />
     </div>
   )

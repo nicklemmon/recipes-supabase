@@ -18,6 +18,7 @@ import { FormSelect } from '../../components/form-select'
 import { FormTextarea } from '../../components/form-textarea'
 import { addRecipe } from '../../api/recipes'
 import { slugify } from '../../helpers/string'
+import { getSession } from '../../api/auth'
 
 export const Route = createFileRoute('/recipes/_private/add')({
   head: () => ({
@@ -31,14 +32,16 @@ export const Route = createFileRoute('/recipes/_private/add')({
   loader: async () => {
     const categories = await getCategories()
     const subcategories = await getSubcategories()
+    const { session } = await getSession()
 
-    return { categories, subcategories }
+    return { categories, subcategories, session }
   },
 })
 
 function RouteComponent() {
   const [selectedCategory, setSelectedCategory] = useState<number>()
   const formRef = useRef<HTMLFormElement>(null)
+  const { session } = Route.useLoaderData()
 
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     try {
@@ -90,7 +93,7 @@ function RouteComponent() {
       <PageBody>
         <form onSubmit={handleSubmit} ref={formRef}>
           <Stack>
-            <div className="bg-slate-100 rounded-lg w-full p-4 grid grid-cols-1 md:grid-cols-2 gap-4">
+            <div className="bg-slate-100 rounded-xl w-full p-4 grid grid-cols-1 md:grid-cols-2 gap-4">
               <Stack>
                 <FormControl>
                   <FormLabel htmlFor="title-input">Title</FormLabel>
@@ -181,6 +184,8 @@ function RouteComponent() {
               <FormLabel htmlFor="directions-textarea">Directions</FormLabel>
               <FormTextarea id="directions-textarea" name="directions_md" rows={4} required />
             </FormControl>
+
+            <input type="hidden" name="user_id" value={session?.user.id} />
 
             <Button type="submit">Add recipe</Button>
           </Stack>

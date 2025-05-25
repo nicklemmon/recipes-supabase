@@ -1,5 +1,5 @@
 import { createFileRoute, Link } from '@tanstack/react-router'
-import { ChevronRight } from 'lucide-react'
+import { ChevronRight, Star } from 'lucide-react'
 import { getCategoryBySlug } from '../../../../api/categories'
 import { getSubcategoryBySlug } from '../../../../api/subcategories'
 import { getRecipes } from '../../../../api/recipes'
@@ -69,7 +69,7 @@ function RouteComponent() {
                     <tr key={recipe.id} className="border-b border-slate-200">
                       <td className="p-4">
                         <Link
-                          className="text-indigo-700 font-medium"
+                          className="text-indigo-600 font-medium"
                           to="/recipes/$category/$subcategory/$recipe"
                           params={{
                             category: category.slug,
@@ -83,12 +83,24 @@ function RouteComponent() {
                           </Inline>
                         </Link>
                       </td>
+
                       <td className="p-4">
                         {recipe.dietary_pref.map((pref) => {
                           return pref
                         })}
                       </td>
-                      <td className="p-4">{recipe.rating} out of 5</td>
+
+                      <td className="p-4">
+                        <Inline spacing="xs">
+                          {[...new Array(recipe.rating)].map((_star, index) => (
+                            <Star
+                              key={`${recipe.id}-start-${index}`}
+                              size={16}
+                              className="text-yellow-500 fill-yellow-200"
+                            />
+                          ))}
+                        </Inline>
+                      </td>
                     </tr>
                   )
                 })}

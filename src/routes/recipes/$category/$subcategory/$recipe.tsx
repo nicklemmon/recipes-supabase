@@ -1,15 +1,18 @@
-import { createFileRoute, Link } from '@tanstack/react-router'
+import { createFileRoute } from '@tanstack/react-router'
 import markdownit from 'markdown-it'
+import { Star } from 'lucide-react'
 import DOMPurify from 'dompurify'
 import { getCategoryBySlug } from '../../../../api/categories'
 import { getSubcategoryBySlug } from '../../../../api/subcategories'
 import { getRecipeBySlug } from '../../../../api/recipes'
 import { title } from '../../../../helpers/dom'
+import { Inline } from '../../../../components/inline'
 import { PageHeader } from '../../../../components/page-header'
 import { PageHeading } from '../../../../components/page-heading'
 import { PageBackLink } from '../../../../components/page-back-link'
 import { PageBody } from '../../../../components/page-body'
 import { Stack } from '../../../../components/stack'
+import { toLegibleDate } from '../../../../helpers/date'
 
 const md = markdownit()
 
@@ -93,24 +96,39 @@ function RouteComponent() {
           </div>
 
           <div>
-            <div className="rounded-lg bg-slate-800 text-slate-100 p-6 border border-slate-600">
-              <Stack spacing="md">
+            <div className="rounded-xl bg-slate-100 text-slate-700 p-4">
+              <Stack spacing="sm">
                 <Stack spacing="xs">
-                  <div className="text-md font-semibold text-slate-50">Source</div>
-                  <div className="text-slate-300">{recipe.source}</div>
+                  <div className="text-md font-semibold text-slate-900">Source</div>
+                  <div className="text-slate-600">{recipe.source}</div>
                 </Stack>
+
                 <Stack spacing="xs">
-                  <div className="text-md font-semibold text-slate-50">Rating</div>
-                  <div className="text-slate-300">{recipe.rating}</div>
+                  <div className="text-md font-semibold text-slate-900">Rating</div>
+                  <div className="text-slate-600">
+                    <Inline spacing="xs">
+                      {[...new Array(recipe.rating)].map((_star, index) => (
+                        <Star
+                          key={`${recipe.id}-start-${index}`}
+                          size={16}
+                          className="text-yellow-500 fill-yellow-200"
+                        />
+                      ))}
+                    </Inline>
+                  </div>
                 </Stack>
+
                 <Stack spacing="xs">
-                  <div className="text-md font-semibold text-slate-50">Date added</div>
-                  <div className="text-slate-300">{recipe.created_at}</div>
+                  <div className="text-md font-semibold text-slate-900">Created at</div>
+                  <div className="text-slate-600">{toLegibleDate(recipe.created_at)}</div>
                 </Stack>
-                <Stack spacing="xs">
-                  <div className="text-md font-semibold text-slate-50">Dietary preferences</div>
-                  <div className="text-slate-300">{recipe.dietary_pref.map((pref) => pref)}</div>
-                </Stack>
+
+                {recipe.dietary_pref.length > 0 ? (
+                  <Stack spacing="xs">
+                    <div className="text-md font-semibold text-slate-900">Dietary preferences</div>
+                    <div className="text-slate-600">{recipe.dietary_pref.map((pref) => pref)}</div>
+                  </Stack>
+                ) : null}
               </Stack>
             </div>
           </div>
