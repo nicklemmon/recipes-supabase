@@ -1,7 +1,7 @@
 import { createFileRoute, Outlet, redirect } from '@tanstack/react-router'
-import { getSession } from '../../api/auth'
+import { getSession } from '../../../../../api/auth'
 
-export const Route = createFileRoute('/recipes/_private')({
+export const Route = createFileRoute('/recipes/$category/$subcategory/$recipe/_private')({
   preload: false,
   beforeLoad: async ({ location }) => {
     const { session } = await getSession()

@@ -70,7 +70,7 @@ function RouteComponent() {
                       <td className="p-4">
                         <Link
                           className="text-indigo-600 font-medium"
-                          to="/recipes/$category/$subcategory/$recipe"
+                          to="/recipes/$category/$subcategory/$recipe/view"
                           params={{
                             category: category.slug,
                             subcategory: subcategory.slug,
