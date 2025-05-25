@@ -44,7 +44,7 @@ function RootComponent() {
               Lemfamy Recipes
             </Link>
 
-            <Inline spacing="lg">
+            <Inline spacing="md">
               {authed ? (
                 <>
                   <Link to="/recipes/add" className="font-medium">
@@ -52,7 +52,7 @@ function RootComponent() {
                     <SrOnly>Add recipe</SrOnly>
                   </Link>
 
-                  <button>
+                  <button className="cursor-pointer">
                     <Search size={NAV_ICON_SIZE} />
                     <SrOnly>Search</SrOnly>
                   </button>
@@ -75,7 +75,7 @@ function RootComponent() {
                     <SrOnly>Log in</SrOnly>
                   </Link>
 
-                  <button>
+                  <button className="cursor-pointer">
                     <Search size={NAV_ICON_SIZE} />
                     <SrOnly>Search</SrOnly>
                   </button>

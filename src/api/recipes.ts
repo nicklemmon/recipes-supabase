@@ -1,6 +1,6 @@
 import * as v from 'valibot'
 import { supabase } from '../constants/supabase'
-import { RecipeSchema } from '../types/recipes'
+import { type NewRecipe, RecipeSchema } from '../types/recipes'
 
 const RECIPES_TABLE_ID = 'recipes'
 
@@ -55,4 +55,9 @@ export async function getRecipe(id: number) {
   const res = await supabase.from(RECIPES_TABLE_ID).select('*').eq('id', id).single().throwOnError()
 
   return v.parse(RecipeSchema, res.data)
+}
+
+/** Adds a recipe */
+export async function addRecipe(recipe: NewRecipe) {
+  return await supabase.from(RECIPES_TABLE_ID).insert([recipe]).select().throwOnError()
 }
