@@ -1,6 +1,6 @@
 import * as v from 'valibot'
 import { supabase } from '../constants/supabase'
-import { type NewRecipe, RecipeSchema } from '../types/recipes'
+import { type NewRecipe, Recipe, RecipeSchema } from '../types/recipes'
 
 const RECIPES_TABLE_ID = 'recipes'
 
@@ -60,4 +60,14 @@ export async function getRecipe(id: number) {
 /** Adds a recipe */
 export async function addRecipe(recipe: NewRecipe) {
   return await supabase.from(RECIPES_TABLE_ID).insert([recipe]).select().throwOnError()
+}
+
+/** Updates a recipe */
+export async function updateRecipe(recipe: Partial<Recipe>) {
+  console.log('recipe', recipe)
+  const { id } = recipe
+
+  if (!id) throw Error(`No "id" provided in updated recipe`)
+
+  return await supabase.from(RECIPES_TABLE_ID).update(recipe).eq('id', id).single().throwOnError()
 }

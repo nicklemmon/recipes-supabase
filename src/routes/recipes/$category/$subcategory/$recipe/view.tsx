@@ -7,8 +7,6 @@ import { getSubcategoryBySlug } from '../../../../../api/subcategories'
 import { getRecipeBySlug } from '../../../../../api/recipes'
 import { title } from '../../../../../helpers/dom'
 import { Inline } from '../../../../../components/inline'
-import { PageHeader } from '../../../../../components/page-header'
-import { PageHeading } from '../../../../../components/page-heading'
 import {
   PageActions,
   PageBackLink,
@@ -16,6 +14,8 @@ import {
   PageEditLink,
 } from '../../../../../components/page-actions'
 import { PageBody } from '../../../../../components/page-body'
+import { PageHeader } from '../../../../../components/page-header'
+import { PageHeading } from '../../../../../components/page-heading'
 import { Stack } from '../../../../../components/stack'
 import { toLegibleDate } from '../../../../../helpers/date'
 
@@ -23,7 +23,7 @@ const md = markdownit()
 
 export const Route = createFileRoute('/recipes/$category/$subcategory/$recipe/view')({
   component: RouteComponent,
-  loader: async ({ params, context }) => {
+  loader: async ({ params }) => {
     const { subcategory: subcategorySlug, category: categorySlug, recipe: recipeSlug } = params
     const category = await getCategoryBySlug(categorySlug)
     const subcategory = await getSubcategoryBySlug(subcategorySlug)

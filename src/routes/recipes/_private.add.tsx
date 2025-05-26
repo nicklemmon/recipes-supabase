@@ -1,4 +1,4 @@
-import { createFileRoute, redirect } from '@tanstack/react-router'
+import { createFileRoute } from '@tanstack/react-router'
 import { toast } from 'sonner'
 import { useRef, useState } from 'react'
 import * as v from 'valibot'
@@ -6,6 +6,7 @@ import { PageHeader } from '../../components/page-header'
 import { PageHeading } from '../../components/page-heading'
 import { PageBody } from '../../components/page-body'
 import { title } from '../../helpers/dom'
+import { slugify } from '../../helpers/string'
 import { NewRecipeSchema } from '../../types/recipes'
 import { getCategories } from '../../api/categories'
 import { getSubcategories } from '../../api/subcategories'
@@ -17,8 +18,6 @@ import { Button } from '../../components/button'
 import { FormSelect } from '../../components/form-select'
 import { FormTextarea } from '../../components/form-textarea'
 import { addRecipe } from '../../api/recipes'
-import { slugify } from '../../helpers/string'
-import { getSession } from '../../api/auth'
 
 export const Route = createFileRoute('/recipes/_private/add')({
   head: () => ({
@@ -32,16 +31,21 @@ export const Route = createFileRoute('/recipes/_private/add')({
   loader: async () => {
     const categories = await getCategories()
     const subcategories = await getSubcategories()
-    const { session } = await getSession()
 
-    return { categories, subcategories, session }
+    return { categories, subcategories }
   },
 })
 
 function RouteComponent() {
   const [selectedCategory, setSelectedCategory] = useState<number>()
   const formRef = useRef<HTMLFormElement>(null)
-  const { session } = Route.useLoaderData()
+  const { categories, subcategories } = Route.useLoaderData()
+  const subcategoriesByCategory = subcategories.filter((subcategory) => {
+    // The category list is empty until a category is selected
+    if (!selectedCategory) return false
+
+    return subcategory.category_id === selectedCategory
+  })
 
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     try {
@@ -75,14 +79,6 @@ function RouteComponent() {
       throw err
     }
   }
-
-  const { categories, subcategories } = Route.useLoaderData()
-  const subcategoriesByCategory = subcategories.filter((subcategory) => {
-    // The category list is empty until a category is selected
-    if (!selectedCategory) return false
-
-    return subcategory.category_id === selectedCategory
-  })
 
   return (
     <div>
@@ -184,8 +180,6 @@ function RouteComponent() {
               <FormLabel htmlFor="directions-textarea">Directions</FormLabel>
               <FormTextarea id="directions-textarea" name="directions_md" rows={4} required />
             </FormControl>
-
-            <input type="hidden" name="user_id" value={session?.user.id} />
 
             <Button type="submit">Add recipe</Button>
           </Stack>
