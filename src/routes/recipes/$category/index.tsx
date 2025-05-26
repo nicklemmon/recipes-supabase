@@ -7,7 +7,7 @@ import { Stack } from '../../../components/stack'
 import { PageBody } from '../../../components/page-body'
 import { PageHeading } from '../../../components/page-heading'
 import { PageHeader } from '../../../components/page-header'
-import { PageBackLink } from '../../../components/page-back-link'
+import { PageBackLink } from '../../../components/page-actions'
 import { title } from '../../../helpers/dom'
 
 export const Route = createFileRoute('/recipes/$category/')({

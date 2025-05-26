@@ -9,7 +9,12 @@ import { title } from '../../../../../helpers/dom'
 import { Inline } from '../../../../../components/inline'
 import { PageHeader } from '../../../../../components/page-header'
 import { PageHeading } from '../../../../../components/page-heading'
-import { PageBackLink } from '../../../../../components/page-back-link'
+import {
+  PageActions,
+  PageBackLink,
+  PageDeleteButton,
+  PageEditLink,
+} from '../../../../../components/page-actions'
 import { PageBody } from '../../../../../components/page-body'
 import { Stack } from '../../../../../components/stack'
 import { toLegibleDate } from '../../../../../helpers/date'
@@ -60,26 +65,32 @@ function RouteComponent() {
       <PageHeader>
         <PageHeading>{recipe.title}</PageHeading>
 
-        <PageBackLink
-          to="/recipes/$category/$subcategory"
-          params={{
-            category: categorySlug,
-            subcategory: subcategorySlug,
-          }}
-        >
-          Back to {subcategory.title}
-        </PageBackLink>
+        <PageActions>
+          <PageBackLink
+            to="/recipes/$category/$subcategory"
+            params={{
+              category: categorySlug,
+              subcategory: subcategorySlug,
+            }}
+          >
+            Back to {subcategory.title}
+          </PageBackLink>
 
-        <Link
-          to="/recipes/$category/$subcategory/$recipe/edit"
-          params={{
-            category: categorySlug,
-            subcategory: subcategorySlug,
-            recipe: recipe.slug,
-          }}
-        >
-          Edit
-        </Link>
+          <Inline>
+            <PageEditLink
+              to="/recipes/$category/$subcategory/$recipe/edit"
+              params={{
+                category: categorySlug,
+                subcategory: subcategorySlug,
+                recipe: recipe.slug,
+              }}
+            >
+              Edit
+            </PageEditLink>
+
+            <PageDeleteButton>Delete</PageDeleteButton>
+          </Inline>
+        </PageActions>
       </PageHeader>
 
       <PageBody>

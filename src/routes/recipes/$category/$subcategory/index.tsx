@@ -7,7 +7,7 @@ import { title } from '../../../../helpers/dom'
 import { PageBody } from '../../../../components/page-body'
 import { PageHeader } from '../../../../components/page-header'
 import { PageHeading } from '../../../../components/page-heading'
-import { PageBackLink } from '../../../../components/page-back-link'
+import { PageBackLink } from '../../../../components/page-actions'
 import { Inline } from '../../../../components/inline'
 
 export const Route = createFileRoute('/recipes/$category/$subcategory/')({
