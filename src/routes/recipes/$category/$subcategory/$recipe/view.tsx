@@ -88,6 +88,7 @@ function RouteComponent() {
               Edit
             </PageEditLink>
 
+            {/** TODO: This should only render for admins */}
             <PageDeleteButton>Delete</PageDeleteButton>
           </Inline>
         </PageActions>

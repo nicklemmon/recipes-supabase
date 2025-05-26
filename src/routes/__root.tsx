@@ -104,7 +104,7 @@ function NavLink({ className, ...props }: React.ComponentProps<typeof Link>) {
   return (
     <Link
       className={cn(
-        'font-medium text-slate-50 cursor-pointer rounded-lg border border-slate-700 p-2 bg-slate-900',
+        'font-medium text-slate-50 cursor-pointer rounded-lg p-2 bg-slate-900',
         'bg-slate-800',
         'hover:bg-slate-900 transition-colors',
         className,
