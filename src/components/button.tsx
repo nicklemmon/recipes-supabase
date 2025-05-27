@@ -1,14 +1,74 @@
+import { LoaderCircle } from 'lucide-react'
 import { cn } from '../helpers/dom'
+import { cva } from 'cva'
 
-export function Button({ className, ...props }: React.ComponentProps<'button'>) {
+type ButtonVariant = 'primary' | 'secondary' | 'destructive'
+
+type ButtonSize = 'sm' | 'md'
+
+const buttonClasses = cva(
+  [
+    'h-10',
+    'px-5',
+    'py-2',
+    'rounded-xl',
+    'focus-visible:ring-3',
+    'ring-indigo-700',
+    'focus:outline-0',
+    'font-semibold',
+    'text-sm',
+    'cursor-pointer',
+    'transition-colors',
+    'relative',
+  ],
+  {
+    variants: {
+      variant: {
+        primary: ['bg-indigo-600', 'text-indigo-50', 'hover:bg-indigo-700'],
+        secondary: ['bg-indigo-100', 'text-indigo-600', 'hover:bg-indigo-200'],
+        destructive: ['bg-red-100', 'text-red-600', 'hover:bg-red-200'],
+      },
+      size: {
+        sm: ['text-sm'],
+        md: [],
+      },
+      loading: {
+        false: null,
+        true: ['cursor-wait', 'pointer-none', 'opacity-75'],
+      },
+      disabled: {
+        false: null,
+        true: ['opacity-50', 'cursor-not-allowed'],
+      },
+    },
+  },
+)
+
+export function Button({
+  className,
+  variant = 'primary',
+  size = 'md',
+  loading,
+  disabled,
+  children,
+  ...props
+}: React.ComponentProps<'button'> & {
+  size?: ButtonSize
+  variant?: ButtonVariant
+  loading?: boolean
+}) {
   return (
     <button
-      className={cn(
-        'h-10 bg-gradient-to-b to-indigo-600 from-indigo-500 border-2 border-indigo-600 px-5 py-2 rounded-xl focus-visible:ring-3 ring-indigo-700 focus:outline-0 font-semibold text-sm cursor-pointer text-white transition',
-        'bg-indigo-600 text-indigo-50',
-        className,
-      )}
+      className={cn(buttonClasses({ disabled, loading, size, variant }), className)}
+      disabled={disabled}
       {...props}
-    />
+    >
+      {loading ? (
+        <span className="absolute top-[50%] left-[50%] translate-[-50%] animate-spin">
+          <LoaderCircle />
+        </span>
+      ) : null}
+      <span className={loading ? 'opacity-0' : ''}>{children}</span>
+    </button>
   )
 }

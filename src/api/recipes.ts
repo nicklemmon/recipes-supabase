@@ -64,10 +64,14 @@ export async function addRecipe(recipe: NewRecipe) {
 
 /** Updates a recipe */
 export async function updateRecipe(recipe: Partial<Recipe>) {
-  console.log('recipe', recipe)
   const { id } = recipe
 
   if (!id) throw Error(`No "id" provided in updated recipe`)
 
   return await supabase.from(RECIPES_TABLE_ID).update(recipe).eq('id', id).single().throwOnError()
+}
+
+/** Deletes a single recipe */
+export async function deleteRecipe(id: Recipe['id']) {
+  return await supabase.from(RECIPES_TABLE_ID).delete().eq('id', id).throwOnError()
 }

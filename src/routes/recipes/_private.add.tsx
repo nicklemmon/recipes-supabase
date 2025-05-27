@@ -72,7 +72,7 @@ function RouteComponent() {
       formRef.current?.reset()
 
       // Toast it up
-      toast.success(`Recipe ${title} added`)
+      toast.success(`Recipe "${title}" added`)
     } catch (err) {
       toast.error(String(err))
 
