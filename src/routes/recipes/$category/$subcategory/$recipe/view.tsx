@@ -23,7 +23,6 @@ import { PageHeader } from '../../../../../components/page-header'
 import { PageHeading } from '../../../../../components/page-heading'
 import { Stack } from '../../../../../components/stack'
 import { toLegibleDate } from '../../../../../helpers/date'
-import { ModalDialog } from '../../../../../components/modal-dialog'
 
 const md = markdownit()
 
@@ -125,8 +124,6 @@ function RouteComponent() {
             >
               Edit
             </PageEditLink>
-
-            {/** TODO: This should only render for admins */}
 
             <Drawer.Root>
               <Drawer.Trigger asChild>

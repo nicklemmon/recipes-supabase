@@ -13,20 +13,34 @@ const buttonClasses = cva(
     'py-2',
     'rounded-xl',
     'focus-visible:ring-3',
-    'ring-indigo-700',
     'focus:outline-0',
     'font-semibold',
     'text-sm',
     'cursor-pointer',
-    'transition-colors',
+    'transition',
     'relative',
   ],
   {
     variants: {
       variant: {
-        primary: ['bg-indigo-600', 'text-indigo-50', 'hover:bg-indigo-700'],
-        secondary: ['bg-indigo-100', 'text-indigo-600', 'hover:bg-indigo-200'],
-        destructive: ['bg-red-100', 'text-red-600', 'hover:bg-red-200'],
+        primary: [
+          'bg-indigo-600',
+          'text-indigo-50',
+          'hover:bg-indigo-700',
+          'focus-visible:ring-indigo-400',
+        ],
+        secondary: [
+          'bg-indigo-100',
+          'text-indigo-600',
+          'hover:bg-indigo-200',
+          'focus-visible:ring-indigo-400',
+        ],
+        destructive: [
+          'bg-red-100',
+          'text-red-600',
+          'hover:bg-red-200',
+          'focus-visible:ring-red-400',
+        ],
       },
       size: {
         sm: ['text-sm'],

@@ -8,22 +8,21 @@ const RECIPES_TABLE_ID = 'recipes'
 export async function getRecipes({
   categoryId,
   subcategoryId,
-}: { categoryId?: number; subcategoryId?: number } = {}) {
-  let res
+  titleSearch,
+}: { categoryId?: number; subcategoryId?: number; titleSearch?: string } = {}) {
+  let query = supabase.from(RECIPES_TABLE_ID).select()
 
   if (categoryId && subcategoryId) {
-    res = await supabase
-      .from(RECIPES_TABLE_ID)
-      .select()
-      .eq('category_id', categoryId)
-      .eq('subcategory_id', subcategoryId)
-      .select('*')
-      .throwOnError()
-
-    return v.parse(v.array(RecipeSchema), res.data)
+    query.eq('category_id', categoryId).eq('subcategory_id', subcategoryId)
   }
 
-  res = await supabase.from(RECIPES_TABLE_ID).select('*').throwOnError()
+  if (titleSearch) {
+    query.like('title', `%${titleSearch}%`)
+  }
+
+  query.select('*').throwOnError()
+
+  const res = await query
 
   return v.parse(v.array(RecipeSchema), res.data)
 }

@@ -18,6 +18,7 @@ import { Route as LoginImport } from './routes/login'
 import { Route as PublicImport } from './routes/_public'
 import { Route as PrivateImport } from './routes/_private'
 import { Route as IndexImport } from './routes/index'
+import { Route as RecipesListImport } from './routes/recipes/list'
 import { Route as RecipesFavoritesImport } from './routes/recipes/favorites'
 import { Route as RecipesPrivateImport } from './routes/recipes/_private'
 import { Route as PrivateProfileImport } from './routes/_private.profile'
@@ -69,6 +70,12 @@ const IndexRoute = IndexImport.update({
   id: '/',
   path: '/',
   getParentRoute: () => rootRoute,
+} as any)
+
+const RecipesListRoute = RecipesListImport.update({
+  id: '/list',
+  path: '/list',
+  getParentRoute: () => RecipesRoute,
 } as any)
 
 const RecipesFavoritesRoute = RecipesFavoritesImport.update({
@@ -201,6 +208,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof RecipesFavoritesImport
       parentRoute: typeof RecipesImport
     }
+    '/recipes/list': {
+      id: '/recipes/list'
+      path: '/list'
+      fullPath: '/recipes/list'
+      preLoaderRoute: typeof RecipesListImport
+      parentRoute: typeof RecipesImport
+    }
     '/recipes/_private/add': {
       id: '/recipes/_private/add'
       path: '/add'
@@ -314,6 +328,7 @@ const RecipesCategorySubcategoryRecipeRouteWithChildren =
 interface RecipesRouteChildren {
   RecipesPrivateRoute: typeof RecipesPrivateRouteWithChildren
   RecipesFavoritesRoute: typeof RecipesFavoritesRoute
+  RecipesListRoute: typeof RecipesListRoute
   RecipesCategoryIndexRoute: typeof RecipesCategoryIndexRoute
   RecipesCategorySubcategoryIndexRoute: typeof RecipesCategorySubcategoryIndexRoute
   RecipesCategorySubcategoryRecipeRoute: typeof RecipesCategorySubcategoryRecipeRouteWithChildren
@@ -322,6 +337,7 @@ interface RecipesRouteChildren {
 const RecipesRouteChildren: RecipesRouteChildren = {
   RecipesPrivateRoute: RecipesPrivateRouteWithChildren,
   RecipesFavoritesRoute: RecipesFavoritesRoute,
+  RecipesListRoute: RecipesListRoute,
   RecipesCategoryIndexRoute: RecipesCategoryIndexRoute,
   RecipesCategorySubcategoryIndexRoute: RecipesCategorySubcategoryIndexRoute,
   RecipesCategorySubcategoryRecipeRoute:
@@ -339,6 +355,7 @@ export interface FileRoutesByFullPath {
   '/profile': typeof PrivateProfileRoute
   '/recipes': typeof RecipesPrivateRouteWithChildren
   '/recipes/favorites': typeof RecipesFavoritesRoute
+  '/recipes/list': typeof RecipesListRoute
   '/recipes/add': typeof RecipesPrivateAddRoute
   '/recipes/$category': typeof RecipesCategoryIndexRoute
   '/recipes/$category/$subcategory': typeof RecipesCategorySubcategoryIndexRoute
@@ -355,6 +372,7 @@ export interface FileRoutesByTo {
   '/profile': typeof PrivateProfileRoute
   '/recipes': typeof RecipesPrivateRouteWithChildren
   '/recipes/favorites': typeof RecipesFavoritesRoute
+  '/recipes/list': typeof RecipesListRoute
   '/recipes/add': typeof RecipesPrivateAddRoute
   '/recipes/$category': typeof RecipesCategoryIndexRoute
   '/recipes/$category/$subcategory': typeof RecipesCategorySubcategoryIndexRoute
@@ -374,6 +392,7 @@ export interface FileRoutesById {
   '/recipes': typeof RecipesRouteWithChildren
   '/recipes/_private': typeof RecipesPrivateRouteWithChildren
   '/recipes/favorites': typeof RecipesFavoritesRoute
+  '/recipes/list': typeof RecipesListRoute
   '/recipes/_private/add': typeof RecipesPrivateAddRoute
   '/recipes/$category/': typeof RecipesCategoryIndexRoute
   '/recipes/$category/$subcategory/': typeof RecipesCategorySubcategoryIndexRoute
@@ -393,6 +412,7 @@ export interface FileRouteTypes {
     | '/profile'
     | '/recipes'
     | '/recipes/favorites'
+    | '/recipes/list'
     | '/recipes/add'
     | '/recipes/$category'
     | '/recipes/$category/$subcategory'
@@ -408,6 +428,7 @@ export interface FileRouteTypes {
     | '/profile'
     | '/recipes'
     | '/recipes/favorites'
+    | '/recipes/list'
     | '/recipes/add'
     | '/recipes/$category'
     | '/recipes/$category/$subcategory'
@@ -425,6 +446,7 @@ export interface FileRouteTypes {
     | '/recipes'
     | '/recipes/_private'
     | '/recipes/favorites'
+    | '/recipes/list'
     | '/recipes/_private/add'
     | '/recipes/$category/'
     | '/recipes/$category/$subcategory/'
@@ -498,6 +520,7 @@ export const routeTree = rootRoute
       "children": [
         "/recipes/_private",
         "/recipes/favorites",
+        "/recipes/list",
         "/recipes/$category/",
         "/recipes/$category/$subcategory/",
         "/recipes/$category/$subcategory/$recipe"
@@ -512,6 +535,10 @@ export const routeTree = rootRoute
     },
     "/recipes/favorites": {
       "filePath": "recipes/favorites.tsx",
+      "parent": "/recipes"
+    },
+    "/recipes/list": {
+      "filePath": "recipes/list.tsx",
       "parent": "/recipes"
     },
     "/recipes/_private/add": {

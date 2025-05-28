@@ -37,6 +37,7 @@ export const Route = createFileRoute('/recipes/_private/add')({
 })
 
 function RouteComponent() {
+  const [addReqStatus, setAddReqStatus] = useState<'loading' | 'idle'>('idle')
   const [selectedCategory, setSelectedCategory] = useState<number>()
   const formRef = useRef<HTMLFormElement>(null)
   const { categories, subcategories } = Route.useLoaderData()
@@ -66,7 +67,11 @@ function RouteComponent() {
         dietary_pref: [],
       })
 
+      setAddReqStatus('loading')
+
       await addRecipe(newRecipe)
+
+      setAddReqStatus('idle')
 
       // Clear the form
       formRef.current?.reset()
@@ -75,6 +80,7 @@ function RouteComponent() {
       toast.success(`Recipe "${title}" added`)
     } catch (err) {
       toast.error(String(err))
+      setAddReqStatus('idle')
 
       throw err
     }
@@ -181,7 +187,9 @@ function RouteComponent() {
               <FormTextarea id="directions-textarea" name="directions_md" rows={4} required />
             </FormControl>
 
-            <Button type="submit">Add recipe</Button>
+            <Button type="submit" loading={addReqStatus === 'loading'}>
+              Add recipe
+            </Button>
           </Stack>
         </form>
       </PageBody>

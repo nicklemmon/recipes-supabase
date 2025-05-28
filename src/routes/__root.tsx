@@ -1,15 +1,15 @@
 import { HeadContent, Link, Outlet, createRootRoute } from '@tanstack/react-router'
 import { TanStackRouterDevtools } from '@tanstack/router-devtools'
-import { LogIn, LogOut, Plus, Search, User } from 'lucide-react'
+import { LogIn, LogOut, Plus, Search as SearchIcon, User } from 'lucide-react'
 import { Toaster } from 'sonner'
-import { cn, title } from '../helpers/dom'
+import { title } from '../helpers/dom'
+import { NavButton, NavLink, NAV_ICON_SIZE } from '../components/nav-actions'
 import { Container } from '../components/container'
 import { Inline } from '../components/inline'
+import { Search } from '../components/search'
 import { supabase } from '../constants/supabase'
 import { SrOnly } from '../components/sr-only'
 import '../styles.css'
-
-const NAV_ICON_SIZE = 16
 
 export const Route = createRootRoute({
   head: () => ({
@@ -52,16 +52,18 @@ function RootComponent() {
                     <SrOnly>Add recipe</SrOnly>
                   </NavLink>
 
-                  <NavLink role="button">
-                    <Search size={NAV_ICON_SIZE} />
-                    <SrOnly>Search</SrOnly>
-                  </NavLink>
-
                   <NavLink to="/profile">
                     <User size={NAV_ICON_SIZE} />
 
                     <SrOnly>Profile</SrOnly>
                   </NavLink>
+
+                  <Search>
+                    <NavButton>
+                      <SearchIcon size={NAV_ICON_SIZE} />
+                      <SrOnly>Search</SrOnly>
+                    </NavButton>
+                  </Search>
 
                   <NavLink to="/logout" preload={false}>
                     <LogOut size={NAV_ICON_SIZE} />
@@ -75,10 +77,12 @@ function RootComponent() {
                     <SrOnly>Log in</SrOnly>
                   </NavLink>
 
-                  <NavLink role="button">
-                    <Search size={NAV_ICON_SIZE} />
-                    <SrOnly>Search</SrOnly>
-                  </NavLink>
+                  <Search>
+                    <NavButton>
+                      <SearchIcon size={NAV_ICON_SIZE} />
+                      <SrOnly>Search</SrOnly>
+                    </NavButton>
+                  </Search>
                 </>
               )}
             </Inline>
@@ -97,19 +101,5 @@ function RootComponent() {
       <Toaster richColors />
       <TanStackRouterDevtools position="bottom-right" />
     </>
-  )
-}
-
-function NavLink({ className, ...props }: React.ComponentProps<typeof Link>) {
-  return (
-    <Link
-      className={cn(
-        'font-medium text-slate-50 cursor-pointer rounded-lg p-2 bg-slate-900',
-        'bg-slate-800',
-        'hover:bg-slate-900 transition-colors',
-        className,
-      )}
-      {...props}
-    />
   )
 }
