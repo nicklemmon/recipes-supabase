@@ -52,7 +52,9 @@ function RouteComponent() {
 
       <PageBody>
         {recipes.length === 0 ? (
-          <div>No recipes yet.</div>
+          <p className="text-slate-700">
+            No recipes <span className="font-bold">"{subcategory.title}"</span> recipes yet.
+          </p>
         ) : (
           <div className="border border-x-0 border-slate-200">
             <table className="w-full text-left text-md border-collapse text-slate-700">
