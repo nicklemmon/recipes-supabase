@@ -23,7 +23,7 @@ export async function getRecipes({
   }
 
   if (titleSearch) {
-    query.like('title', `%${titleSearch}%`)
+    query.ilike('title', `%${titleSearch}%`)
   }
 
   if (onlyFavorites) {
