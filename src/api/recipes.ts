@@ -9,7 +9,13 @@ export async function getRecipes({
   categoryId,
   subcategoryId,
   titleSearch,
-}: { categoryId?: number; subcategoryId?: number; titleSearch?: string } = {}) {
+  onlyFavorites,
+}: {
+  categoryId?: number
+  subcategoryId?: number
+  titleSearch?: string
+  onlyFavorites?: boolean
+} = {}) {
   let query = supabase.from(RECIPES_TABLE_ID).select()
 
   if (categoryId && subcategoryId) {
@@ -18,6 +24,10 @@ export async function getRecipes({
 
   if (titleSearch) {
     query.like('title', `%${titleSearch}%`)
+  }
+
+  if (onlyFavorites) {
+    query.eq('rating', 5)
   }
 
   query.select('*').throwOnError()

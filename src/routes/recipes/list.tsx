@@ -22,15 +22,24 @@ export const Route = createFileRoute('/recipes/list')({
     const recipes = await getRecipes({ titleSearch: s })
     const categories = await getCategories()
     const subCategories = await getSubcategories()
+    const recipesWithSlugs = recipes.map((recipe) => {
+      return {
+        ...recipe,
+        categorySlug: categories.find((category) => category.id === recipe.category_id)?.slug,
+        subCategorySlug: subCategories.find(
+          (subCategory) => subCategory.id === recipe.subcategory_id,
+        )?.slug,
+      }
+    })
 
     return {
       searchStr: s,
       categories,
-      recipes,
+      recipesWithSlugs,
       subCategories,
     }
   },
-  head: ({ loaderData }) => ({
+  head: () => ({
     meta: [
       {
         title: title(['Recipes']),
@@ -40,15 +49,7 @@ export const Route = createFileRoute('/recipes/list')({
 })
 
 function RouteComponent() {
-  const { categories, recipes, subCategories, searchStr } = Route.useLoaderData()
-  const recipesWithSlugs = recipes.map((recipe) => {
-    return {
-      ...recipe,
-      categorySlug: categories.find((category) => category.id === recipe.category_id)?.slug,
-      subCategorySlug: subCategories.find((subCategory) => subCategory.id === recipe.subcategory_id)
-        ?.slug,
-    }
-  })
+  const { categories, recipesWithSlugs, subCategories, searchStr } = Route.useLoaderData()
 
   return (
     <div>
@@ -76,7 +77,7 @@ function RouteComponent() {
                 <thead className="border-b-2 border-slate-200">
                   <tr>
                     <th className="font-medium p-4">Recipe</th>
-                    <th className="font-medium p-4">Dietary preferences</th>
+                    <th className="font-medium p-4">Dietary pref.</th>
                     <th className="font-medium p-4">Rating</th>
                   </tr>
                 </thead>
