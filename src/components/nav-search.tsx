@@ -41,61 +41,59 @@ export function NavSearch() {
   }
 
   return (
-    <Tooltip.Provider>
-      <Drawer.Root onAnimationEnd={handleAnimEnd} open={open} onOpenChange={setOpen}>
-        <Tooltip.Root>
-          <Tooltip.Trigger
-            render={
-              <Drawer.Trigger asChild>
-                <NavButton>
-                  <SearchIcon size={NAV_ICON_SIZE} />
-                  <SrOnly>Search</SrOnly>
-                </NavButton>
-              </Drawer.Trigger>
-            }
-          />
-          <NavTooltipBody>Search</NavTooltipBody>
-        </Tooltip.Root>
+    <Drawer.Root onAnimationEnd={handleAnimEnd} open={open} onOpenChange={setOpen}>
+      <Tooltip.Root>
+        <Tooltip.Trigger
+          render={
+            <Drawer.Trigger asChild>
+              <NavButton>
+                <SearchIcon size={NAV_ICON_SIZE} />
+                <SrOnly>Search</SrOnly>
+              </NavButton>
+            </Drawer.Trigger>
+          }
+        />
+        <NavTooltipBody>Search</NavTooltipBody>
+      </Tooltip.Root>
 
-        <Drawer.Portal>
-          <Drawer.Overlay className="fixed inset-0 bg-black/40 backdrop-blur-lg" />
+      <Drawer.Portal>
+        <Drawer.Overlay className="fixed inset-0 bg-black/40 backdrop-blur-lg" />
 
-          <Drawer.Content className="bg-gray-100 fixed bottom-0 left-0 right-0 outline-none">
-            <div className="h-[85vh] md:h-[50vh] py-8 bg-white">
-              <Container>
-                <form onSubmit={handleSubmit}>
-                  <Stack>
-                    <Drawer.Title asChild>
-                      <h3 className="font-bold text-slate-800 text-xl">Search for recipes</h3>
-                    </Drawer.Title>
+        <Drawer.Content className="bg-gray-100 fixed bottom-0 left-0 right-0 outline-none">
+          <div className="h-[85vh] md:h-[50vh] py-8 bg-white">
+            <Container>
+              <form onSubmit={handleSubmit}>
+                <Stack>
+                  <Drawer.Title asChild>
+                    <h3 className="font-bold text-slate-800 text-xl">Search for recipes</h3>
+                  </Drawer.Title>
 
-                    <FormControl className="max-w-140">
-                      <FormLabel htmlFor="header-search-input">Search by title</FormLabel>
+                  <FormControl className="max-w-140">
+                    <FormLabel htmlFor="header-search-input">Search by title</FormLabel>
 
-                      <FormInput
-                        type="text"
-                        id="header-search-input"
-                        name="s"
-                        autoComplete="off"
-                        required
-                        ref={inputRef}
-                      />
-                    </FormControl>
+                    <FormInput
+                      type="text"
+                      id="header-search-input"
+                      name="s"
+                      autoComplete="off"
+                      required
+                      ref={inputRef}
+                    />
+                  </FormControl>
 
-                    <Inline spacing="sm">
-                      <Button type="submit">Search</Button>
+                  <Inline spacing="sm">
+                    <Button type="submit">Search</Button>
 
-                      <Drawer.Close asChild>
-                        <Button variant="secondary">Cancel</Button>
-                      </Drawer.Close>
-                    </Inline>
-                  </Stack>
-                </form>
-              </Container>
-            </div>
-          </Drawer.Content>
-        </Drawer.Portal>
-      </Drawer.Root>
-    </Tooltip.Provider>
+                    <Drawer.Close asChild>
+                      <Button variant="secondary">Cancel</Button>
+                    </Drawer.Close>
+                  </Inline>
+                </Stack>
+              </form>
+            </Container>
+          </div>
+        </Drawer.Content>
+      </Drawer.Portal>
+    </Drawer.Root>
   )
 }
