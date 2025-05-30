@@ -1,17 +1,17 @@
 import { HeadContent, Link, Outlet, createRootRoute } from '@tanstack/react-router'
-import { TanStackRouterDevtools } from '@tanstack/router-devtools'
 import { Citrus, LogIn, LogOut, Plus, Search as SearchIcon, User } from 'lucide-react'
 import { Toaster } from 'sonner'
 import { Tooltip } from '@base-ui-components/react/tooltip'
-import { title } from '../helpers/dom'
 import { NavButton, NavLink, NAV_ICON_SIZE } from '../components/nav-actions'
 import { Container } from '../components/container'
 import { Inline } from '../components/inline'
-import { Search } from '../components/search'
+import { NavSearch } from '../components/nav-search'
 import { supabase } from '../constants/supabase'
 import { SrOnly } from '../components/sr-only'
-import '../styles.css'
 import { NavTooltip, NavTooltipBody, NavTooltipTrigger } from '../components/nav-tooltip'
+import { title } from '../helpers/dom'
+import '../styles.css'
+import { DrawerWithTooltip } from '../components/drawer-with-tooltip'
 
 export const Route = createRootRoute({
   head: () => ({
@@ -76,7 +76,9 @@ function RootComponent() {
                     <NavTooltipBody>Profile</NavTooltipBody>
                   </NavTooltip>
 
-                  <NavTooltip>
+                  <NavSearch />
+
+                  {/* <NavTooltip>
                     <NavTooltipTrigger
                       as={
                         <Search>
@@ -89,7 +91,9 @@ function RootComponent() {
                     />
 
                     <NavTooltipBody>Search</NavTooltipBody>
-                  </NavTooltip>
+                  </NavTooltip> */}
+
+                  {/* <DrawerWithTooltip /> */}
 
                   <NavTooltip>
                     <NavTooltipTrigger
@@ -111,12 +115,7 @@ function RootComponent() {
                     <SrOnly>Log in</SrOnly>
                   </NavLink>
 
-                  <Search>
-                    <NavButton>
-                      <SearchIcon size={NAV_ICON_SIZE} />
-                      <SrOnly>Search</SrOnly>
-                    </NavButton>
-                  </Search>
+                  <NavSearch />
                 </Tooltip.Provider>
               )}
             </Inline>
@@ -133,8 +132,6 @@ function RootComponent() {
       </footer>
 
       <Toaster richColors />
-
-      <TanStackRouterDevtools position="bottom-right" />
     </>
   )
 }
