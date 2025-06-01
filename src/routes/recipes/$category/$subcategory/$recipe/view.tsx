@@ -24,7 +24,9 @@ import { PageHeading } from '../../../../../components/page-heading'
 import { Stack } from '../../../../../components/stack'
 import { toLegibleDate } from '../../../../../helpers/date'
 
-const md = markdownit()
+const md = markdownit({
+  breaks: true,
+})
 
 export const Route = createFileRoute('/recipes/$category/$subcategory/$recipe/view')({
   component: RouteComponent,
