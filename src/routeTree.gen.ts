@@ -21,6 +21,7 @@ import { Route as IndexImport } from './routes/index'
 import { Route as RecipesListImport } from './routes/recipes/list'
 import { Route as RecipesFavoritesImport } from './routes/recipes/favorites'
 import { Route as RecipesPrivateImport } from './routes/recipes/_private'
+import { Route as LoginTestImport } from './routes/login.test'
 import { Route as PrivateProfileImport } from './routes/_private.profile'
 import { Route as RecipesCategoryIndexImport } from './routes/recipes/$category/index'
 import { Route as RecipesPrivateAddImport } from './routes/recipes/_private.add'
@@ -87,6 +88,12 @@ const RecipesFavoritesRoute = RecipesFavoritesImport.update({
 const RecipesPrivateRoute = RecipesPrivateImport.update({
   id: '/_private',
   getParentRoute: () => RecipesRoute,
+} as any)
+
+const LoginTestRoute = LoginTestImport.update({
+  id: '/test',
+  path: '/test',
+  getParentRoute: () => LoginRoute,
 } as any)
 
 const PrivateProfileRoute = PrivateProfileImport.update({
@@ -187,6 +194,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof PrivateProfileImport
       parentRoute: typeof PrivateImport
     }
+    '/login/test': {
+      id: '/login/test'
+      path: '/test'
+      fullPath: '/login/test'
+      preLoaderRoute: typeof LoginTestImport
+      parentRoute: typeof LoginImport
+    }
     '/recipes': {
       id: '/recipes'
       path: '/recipes'
@@ -280,6 +294,16 @@ const PrivateRouteChildren: PrivateRouteChildren = {
 const PrivateRouteWithChildren =
   PrivateRoute._addFileChildren(PrivateRouteChildren)
 
+interface LoginRouteChildren {
+  LoginTestRoute: typeof LoginTestRoute
+}
+
+const LoginRouteChildren: LoginRouteChildren = {
+  LoginTestRoute: LoginTestRoute,
+}
+
+const LoginRouteWithChildren = LoginRoute._addFileChildren(LoginRouteChildren)
+
 interface RecipesPrivateRouteChildren {
   RecipesPrivateAddRoute: typeof RecipesPrivateAddRoute
 }
@@ -350,9 +374,10 @@ const RecipesRouteWithChildren =
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
   '': typeof PublicRoute
-  '/login': typeof LoginRoute
+  '/login': typeof LoginRouteWithChildren
   '/logout': typeof LogoutRoute
   '/profile': typeof PrivateProfileRoute
+  '/login/test': typeof LoginTestRoute
   '/recipes': typeof RecipesPrivateRouteWithChildren
   '/recipes/favorites': typeof RecipesFavoritesRoute
   '/recipes/list': typeof RecipesListRoute
@@ -367,9 +392,10 @@ export interface FileRoutesByFullPath {
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
   '': typeof PublicRoute
-  '/login': typeof LoginRoute
+  '/login': typeof LoginRouteWithChildren
   '/logout': typeof LogoutRoute
   '/profile': typeof PrivateProfileRoute
+  '/login/test': typeof LoginTestRoute
   '/recipes': typeof RecipesPrivateRouteWithChildren
   '/recipes/favorites': typeof RecipesFavoritesRoute
   '/recipes/list': typeof RecipesListRoute
@@ -386,9 +412,10 @@ export interface FileRoutesById {
   '/': typeof IndexRoute
   '/_private': typeof PrivateRouteWithChildren
   '/_public': typeof PublicRoute
-  '/login': typeof LoginRoute
+  '/login': typeof LoginRouteWithChildren
   '/logout': typeof LogoutRoute
   '/_private/profile': typeof PrivateProfileRoute
+  '/login/test': typeof LoginTestRoute
   '/recipes': typeof RecipesRouteWithChildren
   '/recipes/_private': typeof RecipesPrivateRouteWithChildren
   '/recipes/favorites': typeof RecipesFavoritesRoute
@@ -410,6 +437,7 @@ export interface FileRouteTypes {
     | '/login'
     | '/logout'
     | '/profile'
+    | '/login/test'
     | '/recipes'
     | '/recipes/favorites'
     | '/recipes/list'
@@ -426,6 +454,7 @@ export interface FileRouteTypes {
     | '/login'
     | '/logout'
     | '/profile'
+    | '/login/test'
     | '/recipes'
     | '/recipes/favorites'
     | '/recipes/list'
@@ -443,6 +472,7 @@ export interface FileRouteTypes {
     | '/login'
     | '/logout'
     | '/_private/profile'
+    | '/login/test'
     | '/recipes'
     | '/recipes/_private'
     | '/recipes/favorites'
@@ -461,7 +491,7 @@ export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
   PrivateRoute: typeof PrivateRouteWithChildren
   PublicRoute: typeof PublicRoute
-  LoginRoute: typeof LoginRoute
+  LoginRoute: typeof LoginRouteWithChildren
   LogoutRoute: typeof LogoutRoute
   RecipesRoute: typeof RecipesRouteWithChildren
 }
@@ -470,7 +500,7 @@ const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
   PrivateRoute: PrivateRouteWithChildren,
   PublicRoute: PublicRoute,
-  LoginRoute: LoginRoute,
+  LoginRoute: LoginRouteWithChildren,
   LogoutRoute: LogoutRoute,
   RecipesRoute: RecipesRouteWithChildren,
 }
@@ -506,7 +536,10 @@ export const routeTree = rootRoute
       "filePath": "_public.tsx"
     },
     "/login": {
-      "filePath": "login.tsx"
+      "filePath": "login.tsx",
+      "children": [
+        "/login/test"
+      ]
     },
     "/logout": {
       "filePath": "logout.tsx"
@@ -514,6 +547,10 @@ export const routeTree = rootRoute
     "/_private/profile": {
       "filePath": "_private.profile.tsx",
       "parent": "/_private"
+    },
+    "/login/test": {
+      "filePath": "login.test.tsx",
+      "parent": "/login"
     },
     "/recipes": {
       "filePath": "recipes",
