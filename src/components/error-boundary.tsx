@@ -4,11 +4,11 @@ import { Container } from './container'
 import { Stack } from './stack'
 import { Button } from './button'
 
-interface Props {
+type Props = {
   children: ReactNode
 }
 
-interface State {
+type State = {
   hasError: boolean
   error?: Error
 }
