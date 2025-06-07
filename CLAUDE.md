@@ -46,6 +46,11 @@ This is a React-based family recipes app using:
 - Page-specific components co-located with routes
 - Consistent component props via `src/types/props.ts`
 
+### Coding preferences
+
+- Prefer `type` over `interface` in TypeScript files
+- Add an empty newline at the end of each created file
+
 ### Environment Setup
 
 Requires `.env` file with Supabase credentials:
