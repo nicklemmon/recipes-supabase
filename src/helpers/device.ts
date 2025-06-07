@@ -1,8 +1,10 @@
+import { DEVICE_CAN_SLEEP } from '../constants/device'
+
 /** Prevent device sleep */
 export async function preventSleep() {
   try {
     // Check if the Wake Lock API is supported
-    if ('wakeLock' in navigator) {
+    if (DEVICE_CAN_SLEEP) {
       // Request a screen wake lock
       const wakeLock = await navigator.wakeLock.request('screen')
 
@@ -20,7 +22,7 @@ export async function preventSleep() {
 export async function allowSleep() {
   try {
     // Check if the Wake Lock API is supported
-    if ('wakeLock' in navigator) {
+    if (DEVICE_CAN_SLEEP) {
       // Request a screen wake lock
       const wakeLock = await navigator.wakeLock.request('screen')
 

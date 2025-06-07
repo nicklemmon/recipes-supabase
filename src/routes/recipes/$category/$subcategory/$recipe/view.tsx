@@ -8,6 +8,7 @@ import { toast } from 'sonner'
 import { getCategoryBySlug } from '../../../../../api/categories'
 import { getSubcategoryBySlug } from '../../../../../api/subcategories'
 import { deleteRecipe, getRecipeBySlug } from '../../../../../api/recipes'
+import { DEVICE_CAN_SLEEP } from '../../../../../constants/device'
 import { title } from '../../../../../helpers/dom'
 import { Inline } from '../../../../../components/inline'
 import {
@@ -25,6 +26,8 @@ import { PageHeading } from '../../../../../components/page-heading'
 import { Stack } from '../../../../../components/stack'
 import { toLegibleDate } from '../../../../../helpers/date'
 import { allowSleep, preventSleep } from '../../../../../helpers/device'
+import { FormControl } from '../../../../../components/form-control'
+import { FormLabel } from '../../../../../components/form-label'
 
 const md = markdownit({
   breaks: true,
@@ -115,72 +118,81 @@ function RouteComponent() {
         <PageHeading>{recipe.title}</PageHeading>
 
         <PageActions>
-          <PageBackLink
-            to="/recipes/$category/$subcategory"
-            params={{
-              category: categorySlug,
-              subcategory: subcategorySlug,
-            }}
-          >
-            Back to {subcategory.title}
-          </PageBackLink>
-
-          <Inline>
-            <Switch onCheckedChange={handleSleepToggle} />
-
-            <PageEditLink
-              to="/recipes/$category/$subcategory/$recipe/edit"
+          <div className="w-full">
+            <PageBackLink
+              to="/recipes/$category/$subcategory"
               params={{
                 category: categorySlug,
                 subcategory: subcategorySlug,
-                recipe: recipe.slug,
               }}
             >
-              Edit
-            </PageEditLink>
+              Back to {subcategory.title}
+            </PageBackLink>
+          </div>
 
-            <Drawer.Root>
-              <Drawer.Trigger asChild>
-                <PageDeleteButton>Delete</PageDeleteButton>
-              </Drawer.Trigger>
+          <Stack align="right">
+            {DEVICE_CAN_SLEEP ? (
+              <FormControl className="items-end">
+                <FormLabel htmlFor="prevent-sleep-toggle">Cooking mode</FormLabel>
+                <Switch id="prevent-sleep-toggle" onCheckedChange={handleSleepToggle} />
+              </FormControl>
+            ) : null}
 
-              <Drawer.Portal>
-                <Drawer.Overlay className="fixed inset-0 bg-black/40 backdrop-blur-lg" />
-                <Drawer.Content className="bg-gray-100 fixed bottom-0 left-0 right-0 outline-none">
-                  <div className="h-[85vh] md:h-[50vh] py-8 bg-white">
-                    <Container>
-                      <Stack>
-                        <Drawer.Title asChild>
-                          <h3 className="font-bold text-slate-800 text-xl">Confirm deletion</h3>
-                        </Drawer.Title>
+            <Inline spacing="sm">
+              <PageEditLink
+                to="/recipes/$category/$subcategory/$recipe/edit"
+                params={{
+                  category: categorySlug,
+                  subcategory: subcategorySlug,
+                  recipe: recipe.slug,
+                }}
+              >
+                Edit
+              </PageEditLink>
 
-                        <p className="text-slate-600">
-                          Are you sure you want to delete{' '}
-                          <span className="font-semibold">{recipe.title}</span>? This cannot be
-                          undone.
-                        </p>
+              <Drawer.Root>
+                <Drawer.Trigger asChild>
+                  <PageDeleteButton>Delete</PageDeleteButton>
+                </Drawer.Trigger>
 
-                        <Inline spacing="sm">
-                          <Button
-                            onClick={() => handleDelete(recipe.id, recipe.title)}
-                            loading={delStatus === 'pending'}
-                          >
-                            Delete
-                          </Button>
+                <Drawer.Portal>
+                  <Drawer.Overlay className="fixed inset-0 bg-black/40 backdrop-blur-lg" />
+                  <Drawer.Content className="bg-gray-100 fixed bottom-0 left-0 right-0 outline-none">
+                    <div className="h-[85vh] md:h-[50vh] py-8 bg-white">
+                      <Container>
+                        <Stack>
+                          <Drawer.Title asChild>
+                            <h3 className="font-bold text-slate-800 text-xl">Confirm deletion</h3>
+                          </Drawer.Title>
 
-                          <Drawer.Close asChild>
-                            <Button variant="secondary" disabled={delStatus === 'pending'}>
-                              Cancel
+                          <p className="text-slate-600">
+                            Are you sure you want to delete{' '}
+                            <span className="font-semibold">{recipe.title}</span>? This cannot be
+                            undone.
+                          </p>
+
+                          <Inline spacing="sm">
+                            <Button
+                              onClick={() => handleDelete(recipe.id, recipe.title)}
+                              loading={delStatus === 'pending'}
+                            >
+                              Delete
                             </Button>
-                          </Drawer.Close>
-                        </Inline>
-                      </Stack>
-                    </Container>
-                  </div>
-                </Drawer.Content>
-              </Drawer.Portal>
-            </Drawer.Root>
-          </Inline>
+
+                            <Drawer.Close asChild>
+                              <Button variant="secondary" disabled={delStatus === 'pending'}>
+                                Cancel
+                              </Button>
+                            </Drawer.Close>
+                          </Inline>
+                        </Stack>
+                      </Container>
+                    </div>
+                  </Drawer.Content>
+                </Drawer.Portal>
+              </Drawer.Root>
+            </Inline>
+          </Stack>
         </PageActions>
       </PageHeader>
 

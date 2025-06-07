@@ -11,7 +11,8 @@
     "SUPABASE",
     "valibot",
     "vaul",
-    "VITE"
+    "VITE",
+    "wakelock"
   ],
   "ignoreWords": [],
   "import": []

@@ -27,9 +27,7 @@ const ACTION_ICON_SIZE = 16
 
 /** Re-usable/consistent wrapper for page actions */
 export function PageActions({ className, ...props }: React.ComponentProps<'div'>) {
-  return (
-    <div className={cn('flex items-center justify-between gap-4 w-full', className)} {...props} />
-  )
+  return <div className={cn('flex items-end justify-between gap-2 w-full', className)} {...props} />
 }
 
 export function PageBackLink({
