@@ -9,9 +9,6 @@ repository.
 - `npm run build` - Build production bundle
 - `npm run serve` - Preview production build locally
 - `npm run typecheck` - Run TypeScript type checking
-- `npm test` - Run tests with Vitest
-- `npm run test:ui` - Run tests with Vitest UI
-- `npm run test:run` - Run tests once without watch mode
 
 ## Architecture Overview
 

@@ -61,8 +61,8 @@ function RouteComponent() {
               <thead className="border-b-2 border-slate-200">
                 <tr>
                   <th className="font-medium p-4">Recipe</th>
-                  <th className="font-medium p-4">Dietary preferences</th>
-                  <th className="font-medium p-4">Rating</th>
+                  <th className="font-medium p-4 hidden md:table-cell">Dietary preferences</th>
+                  <th className="font-medium p-4 text-right">Rating</th>
                 </tr>
               </thead>
               <tbody>
@@ -81,19 +81,21 @@ function RouteComponent() {
                         >
                           <Inline spacing="sm">
                             {recipe.title}
-                            <ChevronRight size={16} />
+                            <ChevronRight size={16} className="hidden md:inline-flex" />
                           </Inline>
                         </Link>
                       </td>
 
-                      <td className="p-4">
+                      <td className="p-4 hidden md:table-cell">
                         {recipe.dietary_pref.map((pref) => {
                           return pref
                         })}
                       </td>
 
-                      <td className="p-4">
-                        <Inline spacing="xs">
+                      <td className="p-4 text-right">
+                        <span className="md:hidden">{recipe.rating}&nbsp;stars</span>
+
+                        <Inline spacing="xs" className="hidden md:inline-flex">
                           {[...new Array(recipe.rating)].map((_star, index) => (
                             <Star
                               key={`${recipe.id}-start-${index}`}
