@@ -16,6 +16,7 @@ import {
   PageDeleteButton,
   PageEditLink,
 } from '../../../../../components/page-actions'
+import { Switch } from '../../../../../components/switch'
 import { Button } from '../../../../../components/button'
 import { Container } from '../../../../../components/container'
 import { PageBody } from '../../../../../components/page-body'
@@ -23,6 +24,7 @@ import { PageHeader } from '../../../../../components/page-header'
 import { PageHeading } from '../../../../../components/page-heading'
 import { Stack } from '../../../../../components/stack'
 import { toLegibleDate } from '../../../../../helpers/date'
+import { allowSleep, preventSleep } from '../../../../../helpers/device'
 
 const md = markdownit({
   breaks: true,
@@ -99,6 +101,14 @@ function RouteComponent() {
     }
   }
 
+  const handleSleepToggle = async (checked: boolean) => {
+    if (checked) {
+      return await preventSleep()
+    }
+
+    return await allowSleep()
+  }
+
   return (
     <div>
       <PageHeader>
@@ -116,6 +126,8 @@ function RouteComponent() {
           </PageBackLink>
 
           <Inline>
+            <Switch onCheckedChange={handleSleepToggle} />
+
             <PageEditLink
               to="/recipes/$category/$subcategory/$recipe/edit"
               params={{
