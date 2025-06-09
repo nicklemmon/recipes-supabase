@@ -7,19 +7,27 @@
     "typecheck": "tsc --noEmit",
     "build": "vite build",
     "serve": "vite preview",
-    "start": "vite"
+    "start": "vite",
+    "test": "vitest",
+    "test:ui": "vitest --ui",
+    "test:run": "vitest run"
   },
   "devDependencies": {
     "@tailwindcss/typography": "0.5.16",
     "@tailwindcss/vite": "4.1.7",
     "@tanstack/router-plugin": "^1.120.7",
+    "@testing-library/jest-dom": "^6.6.3",
+    "@testing-library/react": "^16.3.0",
     "@types/lodash.debounce": "4.0.9",
     "@types/markdown-it": "^14.1.2",
     "@types/react": "^19.1.5",
     "@types/react-dom": "^19.1.5",
     "@vitejs/plugin-react": "^4.5.0",
+    "@vitest/ui": "^3.2.3",
+    "happy-dom": "^17.6.3",
     "prettier": "3.5.3",
-    "vite": "^6.3.5"
+    "vite": "^6.3.5",
+    "vitest": "^3.2.3"
   },
   "dependencies": {
     "@base-ui-components/react": "1.0.0-alpha.8",
