@@ -21,7 +21,7 @@ export function Tag({
   ...props
 }: React.ComponentProps<'span'> & { colorScheme: TagColorScheme }) {
   return (
-    <span className={tagClasses({ colorScheme })} {...props}>
+    <span className={tagClasses({ colorScheme, className })} {...props}>
       {children}
     </span>
   )
