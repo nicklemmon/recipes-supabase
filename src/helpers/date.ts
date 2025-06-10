@@ -9,6 +9,10 @@
 export function toLegibleDate(isoTimestamp: string, locale: string = navigator.language): string {
   const date = new Date(isoTimestamp)
 
+  if (isNaN(date.getTime())) {
+    return 'Invalid Date'
+  }
+
   return new Intl.DateTimeFormat(locale, {
     year: 'numeric',
     month: 'long',
