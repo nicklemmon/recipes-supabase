@@ -11,7 +11,7 @@ describe('device sleep functions', () => {
       release: mockRelease,
     }
     mockRequest = vi.fn().mockResolvedValue(mockWakeLock)
-    
+
     // Mock navigator.wakeLock
     Object.defineProperty(navigator, 'wakeLock', {
       value: {
@@ -22,7 +22,7 @@ describe('device sleep functions', () => {
 
     // Clear console mocks
     vi.spyOn(console, 'error').mockImplementation(() => {})
-    
+
     // Reset modules to ensure fresh imports
     vi.resetModules()
   })
@@ -38,10 +38,10 @@ describe('device sleep functions', () => {
       vi.doMock('../constants/device', () => ({
         DEVICE_CAN_SLEEP: true,
       }))
-      
+
       const { preventSleep } = await import('./device')
       const result = await preventSleep()
-      
+
       expect(mockRequest).toHaveBeenCalledWith('screen')
       expect(result).toBe(mockWakeLock)
     })
@@ -51,13 +51,13 @@ describe('device sleep functions', () => {
       vi.doMock('../constants/device', () => ({
         DEVICE_CAN_SLEEP: true,
       }))
-      
+
       const { preventSleep } = await import('./device')
       const error = new Error('Wake lock failed')
       mockRequest.mockRejectedValue(error)
-      
+
       const result = await preventSleep()
-      
+
       expect(console.error).toHaveBeenCalledWith('Failed to acquire Wake Lock:', error)
       expect(result).toBeUndefined()
     })
@@ -67,10 +67,10 @@ describe('device sleep functions', () => {
       vi.doMock('../constants/device', () => ({
         DEVICE_CAN_SLEEP: false,
       }))
-      
+
       const { preventSleep } = await import('./device')
       const result = await preventSleep()
-      
+
       expect(console.error).toHaveBeenCalledWith('Wake Lock API is not supported in this browser.')
       expect(result).toBeUndefined()
     })
@@ -82,10 +82,10 @@ describe('device sleep functions', () => {
       vi.doMock('../constants/device', () => ({
         DEVICE_CAN_SLEEP: true,
       }))
-      
+
       const { allowSleep } = await import('./device')
       const result = await allowSleep()
-      
+
       expect(mockRequest).toHaveBeenCalledWith('screen')
       expect(mockRelease).toHaveBeenCalled()
       expect(result).toBe(mockWakeLock)
@@ -96,13 +96,13 @@ describe('device sleep functions', () => {
       vi.doMock('../constants/device', () => ({
         DEVICE_CAN_SLEEP: true,
       }))
-      
+
       const { allowSleep } = await import('./device')
       const error = new Error('Wake lock failed')
       mockRequest.mockRejectedValue(error)
-      
+
       const result = await allowSleep()
-      
+
       expect(console.error).toHaveBeenCalledWith('Failed to acquire Wake Lock:', error)
       expect(result).toBeUndefined()
     })
@@ -112,10 +112,10 @@ describe('device sleep functions', () => {
       vi.doMock('../constants/device', () => ({
         DEVICE_CAN_SLEEP: false,
       }))
-      
+
       const { allowSleep } = await import('./device')
       const result = await allowSleep()
-      
+
       expect(console.error).toHaveBeenCalledWith('Wake Lock API is not supported in this browser.')
       expect(result).toBeUndefined()
     })
