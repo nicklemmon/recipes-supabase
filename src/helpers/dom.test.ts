@@ -57,6 +57,7 @@ describe('title', () => {
   })
 
   it('should filter out null values from array', () => {
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     const result = title(['Desserts', null as any, 'Chocolate Cake'])
     expect(result).toBe('Desserts | Chocolate Cake | Lemfamy Recipes')
   })
@@ -67,6 +68,7 @@ describe('title', () => {
   })
 
   it('should handle array with only falsy values', () => {
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     const result = title([undefined, null as any, ''])
     expect(result).toBe(ROOT_SITE_TITLE)
   })

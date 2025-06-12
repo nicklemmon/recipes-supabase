@@ -1,8 +1,11 @@
 import { describe, it, expect, vi, beforeEach, afterEach } from 'vitest'
 
 describe('device sleep functions', () => {
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   let mockWakeLock: any
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   let mockRequest: any
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   let mockRelease: any
 
   beforeEach(() => {
