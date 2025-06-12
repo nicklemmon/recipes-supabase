@@ -1,4 +1,3 @@
-import { HTMLProps } from 'react'
 import { Container } from './container'
 import { cn } from '../helpers/dom'
 

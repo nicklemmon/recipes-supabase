@@ -16,5 +16,5 @@ export const Route = createFileRoute('/_public')({
 })
 
 function RouteComponent() {
-  return <div>Hello "/_public"!</div>
+  return <div>Hello &quot;/_public&quot;!</div>
 }

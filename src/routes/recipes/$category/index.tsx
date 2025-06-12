@@ -1,4 +1,3 @@
-import { Link } from '@tanstack/react-router'
 import { createFileRoute } from '@tanstack/react-router'
 import { getSubcategories } from '../../../api/subcategories'
 import { getCategoryBySlug } from '../../../api/categories'

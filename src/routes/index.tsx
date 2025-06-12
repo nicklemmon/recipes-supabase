@@ -1,4 +1,4 @@
-import { createFileRoute, Link } from '@tanstack/react-router'
+import { createFileRoute } from '@tanstack/react-router'
 import { getCategories } from '../api/categories'
 import { CategoryLink } from '../components/category-link'
 import { Stack } from '../components/stack'

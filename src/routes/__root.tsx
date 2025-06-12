@@ -1,8 +1,8 @@
 import { HeadContent, Link, Outlet, createRootRoute } from '@tanstack/react-router'
-import { Citrus, LogIn, LogOut, Plus, Search as SearchIcon, User } from 'lucide-react'
+import { Citrus, LogIn, LogOut, Plus, User } from 'lucide-react'
 import { Toaster } from 'sonner'
 import { Tooltip } from '@base-ui-components/react/tooltip'
-import { NavButton, NavLink, NAV_ICON_SIZE } from '../components/nav-actions'
+import { NavLink, NAV_ICON_SIZE } from '../components/nav-actions'
 import { Container } from '../components/container'
 import { Inline } from '../components/inline'
 import { NavSearch } from '../components/nav-search'
@@ -11,7 +11,6 @@ import { SrOnly } from '../components/sr-only'
 import { NavTooltip, NavTooltipBody, NavTooltipTrigger } from '../components/nav-tooltip'
 import { title } from '../helpers/dom'
 import '../styles.css'
-import { DrawerWithTooltip } from '../components/drawer-with-tooltip'
 
 export const Route = createRootRoute({
   head: () => ({
