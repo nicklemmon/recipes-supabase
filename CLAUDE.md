@@ -49,7 +49,7 @@ This is a React-based family recipes app using:
 ### Coding preferences
 
 - Prefer `type` over `interface` in TypeScript files
-- Add an empty newline at the end of each created file
+- Run the `prettier` command against all files before finishing work
 
 ### Environment Setup
 

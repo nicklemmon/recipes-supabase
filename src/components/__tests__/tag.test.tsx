@@ -45,7 +45,11 @@ describe('Tag', () => {
   })
 
   it('accepts additional props', () => {
-    render(<Tag colorScheme="slate" data-testid="custom-tag" id="tag-id">Tag</Tag>)
+    render(
+      <Tag colorScheme="slate" data-testid="custom-tag" id="tag-id">
+        Tag
+      </Tag>,
+    )
     const tag = screen.getByTestId('custom-tag')
     expect(tag).toHaveAttribute('id', 'tag-id')
   })
@@ -57,7 +61,11 @@ describe('Tag', () => {
   })
 
   it('accepts custom className', () => {
-    render(<Tag colorScheme="slate" className="custom-class">Tag</Tag>)
+    render(
+      <Tag colorScheme="slate" className="custom-class">
+        Tag
+      </Tag>,
+    )
     const tag = screen.getByText('Tag')
     expect(tag).toHaveClass('custom-class')
     expect(tag).toHaveClass('rounded-xl', 'h-12', 'px-4', 'bg-slate-400', 'text-slate-800')
