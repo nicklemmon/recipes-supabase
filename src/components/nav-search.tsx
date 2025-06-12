@@ -12,7 +12,7 @@ import { Inline } from './inline'
 import { NavButton } from './nav-actions'
 import { useNavigate } from '@tanstack/react-router'
 import { useRef, useState } from 'react'
-import { NavTooltipBody, NavTooltipTrigger } from './nav-tooltip'
+import { NavTooltipBody } from './nav-tooltip'
 import { NAV_ICON_SIZE } from './nav-actions'
 
 export function NavSearch() {

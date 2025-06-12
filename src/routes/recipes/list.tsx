@@ -14,7 +14,7 @@ export const Route = createFileRoute('/recipes/list')({
   component: RouteComponent,
   loaderDeps: ({ search }) => {
     return {
-      // @ts-expect-error
+      // @ts-expect-error - search params not typed
       s: search['s'],
     }
   },
@@ -49,7 +49,7 @@ export const Route = createFileRoute('/recipes/list')({
 })
 
 function RouteComponent() {
-  const { categories, recipesWithSlugs, subCategories, searchStr } = Route.useLoaderData()
+  const { recipesWithSlugs, searchStr } = Route.useLoaderData()
 
   return (
     <div>
@@ -60,13 +60,13 @@ function RouteComponent() {
       <PageBody>
         {recipesWithSlugs.length === 0 ? (
           <p className="text-slate-600">
-            Showing results for search <span className="font-bold">"{searchStr}"</span> &mdash; no
+            Showing results for search <span className="font-bold">&quot;{searchStr}&quot;</span> &mdash; no
             recipes found.
           </p>
         ) : (
           <Stack spacing="lg">
             <p className="text-slate-600">
-              Showing results for search <span className="font-bold">"{searchStr}"</span> &mdash;{' '}
+              Showing results for search <span className="font-bold">&quot;{searchStr}&quot;</span> &mdash;{' '}
               {recipesWithSlugs.length} recipes found.
             </p>
 

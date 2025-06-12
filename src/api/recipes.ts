@@ -16,7 +16,7 @@ export async function getRecipes({
   titleSearch?: string
   onlyFavorites?: boolean
 } = {}) {
-  let query = supabase.from(RECIPES_TABLE_ID).select()
+  const query = supabase.from(RECIPES_TABLE_ID).select()
 
   if (categoryId && subcategoryId) {
     query.eq('category_id', categoryId).eq('subcategory_id', subcategoryId)

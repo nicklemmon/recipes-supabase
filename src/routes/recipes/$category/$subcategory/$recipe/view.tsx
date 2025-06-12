@@ -1,4 +1,4 @@
-import { createFileRoute, Link, Outlet, useNavigate, useRouter } from '@tanstack/react-router'
+import { createFileRoute, useNavigate, useRouter } from '@tanstack/react-router'
 import markdownit from 'markdown-it'
 import { Star } from 'lucide-react'
 import { useState } from 'react'

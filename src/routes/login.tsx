@@ -30,7 +30,7 @@ export const Route = createFileRoute('/login')({
 })
 
 function RouteComponent() {
-  const [loginStatus, setLoginStatus] = useState<'idle' | 'loading'>('idle')
+  const [, setLoginStatus] = useState<'idle' | 'loading'>('idle')
   const router = useRouter()
   const search = Route.useSearch()
   const navigate = Route.useNavigate()
