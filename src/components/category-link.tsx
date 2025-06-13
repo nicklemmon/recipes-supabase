@@ -1,4 +1,4 @@
-import { Link, LinkProps } from '@tanstack/react-router'
+import { Link, type LinkProps } from '@tanstack/react-router'
 import { cn } from '../helpers/dom'
 
 export function CategoryLink({ className, ...props }: { className?: string } & LinkProps<'a'>) {

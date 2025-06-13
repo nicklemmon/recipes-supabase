@@ -50,6 +50,7 @@ This is a React-based family recipes app using:
 
 - Prefer `type` over `interface` in TypeScript files
 - Run the `prettier` command against all files before finishing work
+- Place test files in `__tests__` directories (e.g., `src/components/__tests__/`, `src/helpers/__tests__/`)
 
 ### Environment Setup
 
