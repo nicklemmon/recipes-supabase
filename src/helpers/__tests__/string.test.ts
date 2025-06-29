@@ -1,5 +1,5 @@
 import { describe, it, expect } from 'vitest'
-import { slugify } from './string'
+import { slugify } from '../string'
 
 describe('slugify', () => {
   it('should convert basic strings to slugs', () => {

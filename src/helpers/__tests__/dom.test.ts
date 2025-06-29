@@ -1,5 +1,5 @@
 import { describe, it, expect } from 'vitest'
-import { cn, title } from './dom'
+import { cn, title } from '../dom'
 
 describe('cn', () => {
   it('should merge class names correctly', () => {

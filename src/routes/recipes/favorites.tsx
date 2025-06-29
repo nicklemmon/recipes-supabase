@@ -42,7 +42,7 @@ export const Route = createFileRoute('/recipes/favorites')({
       },
     ],
   }),
-  loader: ({ context }) => context.queryClient.ensureQueryData(favoritesQueryOptions),
+  loader: ({ context }) => (context as any).queryClient.ensureQueryData(favoritesQueryOptions),
   component: RouteComponent,
 })
 

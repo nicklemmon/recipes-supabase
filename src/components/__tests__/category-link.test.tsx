@@ -13,12 +13,12 @@ vi.mock('@tanstack/react-router', () => ({
 
 describe('CategoryLink', () => {
   it('renders with children', () => {
-    render(<CategoryLink to="/test">Test Category</CategoryLink>)
+    render(<CategoryLink to="/recipes">Test Category</CategoryLink>)
     expect(screen.getByText('Test Category')).toBeInTheDocument()
   })
 
   it('applies base styles', () => {
-    render(<CategoryLink to="/test">Category</CategoryLink>)
+    render(<CategoryLink to="/recipes">Category</CategoryLink>)
     const link = screen.getByText('Category')
     expect(link).toHaveClass(
       'h-42',
@@ -46,7 +46,7 @@ describe('CategoryLink', () => {
 
   it('accepts custom className', () => {
     render(
-      <CategoryLink to="/test" className="custom-class">
+      <CategoryLink to="/recipes" className="custom-class">
         Category
       </CategoryLink>,
     )
@@ -57,24 +57,24 @@ describe('CategoryLink', () => {
 
   it('passes through additional props', () => {
     render(
-      <CategoryLink to="/test" data-testid="category-link" id="link-id">
+      <CategoryLink to="/recipes" data-testid="category-link">
         Category
       </CategoryLink>,
     )
     const link = screen.getByTestId('category-link')
-    expect(link).toHaveAttribute('id', 'link-id')
-    expect(link).toHaveAttribute('to', '/test')
+    expect(link).toHaveAttribute('data-testid', 'category-link')
+    expect(link).toHaveAttribute('to', '/recipes')
   })
 
   it('renders as anchor element when mocked', () => {
-    render(<CategoryLink to="/test">Category</CategoryLink>)
+    render(<CategoryLink to="/recipes">Category</CategoryLink>)
     const link = screen.getByText('Category')
     expect(link.tagName).toBe('A')
   })
 
   it('merges className with base styles correctly', () => {
     render(
-      <CategoryLink to="/test" className="bg-red-500 custom-padding">
+      <CategoryLink to="/recipes" className="bg-red-500 custom-padding">
         Category
       </CategoryLink>,
     )

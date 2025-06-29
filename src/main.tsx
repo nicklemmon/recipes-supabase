@@ -31,6 +31,8 @@ declare module '@tanstack/react-router' {
     router: typeof router
   }
   interface RouterContext {
+    session: unknown
+    user: unknown
     queryClient: QueryClient
   }
 }
