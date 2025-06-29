@@ -1,7 +1,18 @@
 import ReactDOM from 'react-dom/client'
 import { RouterProvider, createRouter } from '@tanstack/react-router'
+import { QueryClient, QueryClientProvider } from '@tanstack/react-query'
 import { routeTree } from './routeTree.gen'
 import { ErrorBoundary } from './components/error-boundary'
+
+// Set up a QueryClient instance
+const queryClient = new QueryClient({
+  defaultOptions: {
+    queries: {
+      staleTime: 5 * 60 * 1000, // 5 minutes
+      gcTime: 10 * 60 * 1000,   // 10 minutes
+    },
+  },
+})
 
 // Set up a Router instance
 const router = createRouter({
@@ -10,6 +21,7 @@ const router = createRouter({
   context: {
     session: undefined,
     user: undefined,
+    queryClient,
   },
 })
 
@@ -17,6 +29,9 @@ const router = createRouter({
 declare module '@tanstack/react-router' {
   interface Register {
     router: typeof router
+  }
+  interface RouterContext {
+    queryClient: QueryClient
   }
 }
 
@@ -27,7 +42,9 @@ if (!rootElement.innerHTML) {
 
   root.render(
     <ErrorBoundary>
-      <RouterProvider router={router} />
+      <QueryClientProvider client={queryClient}>
+        <RouterProvider router={router} />
+      </QueryClientProvider>
     </ErrorBoundary>
   )
 }

@@ -1,4 +1,5 @@
 import { createFileRoute, Link } from '@tanstack/react-router'
+import { queryOptions, useSuspenseQuery } from '@tanstack/react-query'
 import { ChevronRight, Star } from 'lucide-react'
 import { PageHeader } from '../../components/page-header'
 import { PageHeading } from '../../components/page-heading'
@@ -9,15 +10,9 @@ import { getRecipes } from '../../api/recipes'
 import { getCategories } from '../../api/categories'
 import { getSubcategories } from '../../api/subcategories'
 
-export const Route = createFileRoute('/recipes/favorites')({
-  head: () => ({
-    meta: [
-      {
-        title: title(['Favorites', 'Recipes']),
-      },
-    ],
-  }),
-  loader: async () => {
+const favoritesQueryOptions = queryOptions({
+  queryKey: ['favorites'],
+  queryFn: async () => {
     const recipes = await getRecipes({ onlyFavorites: true })
     const categories = await getCategories()
     const subCategories = await getSubcategories()
@@ -37,11 +32,22 @@ export const Route = createFileRoute('/recipes/favorites')({
       subCategories,
     }
   },
+})
+
+export const Route = createFileRoute('/recipes/favorites')({
+  head: () => ({
+    meta: [
+      {
+        title: title(['Favorites', 'Recipes']),
+      },
+    ],
+  }),
+  loader: ({ context }) => context.queryClient.ensureQueryData(favoritesQueryOptions),
   component: RouteComponent,
 })
 
 function RouteComponent() {
-  const { recipesWithSlugs } = Route.useLoaderData()
+  const { data: { recipesWithSlugs } } = useSuspenseQuery(favoritesQueryOptions)
 
   return (
     <div>
