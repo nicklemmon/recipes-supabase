@@ -28,6 +28,6 @@ if (!rootElement.innerHTML) {
   root.render(
     <ErrorBoundary>
       <RouterProvider router={router} />
-    </ErrorBoundary>
+    </ErrorBoundary>,
   )
 }
