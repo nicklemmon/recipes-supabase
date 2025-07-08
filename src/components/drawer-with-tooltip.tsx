@@ -1,4 +1,3 @@
-import * as React from 'react'
 import { Tooltip } from '@base-ui-components/react/tooltip'
 import { Drawer } from 'vaul'
 import { NavTooltipBody } from './nav-tooltip'
