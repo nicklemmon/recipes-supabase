@@ -1,21 +1,24 @@
 import { createFileRoute, useRouter } from '@tanstack/react-router'
 import { useState } from 'react'
-import { z } from 'zod'
+
 import { toast } from 'sonner'
+import { z } from 'zod'
+
+import { signIn } from '../api/auth'
 import { Button } from '../components/button'
 import { FormControl } from '../components/form-control'
 import { FormInput } from '../components/form-input'
 import { FormLabel } from '../components/form-label'
-import { PageHeader } from '../components/page-header'
 import { PageBody } from '../components/page-body'
+import { PageHeader } from '../components/page-header'
 import { PageHeading } from '../components/page-heading'
 import { Stack } from '../components/stack'
 import { title } from '../helpers/dom'
-import { signIn } from '../api/auth'
 
 const FALLBACK_ROUTE = '/' as const
 
 export const Route = createFileRoute('/login')({
+  component: RouteComponent,
   head: () => ({
     meta: [
       {
@@ -26,7 +29,6 @@ export const Route = createFileRoute('/login')({
   validateSearch: z.object({
     redirect: z.string().optional().catch(''),
   }),
-  component: RouteComponent,
 })
 
 function RouteComponent() {
@@ -58,8 +60,8 @@ function RouteComponent() {
 
       router.update({
         context: {
-          user: res.user,
           session: res.session,
+          user: res.user,
         },
       })
 
@@ -88,11 +90,11 @@ function RouteComponent() {
               <FormLabel htmlFor="email-input">Email</FormLabel>
 
               <FormInput
-                type="text"
                 autoComplete="username"
                 id="email-input"
                 name="email"
                 required
+                type="text"
               />
             </FormControl>
 
@@ -100,11 +102,11 @@ function RouteComponent() {
               <FormLabel htmlFor="pw-input">Password</FormLabel>
 
               <FormInput
-                type="password"
                 autoComplete="password"
                 id="pw-input"
                 name="password"
                 required
+                type="password"
               />
             </FormControl>
 

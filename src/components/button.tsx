@@ -1,6 +1,8 @@
 import { LoaderCircle } from 'lucide-react'
-import { cn } from '../helpers/dom'
+
 import { cva } from 'cva'
+
+import { cn } from '../helpers/dom'
 
 type ButtonVariant = 'primary' | 'secondary' | 'destructive'
 
@@ -22,7 +24,25 @@ const buttonClasses = cva(
   ],
   {
     variants: {
+      disabled: {
+        false: null,
+        true: ['opacity-50', 'cursor-not-allowed'],
+      },
+      loading: {
+        false: null,
+        true: ['cursor-wait', 'pointer-none', 'opacity-75'],
+      },
+      size: {
+        md: [],
+        sm: ['text-sm'],
+      },
       variant: {
+        destructive: [
+          'bg-red-100',
+          'text-red-600',
+          'hover:bg-red-200',
+          'focus-visible:ring-red-400',
+        ],
         primary: [
           'bg-indigo-600',
           'text-indigo-50',
@@ -35,41 +55,23 @@ const buttonClasses = cva(
           'hover:bg-indigo-200',
           'focus-visible:ring-indigo-400',
         ],
-        destructive: [
-          'bg-red-100',
-          'text-red-600',
-          'hover:bg-red-200',
-          'focus-visible:ring-red-400',
-        ],
-      },
-      size: {
-        sm: ['text-sm'],
-        md: [],
-      },
-      loading: {
-        false: null,
-        true: ['cursor-wait', 'pointer-none', 'opacity-75'],
-      },
-      disabled: {
-        false: null,
-        true: ['opacity-50', 'cursor-not-allowed'],
       },
     },
   },
 )
 
 export function Button({
-  className,
-  variant = 'primary',
-  size = 'md',
-  loading,
-  disabled,
   children,
+  className,
+  disabled,
+  loading,
+  size = 'md',
+  variant = 'primary',
   ...props
 }: React.ComponentProps<'button'> & {
+  loading?: boolean
   size?: ButtonSize
   variant?: ButtonVariant
-  loading?: boolean
 }) {
   return (
     <button

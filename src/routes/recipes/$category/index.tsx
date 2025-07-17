@@ -1,25 +1,17 @@
 import { createFileRoute } from '@tanstack/react-router'
-import { getSubcategories } from '../../../api/subcategories'
+
 import { getCategoryBySlug } from '../../../api/categories'
+import { getSubcategories } from '../../../api/subcategories'
 import { CategoryLink } from '../../../components/category-link'
-import { Stack } from '../../../components/stack'
-import { PageBody } from '../../../components/page-body'
-import { PageHeading } from '../../../components/page-heading'
-import { PageHeader } from '../../../components/page-header'
 import { PageBackLink } from '../../../components/page-actions'
+import { PageBody } from '../../../components/page-body'
+import { PageHeader } from '../../../components/page-header'
+import { PageHeading } from '../../../components/page-heading'
+import { Stack } from '../../../components/stack'
 import { title } from '../../../helpers/dom'
 
 export const Route = createFileRoute('/recipes/$category/')({
   component: RouteComponent,
-  loader: async ({ params }) => {
-    const category = await getCategoryBySlug(params.category)
-    const subcategories = await getSubcategories(category.id)
-
-    return {
-      category,
-      subcategories,
-    }
-  },
   head: ({ loaderData }) => {
     return {
       meta: [
@@ -27,6 +19,15 @@ export const Route = createFileRoute('/recipes/$category/')({
           title: title([loaderData?.category?.title]),
         },
       ],
+    }
+  },
+  loader: async ({ params }) => {
+    const category = await getCategoryBySlug(params.category)
+    const subcategories = await getSubcategories(category.id)
+
+    return {
+      category,
+      subcategories,
     }
   },
 })
@@ -47,13 +48,13 @@ function RouteComponent() {
             return (
               <li key={subcategory.id}>
                 <CategoryLink
-                  to="/recipes/$category/$subcategory"
                   params={{
                     category: category.slug,
                     subcategory: subcategory.slug,
                   }}
+                  to="/recipes/$category/$subcategory"
                 >
-                  <Stack spacing="xs" align="center">
+                  <Stack align="center" spacing="xs">
                     <div className="text-xl">{subcategory.emoji}</div>
                     <div>{subcategory.title}</div>
                   </Stack>

@@ -5,11 +5,11 @@ type TagColorScheme = 'red' | 'yellow' | 'indigo' | 'cyan' | 'slate'
 const tagClasses = cva(['rounded-xl', 'h-12', 'px-4', 'bg-slate-400', 'text-slate-800'], {
   variants: {
     colorScheme: {
-      red: [],
-      yellow: [],
-      indigo: [],
       cyan: [],
+      indigo: [],
+      red: [],
       slate: [],
+      yellow: [],
     },
   },
 })
@@ -21,7 +21,7 @@ export function Tag({
   ...props
 }: React.ComponentProps<'span'> & { colorScheme: TagColorScheme }) {
   return (
-    <span className={tagClasses({ colorScheme, className })} {...props}>
+    <span className={tagClasses({ className, colorScheme })} {...props}>
       {children}
     </span>
   )

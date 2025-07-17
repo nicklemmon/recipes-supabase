@@ -107,26 +107,25 @@ const RecipesPrivateAddRoute = RecipesPrivateAddImport.update({
   getParentRoute: () => RecipesPrivateRoute,
 } as any)
 
-const RecipesCategorySubcategoryRecipeRoute =
-  RecipesCategorySubcategoryRecipeImport.update({
-    id: '/$category/$subcategory/$recipe',
-    path: '/$category/$subcategory/$recipe',
-    getParentRoute: () => RecipesRoute,
-  } as any)
+const RecipesCategorySubcategoryRecipeRoute = RecipesCategorySubcategoryRecipeImport.update({
+  id: '/$category/$subcategory/$recipe',
+  path: '/$category/$subcategory/$recipe',
+  getParentRoute: () => RecipesRoute,
+} as any)
 
-const RecipesCategorySubcategoryIndexRoute =
-  RecipesCategorySubcategoryIndexImport.update({
-    id: '/$category/$subcategory/',
-    path: '/$category/$subcategory/',
-    getParentRoute: () => RecipesRoute,
-  } as any)
+const RecipesCategorySubcategoryIndexRoute = RecipesCategorySubcategoryIndexImport.update({
+  id: '/$category/$subcategory/',
+  path: '/$category/$subcategory/',
+  getParentRoute: () => RecipesRoute,
+} as any)
 
-const RecipesCategorySubcategoryRecipeViewRoute =
-  RecipesCategorySubcategoryRecipeViewImport.update({
+const RecipesCategorySubcategoryRecipeViewRoute = RecipesCategorySubcategoryRecipeViewImport.update(
+  {
     id: '/view',
     path: '/view',
     getParentRoute: () => RecipesCategorySubcategoryRecipeRoute,
-  } as any)
+  } as any,
+)
 
 const RecipesCategorySubcategoryRecipePrivateRoute =
   RecipesCategorySubcategoryRecipePrivateImport.update({
@@ -277,8 +276,7 @@ const PrivateRouteChildren: PrivateRouteChildren = {
   PrivateProfileRoute: PrivateProfileRoute,
 }
 
-const PrivateRouteWithChildren =
-  PrivateRoute._addFileChildren(PrivateRouteChildren)
+const PrivateRouteWithChildren = PrivateRoute._addFileChildren(PrivateRouteChildren)
 
 interface RecipesPrivateRouteChildren {
   RecipesPrivateAddRoute: typeof RecipesPrivateAddRoute
@@ -316,8 +314,7 @@ const RecipesCategorySubcategoryRecipeRouteChildren: RecipesCategorySubcategoryR
   {
     RecipesCategorySubcategoryRecipePrivateRoute:
       RecipesCategorySubcategoryRecipePrivateRouteWithChildren,
-    RecipesCategorySubcategoryRecipeViewRoute:
-      RecipesCategorySubcategoryRecipeViewRoute,
+    RecipesCategorySubcategoryRecipeViewRoute: RecipesCategorySubcategoryRecipeViewRoute,
   }
 
 const RecipesCategorySubcategoryRecipeRouteWithChildren =
@@ -340,12 +337,10 @@ const RecipesRouteChildren: RecipesRouteChildren = {
   RecipesListRoute: RecipesListRoute,
   RecipesCategoryIndexRoute: RecipesCategoryIndexRoute,
   RecipesCategorySubcategoryIndexRoute: RecipesCategorySubcategoryIndexRoute,
-  RecipesCategorySubcategoryRecipeRoute:
-    RecipesCategorySubcategoryRecipeRouteWithChildren,
+  RecipesCategorySubcategoryRecipeRoute: RecipesCategorySubcategoryRecipeRouteWithChildren,
 }
 
-const RecipesRouteWithChildren =
-  RecipesRoute._addFileChildren(RecipesRouteChildren)
+const RecipesRouteWithChildren = RecipesRoute._addFileChildren(RecipesRouteChildren)
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute

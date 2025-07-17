@@ -14,11 +14,11 @@ export function toLegibleDate(isoTimestamp: string, locale: string = navigator.l
   }
 
   return new Intl.DateTimeFormat(locale, {
-    year: 'numeric',
-    month: 'long',
     day: 'numeric',
     hour: 'numeric',
-    minute: '2-digit',
     hour12: true,
+    minute: '2-digit',
+    month: 'long',
+    year: 'numeric',
   }).format(date)
 }

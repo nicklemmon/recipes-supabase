@@ -1,17 +1,17 @@
 import { createFileRoute, Outlet, redirect } from '@tanstack/react-router'
+
 import { getSession } from '../../api/auth'
 
 export const Route = createFileRoute('/recipes/_private')({
-  preload: false,
   beforeLoad: async ({ location }) => {
     const { session } = await getSession()
 
     if (!session) {
       throw redirect({
-        to: '/login',
         search: {
           redirect: location.href,
         },
+        to: '/login',
       })
     }
 
@@ -20,6 +20,7 @@ export const Route = createFileRoute('/recipes/_private')({
     }
   },
   component: PrivateLayout,
+  preload: false,
 })
 
 function PrivateLayout() {

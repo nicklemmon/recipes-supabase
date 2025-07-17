@@ -1,19 +1,21 @@
-import { Drawer } from 'vaul'
 import { Tooltip } from '@base-ui-components/react/tooltip'
+import { useNavigate } from '@tanstack/react-router'
 import { SearchIcon } from 'lucide-react'
+import { useRef, useState } from 'react'
+
+import { Drawer } from 'vaul'
+
 import { Button } from './button'
-import { Stack } from './stack'
-import { FormLabel } from './form-label'
+import { Container } from './container'
 import { FormControl } from './form-control'
 import { FormInput } from './form-input'
-import { Container } from './container'
-import { SrOnly } from './sr-only'
+import { FormLabel } from './form-label'
 import { Inline } from './inline'
 import { NavButton } from './nav-actions'
-import { useNavigate } from '@tanstack/react-router'
-import { useRef, useState } from 'react'
-import { NavTooltipBody } from './nav-tooltip'
 import { NAV_ICON_SIZE } from './nav-actions'
+import { NavTooltipBody } from './nav-tooltip'
+import { SrOnly } from './sr-only'
+import { Stack } from './stack'
 
 export function NavSearch() {
   const [open, setOpen] = useState(false)
@@ -29,8 +31,8 @@ export function NavSearch() {
     console.log('s')
 
     navigate({
-      to: '/recipes/list',
       search: { s },
+      to: '/recipes/list',
     })
 
     setOpen(false)
@@ -41,7 +43,7 @@ export function NavSearch() {
   }
 
   return (
-    <Drawer.Root onAnimationEnd={handleAnimEnd} open={open} onOpenChange={setOpen}>
+    <Drawer.Root onAnimationEnd={handleAnimEnd} onOpenChange={setOpen} open={open}>
       <Tooltip.Root>
         <Tooltip.Trigger
           render={
@@ -72,12 +74,12 @@ export function NavSearch() {
                     <FormLabel htmlFor="header-search-input">Search by title</FormLabel>
 
                     <FormInput
-                      type="text"
+                      autoComplete="off"
                       id="header-search-input"
                       name="s"
-                      autoComplete="off"
-                      required
                       ref={inputRef}
+                      required
+                      type="text"
                     />
                   </FormControl>
 

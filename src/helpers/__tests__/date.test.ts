@@ -1,12 +1,13 @@
-import { describe, it, expect, vi, beforeEach } from 'vitest'
+import { beforeEach, describe, expect, it, vi } from 'vitest'
+
 import { toLegibleDate } from '../date'
 
 describe('toLegibleDate', () => {
   beforeEach(() => {
     // Mock navigator.language to have consistent test results
     Object.defineProperty(navigator, 'language', {
-      value: 'en-US',
       configurable: true,
+      value: 'en-US',
     })
   })
 

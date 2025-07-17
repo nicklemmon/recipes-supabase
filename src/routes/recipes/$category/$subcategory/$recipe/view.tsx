@@ -1,16 +1,20 @@
 import { createFileRoute, useNavigate, useRouter } from '@tanstack/react-router'
-import { object, optional, string } from 'valibot'
-import markdownit from 'markdown-it'
 import { Star } from 'lucide-react'
 import { useState } from 'react'
-import { Drawer } from 'vaul'
+
 import DOMPurify from 'dompurify'
+import markdownit from 'markdown-it'
 import { toast } from 'sonner'
+import { object, optional, string } from 'valibot'
+import { Drawer } from 'vaul'
+
 import { getCategoryBySlug } from '../../../../../api/categories'
-import { getSubcategoryBySlug } from '../../../../../api/subcategories'
 import { deleteRecipe, getRecipeBySlug } from '../../../../../api/recipes'
-import { DEVICE_CAN_SLEEP } from '../../../../../constants/device'
-import { title } from '../../../../../helpers/dom'
+import { getSubcategoryBySlug } from '../../../../../api/subcategories'
+import { Button } from '../../../../../components/button'
+import { Container } from '../../../../../components/container'
+import { FormControl } from '../../../../../components/form-control'
+import { FormLabel } from '../../../../../components/form-label'
 import { Inline } from '../../../../../components/inline'
 import {
   PageActions,
@@ -18,17 +22,15 @@ import {
   PageDeleteButton,
   PageEditLink,
 } from '../../../../../components/page-actions'
-import { Switch } from '../../../../../components/switch'
-import { Button } from '../../../../../components/button'
-import { Container } from '../../../../../components/container'
 import { PageBody } from '../../../../../components/page-body'
 import { PageHeader } from '../../../../../components/page-header'
 import { PageHeading } from '../../../../../components/page-heading'
 import { Stack } from '../../../../../components/stack'
+import { Switch } from '../../../../../components/switch'
+import { DEVICE_CAN_SLEEP } from '../../../../../constants/device'
 import { toLegibleDate } from '../../../../../helpers/date'
 import { allowSleep, preventSleep } from '../../../../../helpers/device'
-import { FormControl } from '../../../../../components/form-control'
-import { FormLabel } from '../../../../../components/form-label'
+import { title } from '../../../../../helpers/dom'
 
 const md = markdownit({
   breaks: true,
@@ -40,23 +42,6 @@ const searchSchema = object({
 
 export const Route = createFileRoute('/recipes/$category/$subcategory/$recipe/view')({
   component: RouteComponent,
-  validateSearch: searchSchema,
-  loader: async ({ params }) => {
-    const { subcategory: subcategorySlug, category: categorySlug, recipe: recipeSlug } = params
-    const category = await getCategoryBySlug(categorySlug)
-    const subcategory = await getSubcategoryBySlug(subcategorySlug)
-    const recipe = await getRecipeBySlug({
-      slug: recipeSlug,
-      categoryId: category.id,
-      subcategoryId: subcategory.id,
-    })
-
-    return {
-      category,
-      subcategory,
-      recipe,
-    }
-  },
   head: ({ loaderData }) => {
     return {
       meta: [
@@ -70,10 +55,27 @@ export const Route = createFileRoute('/recipes/$category/$subcategory/$recipe/vi
       ],
     }
   },
+  loader: async ({ params }) => {
+    const { category: categorySlug, recipe: recipeSlug, subcategory: subcategorySlug } = params
+    const category = await getCategoryBySlug(categorySlug)
+    const subcategory = await getSubcategoryBySlug(subcategorySlug)
+    const recipe = await getRecipeBySlug({
+      categoryId: category.id,
+      slug: recipeSlug,
+      subcategoryId: subcategory.id,
+    })
+
+    return {
+      category,
+      recipe,
+      subcategory,
+    }
+  },
+  validateSearch: searchSchema,
 })
 
 function RouteComponent() {
-  const { subcategory: subcategorySlug, category: categorySlug } = Route.useParams()
+  const { category: categorySlug, subcategory: subcategorySlug } = Route.useParams()
   const { recipe, subcategory } = Route.useLoaderData()
   const { from } = Route.useSearch()
   const [delStatus, setDelStatus] = useState<'pending' | 'idle'>('idle')
@@ -96,11 +98,11 @@ function RouteComponent() {
       await router.invalidate()
 
       await navigate({
-        to: '/recipes/$category/$subcategory',
         params: {
           category: categorySlug,
           subcategory: subcategorySlug,
         },
+        to: '/recipes/$category/$subcategory',
       })
     } catch (err) {
       setDelStatus('idle')
@@ -130,11 +132,11 @@ function RouteComponent() {
               <PageBackLink to="/recipes/favorites">Back to favorites</PageBackLink>
             ) : (
               <PageBackLink
-                to="/recipes/$category/$subcategory"
                 params={{
                   category: categorySlug,
                   subcategory: subcategorySlug,
                 }}
+                to="/recipes/$category/$subcategory"
               >
                 Back to {subcategory.title}
               </PageBackLink>
@@ -151,12 +153,12 @@ function RouteComponent() {
 
             <Inline spacing="sm">
               <PageEditLink
-                to="/recipes/$category/$subcategory/$recipe/edit"
                 params={{
                   category: categorySlug,
-                  subcategory: subcategorySlug,
                   recipe: recipe.slug,
+                  subcategory: subcategorySlug,
                 }}
+                to="/recipes/$category/$subcategory/$recipe/edit"
               >
                 Edit
               </PageEditLink>
@@ -184,14 +186,14 @@ function RouteComponent() {
 
                           <Inline spacing="sm">
                             <Button
-                              onClick={() => handleDelete(recipe.id, recipe.title)}
                               loading={delStatus === 'pending'}
+                              onClick={() => handleDelete(recipe.id, recipe.title)}
                             >
                               Delete
                             </Button>
 
                             <Drawer.Close asChild>
-                              <Button variant="secondary" disabled={delStatus === 'pending'}>
+                              <Button disabled={delStatus === 'pending'} variant="secondary">
                                 Cancel
                               </Button>
                             </Drawer.Close>
@@ -245,9 +247,9 @@ function RouteComponent() {
                     <Inline spacing="xs">
                       {[...new Array(recipe.rating)].map((_star, index) => (
                         <Star
+                          className="text-yellow-500 fill-yellow-200"
                           key={`${recipe.id}-start-${index}`}
                           size={16}
-                          className="text-yellow-500 fill-yellow-200"
                         />
                       ))}
                     </Inline>

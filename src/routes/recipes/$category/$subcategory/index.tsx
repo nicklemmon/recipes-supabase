@@ -1,31 +1,18 @@
 import { createFileRoute, Link } from '@tanstack/react-router'
 import { ChevronRight, Star } from 'lucide-react'
+
 import { getCategoryBySlug } from '../../../../api/categories'
-import { getSubcategoryBySlug } from '../../../../api/subcategories'
 import { getRecipes } from '../../../../api/recipes'
-import { title } from '../../../../helpers/dom'
+import { getSubcategoryBySlug } from '../../../../api/subcategories'
+import { Inline } from '../../../../components/inline'
+import { PageBackLink } from '../../../../components/page-actions'
 import { PageBody } from '../../../../components/page-body'
 import { PageHeader } from '../../../../components/page-header'
 import { PageHeading } from '../../../../components/page-heading'
-import { PageBackLink } from '../../../../components/page-actions'
-import { Inline } from '../../../../components/inline'
+import { title } from '../../../../helpers/dom'
 
 export const Route = createFileRoute('/recipes/$category/$subcategory/')({
   component: RouteComponent,
-  loader: async ({ params }) => {
-    const { subcategory: subcategorySlug, category: categorySlug } = params
-    const category = await getCategoryBySlug(categorySlug)
-    const subcategory = await getSubcategoryBySlug(subcategorySlug)
-
-    return {
-      category,
-      subcategory,
-      recipes: await getRecipes({
-        categoryId: category.id,
-        subcategoryId: subcategory.id,
-      }),
-    }
-  },
   head: ({ loaderData }) => {
     return {
       meta: [
@@ -35,17 +22,31 @@ export const Route = createFileRoute('/recipes/$category/$subcategory/')({
       ],
     }
   },
+  loader: async ({ params }) => {
+    const { category: categorySlug, subcategory: subcategorySlug } = params
+    const category = await getCategoryBySlug(categorySlug)
+    const subcategory = await getSubcategoryBySlug(subcategorySlug)
+
+    return {
+      category,
+      recipes: await getRecipes({
+        categoryId: category.id,
+        subcategoryId: subcategory.id,
+      }),
+      subcategory,
+    }
+  },
 })
 
 function RouteComponent() {
-  const { category, subcategory, recipes } = Route.useLoaderData()
+  const { category, recipes, subcategory } = Route.useLoaderData()
 
   return (
     <div>
       <PageHeader>
         <PageHeading>{subcategory.title}</PageHeading>
 
-        <PageBackLink to="/recipes/$category" params={{ category: category.slug }}>
+        <PageBackLink params={{ category: category.slug }} to="/recipes/$category">
           Back to {category.title}
         </PageBackLink>
       </PageHeader>
@@ -69,20 +70,20 @@ function RouteComponent() {
               <tbody>
                 {recipes.map((recipe) => {
                   return (
-                    <tr key={recipe.id} className="border-b border-slate-200">
+                    <tr className="border-b border-slate-200" key={recipe.id}>
                       <td className="p-4">
                         <Link
                           className="text-indigo-600 font-medium"
-                          to="/recipes/$category/$subcategory/$recipe/view"
                           params={{
                             category: category.slug,
-                            subcategory: subcategory.slug,
                             recipe: recipe.slug,
+                            subcategory: subcategory.slug,
                           }}
+                          to="/recipes/$category/$subcategory/$recipe/view"
                         >
                           <Inline spacing="sm">
                             {recipe.title}
-                            <ChevronRight size={16} className="hidden md:inline-flex" />
+                            <ChevronRight className="hidden md:inline-flex" size={16} />
                           </Inline>
                         </Link>
                       </td>
@@ -96,12 +97,12 @@ function RouteComponent() {
                       <td className="p-4 text-right">
                         <span className="md:hidden">{recipe.rating}&nbsp;stars</span>
 
-                        <Inline spacing="xs" className="hidden md:inline-flex">
+                        <Inline className="hidden md:inline-flex" spacing="xs">
                           {[...new Array(recipe.rating)].map((_star, index) => (
                             <Star
+                              className="text-yellow-500 fill-yellow-200"
                               key={`${recipe.id}-start-${index}`}
                               size={16}
-                              className="text-yellow-500 fill-yellow-200"
                             />
                           ))}
                         </Inline>

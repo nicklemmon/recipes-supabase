@@ -1,4 +1,5 @@
 import * as v from 'valibot'
+
 import { supabase } from '../constants/supabase'
 import { type NewRecipe, Recipe, RecipeSchema } from '../types/recipes'
 
@@ -7,14 +8,14 @@ const RECIPES_TABLE_ID = 'recipes'
 /** Returns all recipes, optionally by category and subcategory */
 export async function getRecipes({
   categoryId,
+  onlyFavorites,
   subcategoryId,
   titleSearch,
-  onlyFavorites,
 }: {
   categoryId?: number
+  onlyFavorites?: boolean
   subcategoryId?: number
   titleSearch?: string
-  onlyFavorites?: boolean
 } = {}) {
   const query = supabase.from(RECIPES_TABLE_ID).select()
 
@@ -39,12 +40,12 @@ export async function getRecipes({
 
 /** Returns a single recipe by its slug, category ID, and subcategory ID */
 export async function getRecipeBySlug({
-  slug,
   categoryId,
+  slug,
   subcategoryId,
 }: {
-  slug: string
   categoryId: number
+  slug: string
   subcategoryId: number
 }) {
   const res = await supabase

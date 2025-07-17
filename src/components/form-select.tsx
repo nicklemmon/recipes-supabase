@@ -1,7 +1,8 @@
 import { ChevronDown } from 'lucide-react'
+
 import { cn } from '../helpers/dom'
 
-export function FormSelect({ className, children, ...props }: React.ComponentProps<'select'>) {
+export function FormSelect({ children, className, ...props }: React.ComponentProps<'select'>) {
   return (
     <div className={cn('relative h-10', props.disabled === true ? 'grayscale' : '', className)}>
       <select
@@ -14,8 +15,8 @@ export function FormSelect({ className, children, ...props }: React.ComponentPro
         {children}
       </select>
       <ChevronDown
-        size={18}
         className="absolute right-2.5 top-[50%] translate-y-[-50%] text-indigo-500"
+        size={18}
       />
     </div>
   )

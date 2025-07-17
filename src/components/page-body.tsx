@@ -1,5 +1,6 @@
-import { Container } from './container'
 import { cn } from '../helpers/dom'
+
+import { Container } from './container'
 
 export function PageBody({
   children,

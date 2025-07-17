@@ -1,4 +1,4 @@
-import { describe, it, expect, vi, beforeEach, afterEach } from 'vitest'
+import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest'
 
 describe('device sleep functions', () => {
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
@@ -17,10 +17,10 @@ describe('device sleep functions', () => {
 
     // Mock navigator.wakeLock
     Object.defineProperty(navigator, 'wakeLock', {
+      configurable: true,
       value: {
         request: mockRequest,
       },
-      configurable: true,
     })
 
     // Clear console mocks

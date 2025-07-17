@@ -1,4 +1,5 @@
 import { Link } from '@tanstack/react-router'
+
 import { cn } from '../helpers/dom'
 
 export const NAV_ICON_SIZE = 16

@@ -1,10 +1,11 @@
 import { createFileRoute } from '@tanstack/react-router'
+
 import { getCategories } from '../api/categories'
 import { CategoryLink } from '../components/category-link'
-import { Stack } from '../components/stack'
+import { PageBody } from '../components/page-body'
 import { PageHeader } from '../components/page-header'
 import { PageHeading } from '../components/page-heading'
-import { PageBody } from '../components/page-body'
+import { Stack } from '../components/stack'
 
 export const Route = createFileRoute('/')({
   component: HomeComponent,
@@ -27,8 +28,8 @@ function HomeComponent() {
           {categories.map((category) => {
             return (
               <li key={category.id}>
-                <CategoryLink to="/recipes/$category" params={{ category: category.slug }}>
-                  <Stack spacing="xs" align="center">
+                <CategoryLink params={{ category: category.slug }} to="/recipes/$category">
+                  <Stack align="center" spacing="xs">
                     <div>{category.emoji}</div>
                     <div>{category.title}</div>
                   </Stack>
@@ -39,7 +40,7 @@ function HomeComponent() {
 
           <li>
             <CategoryLink to={`/recipes/favorites`}>
-              <Stack spacing="xs" align="center">
+              <Stack align="center" spacing="xs">
                 <div>⭐</div>
                 <div>Favorites</div>
               </Stack>
