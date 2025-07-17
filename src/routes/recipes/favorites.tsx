@@ -80,6 +80,9 @@ function RouteComponent() {
                         subcategory: recipe.subCategorySlug,
                         recipe: recipe.slug,
                       }}
+                      search={{
+                        from: 'favorites',
+                      }}
                     >
                       <Inline spacing="sm">
                         {recipe.title}
