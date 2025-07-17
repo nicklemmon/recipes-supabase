@@ -1,7 +1,5 @@
 import { createFileRoute, redirect } from '@tanstack/react-router'
-
 import { toast } from 'sonner'
-
 import { signOut } from '../api/auth'
 
 export const Route = createFileRoute('/logout')({

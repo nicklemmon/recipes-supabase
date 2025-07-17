@@ -1,9 +1,7 @@
 import { createFileRoute, useRouter } from '@tanstack/react-router'
 import { useState } from 'react'
-
 import { toast } from 'sonner'
 import { z } from 'zod'
-
 import { signIn } from '../api/auth'
 import { Button } from '../components/button'
 import { FormControl } from '../components/form-control'

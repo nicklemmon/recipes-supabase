@@ -1,5 +1,4 @@
 import { describe, expect, it } from 'vitest'
-
 import { slugify } from '../string'
 
 describe('slugify', () => {

@@ -1,9 +1,7 @@
 import { Tooltip } from '@base-ui-components/react/tooltip'
 import { createRootRoute, HeadContent, Link, Outlet } from '@tanstack/react-router'
 import { Citrus, LogIn, LogOut, Plus, User } from 'lucide-react'
-
 import { Toaster } from 'sonner'
-
 import { Container } from '../components/container'
 import { Inline } from '../components/inline'
 import { NAV_ICON_SIZE, NavLink } from '../components/nav-actions'

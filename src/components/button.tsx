@@ -1,7 +1,5 @@
 import { LoaderCircle } from 'lucide-react'
-
 import { cva } from 'cva'
-
 import { cn } from '../helpers/dom'
 
 type ButtonVariant = 'primary' | 'secondary' | 'destructive'

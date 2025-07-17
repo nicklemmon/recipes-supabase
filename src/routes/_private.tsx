@@ -1,5 +1,4 @@
 import { createFileRoute, Outlet, redirect } from '@tanstack/react-router'
-
 import { getSession } from '../api/auth'
 
 export const Route = createFileRoute('/_private')({

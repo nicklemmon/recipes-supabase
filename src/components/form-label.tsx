@@ -1,5 +1,4 @@
 import type React from 'react'
-
 import { cn } from '../helpers/dom'
 
 export function FormLabel({ className, ...props }: React.ComponentProps<'label'>) {

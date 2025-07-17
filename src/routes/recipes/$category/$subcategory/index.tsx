@@ -1,6 +1,5 @@
 import { createFileRoute, Link } from '@tanstack/react-router'
 import { ChevronRight, Star } from 'lucide-react'
-
 import { getCategoryBySlug } from '../../../../api/categories'
 import { getRecipes } from '../../../../api/recipes'
 import { getSubcategoryBySlug } from '../../../../api/subcategories'

@@ -1,6 +1,5 @@
 import { Switch as BaseSwitch } from '@base-ui-components/react/switch'
 import * as React from 'react'
-
 import { cn } from '../helpers/dom'
 
 export function Switch({

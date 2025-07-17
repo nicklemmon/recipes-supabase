@@ -1,5 +1,4 @@
 import { ChevronDown } from 'lucide-react'
-
 import { cn } from '../helpers/dom'
 
 export function FormSelect({ children, className, ...props }: React.ComponentProps<'select'>) {

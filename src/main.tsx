@@ -1,6 +1,5 @@
 import { createRouter, RouterProvider } from '@tanstack/react-router'
 import ReactDOM from 'react-dom/client'
-
 import { ErrorBoundary } from './components/error-boundary'
 import { routeTree } from './routeTree.gen'
 

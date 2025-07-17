@@ -1,5 +1,4 @@
 import { createFileRoute } from '@tanstack/react-router'
-
 import { getCategories } from '../api/categories'
 import { CategoryLink } from '../components/category-link'
 import { PageBody } from '../components/page-body'

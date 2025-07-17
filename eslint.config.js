@@ -52,7 +52,7 @@ export default defineConfig([
             'index-type',
             'index',
           ],
-          newlinesBetween: 'always',
+          newlinesBetween: 'never',
           type: 'alphabetical',
         },
       ],

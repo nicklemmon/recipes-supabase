@@ -1,13 +1,11 @@
 import { createFileRoute, useNavigate, useRouter } from '@tanstack/react-router'
 import { Star } from 'lucide-react'
 import { useState } from 'react'
-
 import DOMPurify from 'dompurify'
 import markdownit from 'markdown-it'
 import { toast } from 'sonner'
 import { object, optional, string } from 'valibot'
 import { Drawer } from 'vaul'
-
 import { getCategoryBySlug } from '../../../../../api/categories'
 import { deleteRecipe, getRecipeBySlug } from '../../../../../api/recipes'
 import { getSubcategoryBySlug } from '../../../../../api/subcategories'

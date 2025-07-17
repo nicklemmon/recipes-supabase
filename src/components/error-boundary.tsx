@@ -1,6 +1,5 @@
 import { AlertTriangle, RefreshCw } from 'lucide-react'
 import { Component, ErrorInfo, ReactNode } from 'react'
-
 import { Button } from './button'
 import { Container } from './container'
 import { Stack } from './stack'

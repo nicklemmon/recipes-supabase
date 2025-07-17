@@ -2,9 +2,7 @@ import { Tooltip } from '@base-ui-components/react/tooltip'
 import { useNavigate } from '@tanstack/react-router'
 import { SearchIcon } from 'lucide-react'
 import { useRef, useState } from 'react'
-
 import { Drawer } from 'vaul'
-
 import { Button } from './button'
 import { Container } from './container'
 import { FormControl } from './form-control'

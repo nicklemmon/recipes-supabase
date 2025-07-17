@@ -1,5 +1,4 @@
 import * as v from 'valibot'
-
 import { supabase } from '../constants/supabase'
 import { CategorySchema } from '../types/categories'
 

@@ -1,6 +1,5 @@
 import type { AuthChangeEvent } from '@supabase/supabase-js'
 import type { Session } from '@supabase/supabase-js'
-
 import { supabase } from '../constants/supabase'
 
 /** Async log in to the application */

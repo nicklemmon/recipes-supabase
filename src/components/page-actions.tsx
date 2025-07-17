@@ -1,10 +1,7 @@
 import { Link, LinkProps } from '@tanstack/react-router'
 import { ArrowLeft, Pencil, Trash2 } from 'lucide-react'
-
 import { cva } from 'cva'
-
 import { cn } from '../helpers/dom'
-
 import { Inline } from './inline'
 
 const pageActionClasses = cva([

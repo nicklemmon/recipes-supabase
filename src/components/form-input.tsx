@@ -1,5 +1,4 @@
 import React from 'react'
-
 import { cn } from '../helpers/dom'
 
 export type FormInputProps = React.ComponentProps<'input'>

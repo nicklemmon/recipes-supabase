@@ -1,5 +1,4 @@
 import { beforeEach, describe, expect, it, vi } from 'vitest'
-
 import { toLegibleDate } from '../date'
 
 describe('toLegibleDate', () => {

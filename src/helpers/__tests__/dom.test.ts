@@ -1,5 +1,4 @@
 import { describe, expect, it } from 'vitest'
-
 import { cn, title } from '../dom'
 
 describe('cn', () => {

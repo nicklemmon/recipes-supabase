@@ -1,5 +1,4 @@
 import { createFileRoute } from '@tanstack/react-router'
-
 import { getSession } from '../api/auth'
 import { PageBody } from '../components/page-body'
 import { PageHeader } from '../components/page-header'

@@ -1,7 +1,5 @@
 import type { HTMLProps } from 'react'
-
 import type { SpacingProp } from '../types/props'
-
 import { cn } from '../helpers/dom'
 
 type AlignProp = 'top' | 'center' | 'bottom'
