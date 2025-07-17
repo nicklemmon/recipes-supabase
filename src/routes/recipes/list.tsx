@@ -1,5 +1,6 @@
 import { createFileRoute, Link } from '@tanstack/react-router'
 import { ChevronRight, Star } from 'lucide-react'
+import { object, optional, string } from 'valibot'
 import { getCategories } from '../../api/categories'
 import { getRecipes } from '../../api/recipes'
 import { getSubcategories } from '../../api/subcategories'
@@ -10,16 +11,20 @@ import { PageHeading } from '../../components/page-heading'
 import { Stack } from '../../components/stack'
 import { title } from '../../helpers/dom'
 
+const searchSchema = object({
+  s: optional(string()),
+})
+
 export const Route = createFileRoute('/recipes/list')({
   component: RouteComponent,
-  head: () => ({
-    meta: [
-      {
-        title: title(['Recipes']),
-      },
-    ],
-  }),
-  loader: async ({ deps: { s } }) => {
+  validateSearch: searchSchema,
+  loaderDeps: ({ search }) => {
+    return {
+      s: search.s ?? '',
+    }
+  },
+  loader: async ({ deps }) => {
+    const s = deps.s || ''
     const recipes = await getRecipes({ titleSearch: s })
     const categories = await getCategories()
     const subCategories = await getSubcategories()
@@ -40,12 +45,13 @@ export const Route = createFileRoute('/recipes/list')({
       subCategories,
     }
   },
-  loaderDeps: ({ search }) => {
-    return {
-      // @ts-expect-error - search params not typed
-      s: search['s'],
-    }
-  },
+  head: () => ({
+    meta: [
+      {
+        title: title(['Recipes']),
+      },
+    ],
+  }),
 })
 
 function RouteComponent() {

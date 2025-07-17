@@ -23,20 +23,6 @@ import { RecipeSchema } from '../../../../../types/recipes'
 
 export const Route = createFileRoute('/recipes/$category/$subcategory/$recipe/_private/edit')({
   component: RouteComponent,
-  head: ({ loaderData }) => {
-    return {
-      meta: [
-        {
-          title: title([
-            'Editing',
-            loaderData?.recipe?.title,
-            loaderData?.subcategory?.title,
-            loaderData?.category?.title,
-          ]),
-        },
-      ],
-    }
-  },
   loader: async ({ params }) => {
     const { category: categorySlug, recipe: recipeSlug, subcategory: subcategorySlug } = params
     const category = await getCategoryBySlug(categorySlug)
@@ -55,6 +41,20 @@ export const Route = createFileRoute('/recipes/$category/$subcategory/$recipe/_p
       recipe,
       subcategories,
       subcategory,
+    }
+  },
+  head: ({ loaderData }) => {
+    return {
+      meta: [
+        {
+          title: title([
+            'Editing',
+            loaderData?.recipe?.title,
+            loaderData?.subcategory?.title,
+            loaderData?.category?.title,
+          ]),
+        },
+      ],
     }
   },
 })

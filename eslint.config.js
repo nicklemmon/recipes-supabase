@@ -60,7 +60,13 @@ export default defineConfig([
       'perfectionist/sort-jsx-props': ['error', { type: 'alphabetical' }],
       'perfectionist/sort-named-imports': ['error', { type: 'alphabetical' }],
       'perfectionist/sort-object-types': ['error', { type: 'alphabetical' }],
-      'perfectionist/sort-objects': ['error', { type: 'alphabetical' }],
+      'perfectionist/sort-objects': [
+        'error',
+        {
+          ignorePattern: ['createFileRoute'],
+          type: 'alphabetical',
+        },
+      ],
       'react/react-in-jsx-scope': 'off',
     },
   },

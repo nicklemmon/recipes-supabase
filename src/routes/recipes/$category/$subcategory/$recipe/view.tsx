@@ -40,19 +40,6 @@ const searchSchema = object({
 
 export const Route = createFileRoute('/recipes/$category/$subcategory/$recipe/view')({
   component: RouteComponent,
-  head: ({ loaderData }) => {
-    return {
-      meta: [
-        {
-          title: title([
-            loaderData?.recipe?.title,
-            loaderData?.subcategory?.title,
-            loaderData?.category?.title,
-          ]),
-        },
-      ],
-    }
-  },
   loader: async ({ params }) => {
     const { category: categorySlug, recipe: recipeSlug, subcategory: subcategorySlug } = params
     const category = await getCategoryBySlug(categorySlug)
@@ -67,6 +54,19 @@ export const Route = createFileRoute('/recipes/$category/$subcategory/$recipe/vi
       category,
       recipe,
       subcategory,
+    }
+  },
+  head: ({ loaderData }) => {
+    return {
+      meta: [
+        {
+          title: title([
+            loaderData?.recipe?.title,
+            loaderData?.subcategory?.title,
+            loaderData?.category?.title,
+          ]),
+        },
+      ],
     }
   },
   validateSearch: searchSchema,

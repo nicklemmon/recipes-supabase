@@ -24,7 +24,7 @@ export function NavSearch() {
     e.preventDefault()
 
     const formData = new FormData(e.currentTarget)
-    const { s } = Object.fromEntries(formData)
+    const { s } = Object.fromEntries(formData) as { s: string }
 
     console.log('s')
 
