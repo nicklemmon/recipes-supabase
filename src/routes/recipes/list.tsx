@@ -60,14 +60,14 @@ function RouteComponent() {
       <PageBody>
         {recipesWithSlugs.length === 0 ? (
           <p className="text-slate-600">
-            Showing results for search <span className="font-bold">&quot;{searchStr}&quot;</span> &mdash; no
-            recipes found.
+            Showing results for search <span className="font-bold">&quot;{searchStr}&quot;</span>{' '}
+            &mdash; no recipes found.
           </p>
         ) : (
           <Stack spacing="lg">
             <p className="text-slate-600">
-              Showing results for search <span className="font-bold">&quot;{searchStr}&quot;</span> &mdash;{' '}
-              {recipesWithSlugs.length} recipes found.
+              Showing results for search <span className="font-bold">&quot;{searchStr}&quot;</span>{' '}
+              &mdash; {recipesWithSlugs.length} recipes found.
             </p>
 
             <div className="border border-x-0 border-slate-200 w-full">

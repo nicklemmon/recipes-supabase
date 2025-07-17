@@ -1,4 +1,5 @@
 import { createFileRoute, useNavigate, useRouter } from '@tanstack/react-router'
+import { object, optional, string } from 'valibot'
 import markdownit from 'markdown-it'
 import { Star } from 'lucide-react'
 import { useState } from 'react'
@@ -33,8 +34,13 @@ const md = markdownit({
   breaks: true,
 })
 
+const searchSchema = object({
+  from: optional(string(), 'category'),
+})
+
 export const Route = createFileRoute('/recipes/$category/$subcategory/$recipe/view')({
   component: RouteComponent,
+  validateSearch: searchSchema,
   loader: async ({ params }) => {
     const { subcategory: subcategorySlug, category: categorySlug, recipe: recipeSlug } = params
     const category = await getCategoryBySlug(categorySlug)
@@ -69,6 +75,7 @@ export const Route = createFileRoute('/recipes/$category/$subcategory/$recipe/vi
 function RouteComponent() {
   const { subcategory: subcategorySlug, category: categorySlug } = Route.useParams()
   const { recipe, subcategory } = Route.useLoaderData()
+  const { from } = Route.useSearch()
   const [delStatus, setDelStatus] = useState<'pending' | 'idle'>('idle')
   const navigate = useNavigate()
   const router = useRouter()
@@ -119,15 +126,19 @@ function RouteComponent() {
 
         <PageActions>
           <div className="w-full">
-            <PageBackLink
-              to="/recipes/$category/$subcategory"
-              params={{
-                category: categorySlug,
-                subcategory: subcategorySlug,
-              }}
-            >
-              Back to {subcategory.title}
-            </PageBackLink>
+            {from === 'favorites' ? (
+              <PageBackLink to="/recipes/favorites">Back to favorites</PageBackLink>
+            ) : (
+              <PageBackLink
+                to="/recipes/$category/$subcategory"
+                params={{
+                  category: categorySlug,
+                  subcategory: subcategorySlug,
+                }}
+              >
+                Back to {subcategory.title}
+              </PageBackLink>
+            )}
           </div>
 
           <Stack align="right">

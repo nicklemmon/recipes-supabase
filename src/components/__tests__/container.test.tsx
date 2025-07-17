@@ -7,7 +7,7 @@ describe('Container', () => {
     render(
       <Container>
         <div>Test content</div>
-      </Container>
+      </Container>,
     )
     expect(screen.getByText('Test content')).toBeInTheDocument()
   })
@@ -16,7 +16,7 @@ describe('Container', () => {
     render(
       <Container>
         <div>Content</div>
-      </Container>
+      </Container>,
     )
     const container = screen.getByText('Content').parentElement
     expect(container).toHaveClass('max-w-[1000px]', 'mx-auto', 'w-full', 'px-4')
@@ -26,17 +26,24 @@ describe('Container', () => {
     render(
       <Container className="bg-red-500 py-8">
         <div>Content</div>
-      </Container>
+      </Container>,
     )
     const container = screen.getByText('Content').parentElement
-    expect(container).toHaveClass('max-w-[1000px]', 'mx-auto', 'w-full', 'px-4', 'bg-red-500', 'py-8')
+    expect(container).toHaveClass(
+      'max-w-[1000px]',
+      'mx-auto',
+      'w-full',
+      'px-4',
+      'bg-red-500',
+      'py-8',
+    )
   })
 
   it('handles className conflicts with tailwind-merge', () => {
     render(
       <Container className="px-8">
         <div>Content</div>
-      </Container>
+      </Container>,
     )
     const container = screen.getByText('Content').parentElement
     expect(container).toHaveClass('px-8')
@@ -53,7 +60,7 @@ describe('Container', () => {
     render(
       <Container className="">
         <div>Content</div>
-      </Container>
+      </Container>,
     )
     const container = screen.getByText('Content').parentElement
     expect(container).toHaveClass('max-w-[1000px]', 'mx-auto', 'w-full', 'px-4')
@@ -63,7 +70,7 @@ describe('Container', () => {
     render(
       <Container className={undefined}>
         <div>Content</div>
-      </Container>
+      </Container>,
     )
     const container = screen.getByText('Content').parentElement
     expect(container).toHaveClass('max-w-[1000px]', 'mx-auto', 'w-full', 'px-4')

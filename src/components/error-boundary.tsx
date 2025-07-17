@@ -45,7 +45,8 @@ export class ErrorBoundary extends Component<Props, State> {
                 <Stack spacing="sm">
                   <h1 className="text-2xl font-bold text-slate-900">Something went wrong</h1>
                   <p className="text-slate-600">
-                    We&apos;re sorry, but something unexpected happened. Please try reloading the page.
+                    We&apos;re sorry, but something unexpected happened. Please try reloading the
+                    page.
                   </p>
                 </Stack>
 
