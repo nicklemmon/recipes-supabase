@@ -1,4 +1,4 @@
-import * as v from 'valibot'
+import { z } from 'zod'
 import { supabase } from '../constants/supabase'
 import { type NewRecipe, Recipe, RecipeSchema } from '../types/recipes'
 
@@ -34,7 +34,7 @@ export async function getRecipes({
 
   const res = await query
 
-  return v.parse(v.array(RecipeSchema), res.data)
+  return z.array(RecipeSchema).parse(res.data)
 }
 
 /** Returns a single recipe by its slug, category ID, and subcategory ID */
@@ -56,14 +56,14 @@ export async function getRecipeBySlug({
     .single()
     .throwOnError()
 
-  return v.parse(RecipeSchema, res.data)
+  return RecipeSchema.parse(res.data)
 }
 
 /** Returns a single recipe by its id */
 export async function getRecipe(id: number) {
   const res = await supabase.from(RECIPES_TABLE_ID).select('*').eq('id', id).single().throwOnError()
 
-  return v.parse(RecipeSchema, res.data)
+  return RecipeSchema.parse(res.data)
 }
 
 /** Adds a recipe */

@@ -1,5 +1,5 @@
 import { createFileRoute, useNavigate, useRouter } from '@tanstack/react-router'
-import { object, optional, string } from 'valibot'
+import { z } from 'zod'
 import markdownit from 'markdown-it'
 import { Star } from 'lucide-react'
 import { useState } from 'react'
@@ -34,8 +34,8 @@ const md = markdownit({
   breaks: true,
 })
 
-const SearchSchema = object({
-  from: optional(string(), 'category'),
+const SearchSchema = z.object({
+  from: z.string().default('category'),
 })
 
 export const Route = createFileRoute('/recipes/$category/$subcategory/$recipe/view')({

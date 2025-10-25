@@ -1,23 +1,23 @@
-import * as v from 'valibot'
+import { z } from 'zod'
 
-export const RecipeRatingSchema = v.pipe(v.number(), v.minValue(0), v.maxValue(5))
+export const RecipeRatingSchema = z.number().min(0).max(5)
 
-export const RecipeSchema = v.object({
-  id: v.number(),
-  created_at: v.string(),
-  title: v.string(),
-  source: v.optional(v.string()),
-  category_id: v.number(),
-  subcategory_id: v.number(),
-  ingredients_md: v.string(),
-  dietary_pref: v.array(v.string()),
+export const RecipeSchema = z.object({
+  id: z.number(),
+  created_at: z.string(),
+  title: z.string(),
+  source: z.string().optional(),
+  category_id: z.number(),
+  subcategory_id: z.number(),
+  ingredients_md: z.string(),
+  dietary_pref: z.array(z.string()),
   rating: RecipeRatingSchema,
-  directions_md: v.string(),
-  slug: v.pipe(v.string(), v.slug()),
+  directions_md: z.string(),
+  slug: z.string().regex(/^[a-z0-9]+(?:-[a-z0-9]+)*$/),
 })
 
-export const NewRecipeSchema = v.omit(RecipeSchema, ['id', 'created_at'])
+export const NewRecipeSchema = RecipeSchema.omit({ id: true, created_at: true })
 
-export type Recipe = v.InferOutput<typeof RecipeSchema>
+export type Recipe = z.infer<typeof RecipeSchema>
 
-export type NewRecipe = v.InferOutput<typeof NewRecipeSchema>
+export type NewRecipe = z.infer<typeof NewRecipeSchema>

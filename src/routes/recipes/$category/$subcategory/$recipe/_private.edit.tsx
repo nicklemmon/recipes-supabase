@@ -1,7 +1,6 @@
 import { createFileRoute, useRouter } from '@tanstack/react-router'
 import { useRef, useState } from 'react'
 import { toast } from 'sonner'
-import * as v from 'valibot'
 import { RecipeSchema } from '../../../../../types/recipes'
 import { PageBody } from '../../../../../components/page-body'
 import { PageHeader } from '../../../../../components/page-header'
@@ -91,7 +90,7 @@ function RouteComponent() {
         directions_md,
       } = Object.fromEntries(data)
 
-      const partialRecipe = v.parse(v.partial(RecipeSchema), {
+      const partialRecipe = RecipeSchema.partial().parse({
         id: Number(id),
         title,
         source,
