@@ -5,11 +5,7 @@ import { TanStackRouterVite } from '@tanstack/router-plugin/vite'
 import tailwindcss from '@tailwindcss/vite'
 
 export default defineConfig({
-  plugins: [
-    TanStackRouterVite({}),
-    tailwindcss(),
-    react(),
-  ],
+  plugins: [TanStackRouterVite({}), tailwindcss(), react()],
   test: {
     globals: true,
     environment: 'happy-dom',

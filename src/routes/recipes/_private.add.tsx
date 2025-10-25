@@ -1,7 +1,6 @@
 import { createFileRoute } from '@tanstack/react-router'
 import { toast } from 'sonner'
 import { useRef, useState } from 'react'
-import * as v from 'valibot'
 import { PageHeader } from '../../components/page-header'
 import { PageHeading } from '../../components/page-heading'
 import { PageBody } from '../../components/page-body'
@@ -55,7 +54,7 @@ function RouteComponent() {
       const { title, source, category_id, rating, subcategory_id, ingredients_md, directions_md } =
         Object.fromEntries(data)
 
-      const newRecipe = v.parse(NewRecipeSchema, {
+      const newRecipe = NewRecipeSchema.parse({
         title,
         slug: slugify(String(title)),
         source,

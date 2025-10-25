@@ -1,4 +1,4 @@
-import * as v from 'valibot'
+import { z } from 'zod'
 import { supabase } from '../constants/supabase'
 import { SubcategorySchema } from '../types/subcategories'
 
@@ -14,12 +14,12 @@ export async function getSubcategories(categoryId?: number) {
       .select('*')
       .throwOnError()
 
-    return v.parse(v.array(SubcategorySchema), res.data)
+    return z.array(SubcategorySchema).parse(res.data)
   }
 
   const res = await supabase.from(SUBCATEGORIES_TABLE_ID).select().select('*').throwOnError()
 
-  return v.parse(v.array(SubcategorySchema), res.data)
+  return z.array(SubcategorySchema).parse(res.data)
 }
 
 /** Returns a subcategory by its slug */
@@ -31,5 +31,5 @@ export async function getSubcategoryBySlug(slug: string) {
     .single()
     .throwOnError()
 
-  return v.parse(SubcategorySchema, res.data)
+  return SubcategorySchema.parse(res.data)
 }

@@ -1,4 +1,4 @@
-import * as v from 'valibot'
+import { z } from 'zod'
 import { supabase } from '../constants/supabase'
 import { CategorySchema } from '../types/categories'
 
@@ -8,7 +8,7 @@ const CATEGORIES_TABLE_ID = 'categories'
 export async function getCategories() {
   const res = await supabase.from(CATEGORIES_TABLE_ID).select().throwOnError()
 
-  return v.parse(v.array(CategorySchema), res.data)
+  return z.array(CategorySchema).parse(res.data)
 }
 
 /** Returns a category by its slug */
@@ -20,5 +20,5 @@ export async function getCategoryBySlug(slug: string) {
     .single()
     .throwOnError()
 
-  return v.parse(CategorySchema, res.data)
+  return CategorySchema.parse(res.data)
 }

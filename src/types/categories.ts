@@ -1,11 +1,11 @@
-import * as v from 'valibot'
+import { z } from 'zod'
 
-export const CategorySchema = v.object({
-  id: v.number(),
-  created_at: v.string(),
-  title: v.string(),
-  emoji: v.string(),
-  slug: v.string(),
+export const CategorySchema = z.object({
+  id: z.number(),
+  created_at: z.string(),
+  title: z.string(),
+  emoji: z.string(),
+  slug: z.string(),
 })
 
-export type Category = v.InferOutput<typeof CategorySchema>
+export type Category = z.infer<typeof CategorySchema>

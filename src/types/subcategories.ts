@@ -1,12 +1,12 @@
-import * as v from 'valibot'
+import { z } from 'zod'
 
-export const SubcategorySchema = v.object({
-  id: v.number(),
-  created_at: v.string(),
-  title: v.string(),
-  slug: v.string(),
-  emoji: v.string(),
-  category_id: v.number(),
+export const SubcategorySchema = z.object({
+  id: z.number(),
+  created_at: z.string(),
+  title: z.string(),
+  slug: z.string(),
+  emoji: z.string(),
+  category_id: z.number(),
 })
 
-export type SubCategory = v.InferOutput<typeof SubcategorySchema>
+export type SubCategory = z.infer<typeof SubcategorySchema>

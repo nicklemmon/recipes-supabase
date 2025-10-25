@@ -14,10 +14,10 @@ import { useNavigate } from '@tanstack/react-router'
 import { useRef, useState } from 'react'
 import { NavTooltipBody } from './nav-tooltip'
 import { NAV_ICON_SIZE } from './nav-actions'
-import * as v from 'valibot'
+import { z } from 'zod'
 
-const FormSchema = v.object({
-  s: v.string(),
+const FormSchema = z.object({
+  s: z.string(),
 })
 
 export function NavSearch() {
@@ -29,7 +29,7 @@ export function NavSearch() {
     e.preventDefault()
 
     const formData = new FormData(e.currentTarget)
-    const formJson = v.parse(FormSchema, Object.fromEntries(formData))
+    const formJson = FormSchema.parse(Object.fromEntries(formData))
 
     const { s } = formJson
 

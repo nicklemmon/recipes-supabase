@@ -1,5 +1,5 @@
 import { createFileRoute, Link } from '@tanstack/react-router'
-import { object, optional, string } from 'valibot'
+import { z } from 'zod'
 import { Star, ChevronRight } from 'lucide-react'
 import { title } from '../../helpers/dom'
 import { Inline } from '../../components/inline'
@@ -11,8 +11,8 @@ import { getCategories } from '../../api/categories'
 import { getSubcategories } from '../../api/subcategories'
 import { Stack } from '../../components/stack'
 
-const SearchSchema = object({
-  s: optional(string()),
+const SearchSchema = z.object({
+  s: z.string().optional(),
 })
 
 export const Route = createFileRoute('/recipes/list')({
