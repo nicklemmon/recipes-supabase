@@ -34,29 +34,13 @@ const md = markdownit({
   breaks: true,
 })
 
-const searchSchema = object({
+const SearchSchema = object({
   from: optional(string(), 'category'),
 })
 
 export const Route = createFileRoute('/recipes/$category/$subcategory/$recipe/view')({
   component: RouteComponent,
-<<<<<<< Updated upstream
-  validateSearch: searchSchema,
-=======
-  head: ({ loaderData }) => {
-    return {
-      meta: [
-        {
-          title: title([
-            loaderData?.recipe?.title,
-            loaderData?.subcategory?.title,
-            loaderData?.category?.title,
-          ]),
-        },
-      ],
-    }
-  },
->>>>>>> Stashed changes
+  validateSearch: SearchSchema,
   loader: async ({ params }) => {
     const { subcategory: subcategorySlug, category: categorySlug, recipe: recipeSlug } = params
     const category = await getCategoryBySlug(categorySlug)
@@ -73,7 +57,6 @@ export const Route = createFileRoute('/recipes/$category/$subcategory/$recipe/vi
       recipe,
     }
   },
-<<<<<<< Updated upstream
   head: ({ loaderData }) => {
     return {
       meta: [
@@ -87,9 +70,6 @@ export const Route = createFileRoute('/recipes/$category/$subcategory/$recipe/vi
       ],
     }
   },
-=======
-  validateSearch: searchSchema,
->>>>>>> Stashed changes
 })
 
 function RouteComponent() {

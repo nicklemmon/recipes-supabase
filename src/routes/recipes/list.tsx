@@ -1,4 +1,5 @@
 import { createFileRoute, Link } from '@tanstack/react-router'
+import { object, optional, string } from 'valibot'
 import { Star, ChevronRight } from 'lucide-react'
 import { title } from '../../helpers/dom'
 import { Inline } from '../../components/inline'
@@ -10,17 +11,12 @@ import { getCategories } from '../../api/categories'
 import { getSubcategories } from '../../api/subcategories'
 import { Stack } from '../../components/stack'
 
+const SearchSchema = object({
+  s: optional(string()),
+})
+
 export const Route = createFileRoute('/recipes/list')({
   component: RouteComponent,
-<<<<<<< Updated upstream
-  loaderDeps: ({ search }) => {
-    return {
-      // @ts-expect-error - search params not typed
-      s: search['s'],
-    }
-  },
-  loader: async ({ deps: { s } }) => {
-=======
   head: () => ({
     meta: [
       {
@@ -29,8 +25,8 @@ export const Route = createFileRoute('/recipes/list')({
     ],
   }),
   loader: async ({ deps }) => {
+    // @ts-expect-error - unclear why this is happening...
     const s = deps.s || ''
->>>>>>> Stashed changes
     const recipes = await getRecipes({ titleSearch: s })
     const categories = await getCategories()
     const subCategories = await getSubcategories()
@@ -56,7 +52,7 @@ export const Route = createFileRoute('/recipes/list')({
       s: search.s ?? '',
     }
   },
-  validateSearch: searchSchema,
+  validateSearch: SearchSchema,
 })
 
 function RouteComponent() {
