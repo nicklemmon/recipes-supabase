@@ -12,6 +12,7 @@ import { Stack } from '../../components/stack'
 
 export const Route = createFileRoute('/recipes/list')({
   component: RouteComponent,
+<<<<<<< Updated upstream
   loaderDeps: ({ search }) => {
     return {
       // @ts-expect-error - search params not typed
@@ -19,6 +20,17 @@ export const Route = createFileRoute('/recipes/list')({
     }
   },
   loader: async ({ deps: { s } }) => {
+=======
+  head: () => ({
+    meta: [
+      {
+        title: title(['Recipes']),
+      },
+    ],
+  }),
+  loader: async ({ deps }) => {
+    const s = deps.s || ''
+>>>>>>> Stashed changes
     const recipes = await getRecipes({ titleSearch: s })
     const categories = await getCategories()
     const subCategories = await getSubcategories()
@@ -39,13 +51,12 @@ export const Route = createFileRoute('/recipes/list')({
       subCategories,
     }
   },
-  head: () => ({
-    meta: [
-      {
-        title: title(['Recipes']),
-      },
-    ],
-  }),
+  loaderDeps: ({ search }) => {
+    return {
+      s: search.s ?? '',
+    }
+  },
+  validateSearch: searchSchema,
 })
 
 function RouteComponent() {

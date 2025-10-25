@@ -23,6 +23,20 @@ import { FormTextarea } from '../../../../../components/form-textarea'
 
 export const Route = createFileRoute('/recipes/$category/$subcategory/$recipe/_private/edit')({
   component: RouteComponent,
+  head: ({ loaderData }) => {
+    return {
+      meta: [
+        {
+          title: title([
+            'Editing',
+            loaderData?.recipe?.title,
+            loaderData?.subcategory?.title,
+            loaderData?.category?.title,
+          ]),
+        },
+      ],
+    }
+  },
   loader: async ({ params }) => {
     const { subcategory: subcategorySlug, category: categorySlug, recipe: recipeSlug } = params
     const category = await getCategoryBySlug(categorySlug)
@@ -41,20 +55,6 @@ export const Route = createFileRoute('/recipes/$category/$subcategory/$recipe/_p
       recipe,
       categories,
       subcategories,
-    }
-  },
-  head: ({ loaderData }) => {
-    return {
-      meta: [
-        {
-          title: title([
-            'Editing',
-            loaderData?.recipe?.title,
-            loaderData?.subcategory?.title,
-            loaderData?.category?.title,
-          ]),
-        },
-      ],
     }
   },
 })

@@ -12,6 +12,15 @@ import { Inline } from '../../../../components/inline'
 
 export const Route = createFileRoute('/recipes/$category/$subcategory/')({
   component: RouteComponent,
+  head: ({ loaderData }) => {
+    return {
+      meta: [
+        {
+          title: title([loaderData?.subcategory?.title, loaderData?.category?.title]),
+        },
+      ],
+    }
+  },
   loader: async ({ params }) => {
     const { subcategory: subcategorySlug, category: categorySlug } = params
     const category = await getCategoryBySlug(categorySlug)
@@ -24,15 +33,6 @@ export const Route = createFileRoute('/recipes/$category/$subcategory/')({
         categoryId: category.id,
         subcategoryId: subcategory.id,
       }),
-    }
-  },
-  head: ({ loaderData }) => {
-    return {
-      meta: [
-        {
-          title: title([loaderData?.subcategory?.title, loaderData?.category?.title]),
-        },
-      ],
     }
   },
 })

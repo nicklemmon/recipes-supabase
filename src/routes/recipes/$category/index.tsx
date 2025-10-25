@@ -11,15 +11,6 @@ import { title } from '../../../helpers/dom'
 
 export const Route = createFileRoute('/recipes/$category/')({
   component: RouteComponent,
-  loader: async ({ params }) => {
-    const category = await getCategoryBySlug(params.category)
-    const subcategories = await getSubcategories(category.id)
-
-    return {
-      category,
-      subcategories,
-    }
-  },
   head: ({ loaderData }) => {
     return {
       meta: [
@@ -27,6 +18,15 @@ export const Route = createFileRoute('/recipes/$category/')({
           title: title([loaderData?.category?.title]),
         },
       ],
+    }
+  },
+  loader: async ({ params }) => {
+    const category = await getCategoryBySlug(params.category)
+    const subcategories = await getSubcategories(category.id)
+
+    return {
+      category,
+      subcategories,
     }
   },
 })
