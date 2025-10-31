@@ -1,16 +1,17 @@
-import { Component, ErrorInfo, ReactNode } from 'react'
 import { AlertTriangle, RefreshCw } from 'lucide-react'
+import { Component, ErrorInfo, ReactNode } from 'react'
+
+import { Button } from './button'
 import { Container } from './container'
 import { Stack } from './stack'
-import { Button } from './button'
 
 type Props = {
   children: ReactNode
 }
 
 type State = {
-  hasError: boolean
   error?: Error
+  hasError: boolean
 }
 
 export class ErrorBoundary extends Component<Props, State> {
@@ -20,7 +21,7 @@ export class ErrorBoundary extends Component<Props, State> {
   }
 
   static getDerivedStateFromError(error: Error): State {
-    return { hasError: true, error }
+    return { error, hasError: true }
   }
 
   componentDidCatch(error: Error, errorInfo: ErrorInfo) {
@@ -39,7 +40,7 @@ export class ErrorBoundary extends Component<Props, State> {
             <div className="max-w-md mx-auto text-center">
               <Stack spacing="lg">
                 <div className="text-red-500">
-                  <AlertTriangle size={64} className="mx-auto" />
+                  <AlertTriangle className="mx-auto" size={64} />
                 </div>
 
                 <Stack spacing="sm">

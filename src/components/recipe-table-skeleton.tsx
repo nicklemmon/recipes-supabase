@@ -26,7 +26,7 @@ export function RecipeTableSkeleton({
         <span className="md:hidden h-5 w-16 bg-gray-200 rounded inline-block" />
         <div className="hidden md:inline-flex gap-1">
           {Array.from({ length: 5 }).map((_, index) => (
-            <div key={index} className="w-4 h-4 bg-gray-200 rounded-full" />
+            <div className="w-4 h-4 bg-gray-200 rounded-full" key={index} />
           ))}
         </div>
       </td>

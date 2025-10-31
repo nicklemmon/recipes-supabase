@@ -1,4 +1,5 @@
 import js from '@eslint/js'
+import perfectionist from 'eslint-plugin-perfectionist'
 import pluginReact from 'eslint-plugin-react'
 import { defineConfig } from 'eslint/config'
 import globals from 'globals'
@@ -12,6 +13,7 @@ export default defineConfig([
   },
   tseslint.configs.recommended,
   pluginReact.configs.flat.recommended,
+  perfectionist.configs['recommended-natural'],
   {
     rules: {
       'react/react-in-jsx-scope': 'off',

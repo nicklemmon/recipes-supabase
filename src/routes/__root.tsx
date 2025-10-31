@@ -1,18 +1,20 @@
-import { HeadContent, Link, Outlet, createRootRoute } from '@tanstack/react-router'
+import { Tooltip } from '@base-ui-components/react/tooltip'
+import { createRootRoute, HeadContent, Link, Outlet } from '@tanstack/react-router'
 import { Citrus, LogIn, LogOut, Plus, User } from 'lucide-react'
 import { Toaster } from 'sonner'
-import { Tooltip } from '@base-ui-components/react/tooltip'
-import { NavLink, NAV_ICON_SIZE } from '../components/nav-actions'
+
 import { Container } from '../components/container'
 import { Inline } from '../components/inline'
+import { NAV_ICON_SIZE, NavLink } from '../components/nav-actions'
 import { NavSearch } from '../components/nav-search'
-import { supabase } from '../constants/supabase'
-import { SrOnly } from '../components/sr-only'
 import { NavTooltip, NavTooltipBody, NavTooltipTrigger } from '../components/nav-tooltip'
+import { SrOnly } from '../components/sr-only'
+import { supabase } from '../constants/supabase'
 import { title } from '../helpers/dom'
 import '../styles.css'
 
 export const Route = createRootRoute({
+  component: RootComponent,
   head: () => ({
     meta: [
       {
@@ -20,7 +22,6 @@ export const Route = createRootRoute({
       },
     ],
   }),
-  component: RootComponent,
   loader: async () => {
     const {
       data: { session },
@@ -41,9 +42,9 @@ function RootComponent() {
       <header className="py-2 flex gap-2 bg-slate-800 text-slate-300 text-sm">
         <Container>
           <div className="flex justify-between items-center gap-4">
-            <Link to="/" className="font-semibold text-slate-100">
+            <Link className="font-semibold text-slate-100" to="/">
               <Inline spacing="xs">
-                Lemfamy Recipes <Citrus size={NAV_ICON_SIZE} className="text-yellow-300" />
+                Lemfamy Recipes <Citrus className="text-yellow-300" size={NAV_ICON_SIZE} />
               </Inline>
             </Link>
 
@@ -97,7 +98,7 @@ function RootComponent() {
                   <NavTooltip>
                     <NavTooltipTrigger
                       as={
-                        <NavLink to="/logout" preload={false}>
+                        <NavLink preload={false} to="/logout">
                           <LogOut size={NAV_ICON_SIZE} />
                           <SrOnly>Log out</SrOnly>
                         </NavLink>

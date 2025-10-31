@@ -1,5 +1,6 @@
 import { render, screen } from '@testing-library/react'
-import { describe, it, expect, vi } from 'vitest'
+import { describe, expect, it, vi } from 'vitest'
+
 import { CategoryLink } from '../category-link'
 
 // Mock TanStack Router's Link component
@@ -46,7 +47,7 @@ describe('CategoryLink', () => {
 
   it('accepts custom className', () => {
     render(
-      <CategoryLink to="/recipes" className="custom-class">
+      <CategoryLink className="custom-class" to="/recipes">
         Category
       </CategoryLink>,
     )
@@ -57,7 +58,7 @@ describe('CategoryLink', () => {
 
   it('passes through additional props', () => {
     render(
-      <CategoryLink to="/recipes" data-testid="category-link">
+      <CategoryLink data-testid="category-link" to="/recipes">
         Category
       </CategoryLink>,
     )
@@ -74,7 +75,7 @@ describe('CategoryLink', () => {
 
   it('merges className with base styles correctly', () => {
     render(
-      <CategoryLink to="/recipes" className="bg-red-500 custom-padding">
+      <CategoryLink className="bg-red-500 custom-padding" to="/recipes">
         Category
       </CategoryLink>,
     )

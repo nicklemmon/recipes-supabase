@@ -1,17 +1,19 @@
-import { createFileRoute, Link, Await, defer } from '@tanstack/react-router'
-import { Suspense } from 'react'
+import { Await, createFileRoute, defer, Link } from '@tanstack/react-router'
 import { ChevronRight, Star } from 'lucide-react'
+import { Suspense } from 'react'
+
+import { getCategories } from '../../api/categories'
+import { getRecipes } from '../../api/recipes'
+import { getSubcategories } from '../../api/subcategories'
+import { Inline } from '../../components/inline'
+import { PageBody } from '../../components/page-body'
 import { PageHeader } from '../../components/page-header'
 import { PageHeading } from '../../components/page-heading'
-import { PageBody } from '../../components/page-body'
-import { Inline } from '../../components/inline'
 import { RecipeTableSkeleton } from '../../components/recipe-table-skeleton'
 import { title } from '../../helpers/dom'
-import { getRecipes } from '../../api/recipes'
-import { getCategories } from '../../api/categories'
-import { getSubcategories } from '../../api/subcategories'
 
 export const Route = createFileRoute('/recipes/favorites')({
+  component: RouteComponent,
   head: () => ({
     meta: [
       {
@@ -41,7 +43,6 @@ export const Route = createFileRoute('/recipes/favorites')({
       ),
     }
   },
-  component: RouteComponent,
 })
 
 function RouteComponent() {
@@ -68,7 +69,7 @@ function RouteComponent() {
               </thead>
               <tbody>
                 {Array.from({ length: 5 }).map((_, index) => (
-                  <RecipeTableSkeleton key={index} delay={index * 100} showDietaryPref={false} />
+                  <RecipeTableSkeleton delay={index * 100} key={index} showDietaryPref={false} />
                 ))}
               </tbody>
             </table>
@@ -96,19 +97,19 @@ function RouteComponent() {
                     }
 
                     return (
-                      <tr key={recipe.id} className="border-b border-slate-200">
+                      <tr className="border-b border-slate-200" key={recipe.id}>
                         <td className="p-4">
                           <Link
                             className="text-indigo-600 font-medium"
-                            to="/recipes/$category/$subcategory/$recipe/view"
                             params={{
                               category: recipe.categorySlug,
-                              subcategory: recipe.subCategorySlug,
                               recipe: recipe.slug,
+                              subcategory: recipe.subCategorySlug,
                             }}
                             search={{
                               from: 'favorites',
                             }}
+                            to="/recipes/$category/$subcategory/$recipe/view"
                           >
                             <Inline spacing="sm">
                               {recipe.title}
@@ -127,9 +128,9 @@ function RouteComponent() {
                           <Inline spacing="xs">
                             {[...new Array(recipe.rating)].map((_star, index) => (
                               <Star
+                                className="text-yellow-500 fill-yellow-200"
                                 key={`${recipe.id}-start-${index}`}
                                 size={16}
-                                className="text-yellow-500 fill-yellow-200"
                               />
                             ))}
                           </Inline>

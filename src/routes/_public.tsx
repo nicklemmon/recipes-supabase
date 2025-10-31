@@ -1,9 +1,8 @@
 import { createFileRoute, redirect } from '@tanstack/react-router'
+
 import { getSession } from '../api/auth'
 
 export const Route = createFileRoute('/_public')({
-  component: RouteComponent,
-  preload: false,
   beforeLoad: async () => {
     const { session } = await getSession()
 
@@ -13,6 +12,8 @@ export const Route = createFileRoute('/_public')({
       })
     }
   },
+  component: RouteComponent,
+  preload: false,
 })
 
 function RouteComponent() {

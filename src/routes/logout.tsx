@@ -1,10 +1,9 @@
 import { createFileRoute, redirect } from '@tanstack/react-router'
 import { toast } from 'sonner'
+
 import { signOut } from '../api/auth'
 
 export const Route = createFileRoute('/logout')({
-  component: RouteComponent,
-  preload: false,
   beforeLoad: async () => {
     try {
       await signOut()
@@ -18,10 +17,12 @@ export const Route = createFileRoute('/logout')({
 
     // Redirect to home or login page after logout
     throw redirect({
-      to: '/login',
       replace: true,
+      to: '/login',
     })
   },
+  component: RouteComponent,
+  preload: false,
 })
 
 function RouteComponent() {

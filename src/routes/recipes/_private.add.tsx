@@ -1,24 +1,26 @@
 import { createFileRoute } from '@tanstack/react-router'
-import { toast } from 'sonner'
 import { useRef, useState } from 'react'
+import { toast } from 'sonner'
+
+import { getCategories } from '../../api/categories'
+import { addRecipe } from '../../api/recipes'
+import { getSubcategories } from '../../api/subcategories'
+import { Button } from '../../components/button'
+import { FormControl } from '../../components/form-control'
+import { FormInput } from '../../components/form-input'
+import { FormLabel } from '../../components/form-label'
+import { FormSelect } from '../../components/form-select'
+import { FormTextarea } from '../../components/form-textarea'
+import { PageBody } from '../../components/page-body'
 import { PageHeader } from '../../components/page-header'
 import { PageHeading } from '../../components/page-heading'
-import { PageBody } from '../../components/page-body'
+import { Stack } from '../../components/stack'
 import { title } from '../../helpers/dom'
 import { slugify } from '../../helpers/string'
 import { NewRecipeSchema } from '../../types/recipes'
-import { getCategories } from '../../api/categories'
-import { getSubcategories } from '../../api/subcategories'
-import { Stack } from '../../components/stack'
-import { FormControl } from '../../components/form-control'
-import { FormLabel } from '../../components/form-label'
-import { FormInput } from '../../components/form-input'
-import { Button } from '../../components/button'
-import { FormSelect } from '../../components/form-select'
-import { FormTextarea } from '../../components/form-textarea'
-import { addRecipe } from '../../api/recipes'
 
 export const Route = createFileRoute('/recipes/_private/add')({
+  component: RouteComponent,
   head: () => ({
     meta: [
       {
@@ -26,7 +28,6 @@ export const Route = createFileRoute('/recipes/_private/add')({
       },
     ],
   }),
-  component: RouteComponent,
   loader: async () => {
     const categories = await getCategories()
     const subcategories = await getSubcategories()
@@ -36,7 +37,7 @@ export const Route = createFileRoute('/recipes/_private/add')({
 })
 
 function RouteComponent() {
-  const [addReqStatus, setAddReqStatus] = useState<'loading' | 'idle'>('idle')
+  const [addReqStatus, setAddReqStatus] = useState<'idle' | 'loading'>('idle')
   const [selectedCategory, setSelectedCategory] = useState<number>()
   const formRef = useRef<HTMLFormElement>(null)
   const { categories, subcategories } = Route.useLoaderData()
@@ -51,19 +52,19 @@ function RouteComponent() {
     try {
       e.preventDefault()
       const data = new FormData(e.currentTarget)
-      const { title, source, category_id, rating, subcategory_id, ingredients_md, directions_md } =
+      const { category_id, directions_md, ingredients_md, rating, source, subcategory_id, title } =
         Object.fromEntries(data)
 
       const newRecipe = NewRecipeSchema.parse({
-        title,
+        category_id: Number(category_id),
+        dietary_pref: [],
+        directions_md,
+        ingredients_md,
+        rating: Number(rating),
         slug: slugify(String(title)),
         source,
-        category_id: Number(category_id),
-        rating: Number(rating),
         subcategory_id: Number(subcategory_id),
-        ingredients_md,
-        directions_md,
-        dietary_pref: [],
+        title,
       })
 
       setAddReqStatus('loading')
@@ -104,9 +105,9 @@ function RouteComponent() {
                 <FormControl>
                   <FormLabel htmlFor="category-select">Category</FormLabel>
                   <FormSelect
+                    defaultValue=""
                     id="category-select"
                     name="category_id"
-                    defaultValue=""
                     onChange={(e) => {
                       const categoryId = Number((e.target as HTMLSelectElement).value)
 
@@ -133,11 +134,11 @@ function RouteComponent() {
                 <FormControl>
                   <FormLabel htmlFor="subcategory-select">Subcategory</FormLabel>
                   <FormSelect
+                    defaultValue=""
+                    disabled={subcategoriesByCategory.length === 0}
                     id="subcategory-select"
                     name="subcategory_id"
-                    defaultValue=""
                     required
-                    disabled={subcategoriesByCategory.length === 0}
                   >
                     <option disabled value="">
                       Select subcategory
@@ -157,7 +158,7 @@ function RouteComponent() {
               <Stack>
                 <FormControl>
                   <FormLabel htmlFor="rating-select">Rating</FormLabel>
-                  <FormSelect id="rating-select" name="rating" defaultValue="">
+                  <FormSelect defaultValue="" id="rating-select" name="rating">
                     <option disabled value="">
                       Select rating
                     </option>
@@ -178,15 +179,15 @@ function RouteComponent() {
 
             <FormControl>
               <FormLabel htmlFor="ingredients-textarea">Ingredients</FormLabel>
-              <FormTextarea id="ingredients-textarea" name="ingredients_md" rows={4} required />
+              <FormTextarea id="ingredients-textarea" name="ingredients_md" required rows={4} />
             </FormControl>
 
             <FormControl>
               <FormLabel htmlFor="directions-textarea">Directions</FormLabel>
-              <FormTextarea id="directions-textarea" name="directions_md" rows={4} required />
+              <FormTextarea id="directions-textarea" name="directions_md" required rows={4} />
             </FormControl>
 
-            <Button type="submit" loading={addReqStatus === 'loading'}>
+            <Button loading={addReqStatus === 'loading'} type="submit">
               Add recipe
             </Button>
           </Stack>

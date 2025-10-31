@@ -9,7 +9,7 @@ export function cn(...inputs: ClassValue[]) {
 }
 
 /** Returns site title */
-export function title(titleStr?: string | Array<string | undefined>) {
+export function title(titleStr?: Array<string | undefined> | string) {
   if (!titleStr) return ROOT_SITE_TITLE
 
   if (typeof titleStr === 'string') {

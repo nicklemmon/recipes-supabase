@@ -1,17 +1,14 @@
 import { createFileRoute } from '@tanstack/react-router'
+
+import { getSession } from '../api/auth'
+import { PageBody } from '../components/page-body'
 import { PageHeader } from '../components/page-header'
 import { PageHeading } from '../components/page-heading'
-import { PageBody } from '../components/page-body'
-import { title } from '../helpers/dom'
-import { getSession } from '../api/auth'
 import { Stack } from '../components/stack'
+import { title } from '../helpers/dom'
 
 export const Route = createFileRoute('/_private/profile')({
-  loader: async () => {
-    const { session } = await getSession()
-
-    return { session }
-  },
+  component: RouteComponent,
   head: () => ({
     meta: [
       {
@@ -19,7 +16,11 @@ export const Route = createFileRoute('/_private/profile')({
       },
     ],
   }),
-  component: RouteComponent,
+  loader: async () => {
+    const { session } = await getSession()
+
+    return { session }
+  },
 })
 
 function RouteComponent() {

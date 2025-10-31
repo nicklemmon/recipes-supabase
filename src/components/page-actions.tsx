@@ -1,6 +1,7 @@
 import { Link, LinkProps } from '@tanstack/react-router'
-import { ArrowLeft, Pencil, Trash2 } from 'lucide-react'
 import { cva } from 'cva'
+import { ArrowLeft, Pencil, Trash2 } from 'lucide-react'
+
 import { cn } from '../helpers/dom'
 import { Inline } from './inline'
 
@@ -27,13 +28,13 @@ export function PageActions({ className, ...props }: React.ComponentProps<'div'>
 }
 
 export function PageBackLink({
-  className,
   children,
+  className,
   ...props
-}: { className?: string; children?: React.ReactNode } & LinkProps<'a'>) {
+}: LinkProps<'a'> & { children?: React.ReactNode; className?: string }) {
   return (
     <Link className={cn(pageActionClasses(), className)} {...props}>
-      <Inline spacing="sm" align="center">
+      <Inline align="center" spacing="sm">
         <ArrowLeft size={ACTION_ICON_SIZE} />
         <span>{children}</span>
       </Inline>
@@ -41,35 +42,35 @@ export function PageBackLink({
   )
 }
 
-export function PageEditLink({
-  className,
-  children,
-  ...props
-}: { className?: string; children?: React.ReactNode } & LinkProps<'a'>) {
-  return (
-    <Link className={cn(pageActionClasses(), className)} {...props}>
-      <Inline spacing="sm" align="center">
-        <span>{children}</span>
-        <Pencil size={ACTION_ICON_SIZE} />
-      </Inline>
-    </Link>
-  )
-}
-
 export function PageDeleteButton({
-  className,
   children,
+  className,
   ...props
-}: { className?: string; children?: React.ReactNode } & React.ComponentProps<'button'>) {
+}: React.ComponentProps<'button'> & { children?: React.ReactNode; className?: string }) {
   return (
     <button
       className={cn(pageActionClasses(), 'bg-red-200 text-red-900 hover:bg-red-300', className)}
       {...props}
     >
-      <Inline spacing="sm" align="center">
+      <Inline align="center" spacing="sm">
         <span>{children}</span>
         <Trash2 size={ACTION_ICON_SIZE} />
       </Inline>
     </button>
+  )
+}
+
+export function PageEditLink({
+  children,
+  className,
+  ...props
+}: LinkProps<'a'> & { children?: React.ReactNode; className?: string }) {
+  return (
+    <Link className={cn(pageActionClasses(), className)} {...props}>
+      <Inline align="center" spacing="sm">
+        <span>{children}</span>
+        <Pencil size={ACTION_ICON_SIZE} />
+      </Inline>
+    </Link>
   )
 }

@@ -1,42 +1,44 @@
 import type { HTMLProps } from 'react'
+
 import type { SpacingProp } from '../types/props'
+
 import { cn } from '../helpers/dom'
 
-type AlignProp = 'top' | 'center' | 'bottom'
-
-type InlineProps = {
-  children: React.ReactNode
-  spacing?: SpacingProp
-  align?: AlignProp
-  className?: string
-} & HTMLProps<HTMLDivElement>
+type AlignProp = 'bottom' | 'center' | 'top'
 
 type InlineClassMap = {
-  spacing: Required<Record<SpacingProp, string>>
   align: Required<Record<AlignProp, string>>
+  spacing: Required<Record<SpacingProp, string>>
+}
+
+type InlineProps = HTMLProps<HTMLDivElement> & {
+  align?: AlignProp
+  children: React.ReactNode
+  className?: string
+  spacing?: SpacingProp
 }
 
 const INLINE_CLASS_MAP: InlineClassMap = {
+  align: {
+    bottom: 'items-end',
+    center: 'items-center',
+    top: 'items-start',
+  },
   spacing: {
     '0': 'gap-0',
-    xs: 'gap-1',
-    sm: 'gap-2',
-    md: 'gap-4',
     lg: 'gap-8',
+    md: 'gap-4',
+    sm: 'gap-2',
     xl: 'gap-16',
-  },
-  align: {
-    top: 'items-start',
-    center: 'items-center',
-    bottom: 'items-end',
+    xs: 'gap-1',
   },
 }
 
 /** Arrange child elements horizontally in a row (with wrapping) */
 export function Inline({
+  align = 'center',
   children,
   className,
-  align = 'center',
   spacing = 'md',
   ...rest
 }: InlineProps) {
