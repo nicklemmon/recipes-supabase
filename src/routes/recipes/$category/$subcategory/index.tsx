@@ -84,8 +84,8 @@ function RouteComponent() {
               <>
                 {resolvedRecipes.length === 0 ? (
                   <p className="text-slate-700">
-                    No recipes <span className="font-bold">&quot;{subcategory.title}&quot;</span>{' '}
-                    recipes yet.
+                    No <span className="font-bold">&quot;{subcategory.title}&quot;</span> recipes
+                    yet.
                   </p>
                 ) : (
                   <div className="border border-x-0 border-slate-200">
