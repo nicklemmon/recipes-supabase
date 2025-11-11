@@ -4,5 +4,9 @@ import { tanstackRouter } from '@tanstack/router-plugin/vite'
 import tailwindcss from '@tailwindcss/vite'
 
 export default defineConfig({
-  plugins: [tanstackRouter(), tailwindcss(), react()],
+  plugins: [
+    tanstackRouter({ generatedRouteTree: './src/route-tree.gen.ts' }),
+    tailwindcss(),
+    react(),
+  ],
 })
