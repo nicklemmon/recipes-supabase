@@ -10,263 +10,349 @@
 
 import { createFileRoute } from '@tanstack/react-router'
 
-// Import Routes
+import { Route as rootRouteImport } from './routes/__root'
+import { Route as LogoutRouteImport } from './routes/logout'
+import { Route as LoginRouteImport } from './routes/login'
+import { Route as PublicRouteImport } from './routes/_public'
+import { Route as PrivateRouteImport } from './routes/_private'
+import { Route as IndexRouteImport } from './routes/index'
+import { Route as RecipesListRouteImport } from './routes/recipes/list'
+import { Route as RecipesFavoritesRouteImport } from './routes/recipes/favorites'
+import { Route as RecipesPrivateRouteImport } from './routes/recipes/_private'
+import { Route as PrivateProfileRouteImport } from './routes/_private.profile'
+import { Route as RecipesCategoryIndexRouteImport } from './routes/recipes/$category/index'
+import { Route as RecipesPrivateAddRouteImport } from './routes/recipes/_private.add'
+import { Route as RecipesCategorySubcategoryIndexRouteImport } from './routes/recipes/$category/$subcategory/index'
+import { Route as RecipesCategorySubcategoryRecipeViewRouteImport } from './routes/recipes/$category/$subcategory/$recipe/view'
+import { Route as RecipesCategorySubcategoryRecipePrivateRouteImport } from './routes/recipes/$category/$subcategory/$recipe/_private'
+import { Route as RecipesCategorySubcategoryRecipePrivateEditRouteImport } from './routes/recipes/$category/$subcategory/$recipe/_private.edit'
 
-import { Route as rootRoute } from './routes/__root'
-import { Route as LogoutImport } from './routes/logout'
-import { Route as LoginImport } from './routes/login'
-import { Route as PublicImport } from './routes/_public'
-import { Route as PrivateImport } from './routes/_private'
-import { Route as IndexImport } from './routes/index'
-import { Route as RecipesListImport } from './routes/recipes/list'
-import { Route as RecipesFavoritesImport } from './routes/recipes/favorites'
-import { Route as RecipesPrivateImport } from './routes/recipes/_private'
-import { Route as PrivateProfileImport } from './routes/_private.profile'
-import { Route as RecipesCategoryIndexImport } from './routes/recipes/$category/index'
-import { Route as RecipesPrivateAddImport } from './routes/recipes/_private.add'
-import { Route as RecipesCategorySubcategoryIndexImport } from './routes/recipes/$category/$subcategory/index'
-import { Route as RecipesCategorySubcategoryRecipeViewImport } from './routes/recipes/$category/$subcategory/$recipe/view'
-import { Route as RecipesCategorySubcategoryRecipePrivateImport } from './routes/recipes/$category/$subcategory/$recipe/_private'
-import { Route as RecipesCategorySubcategoryRecipePrivateEditImport } from './routes/recipes/$category/$subcategory/$recipe/_private.edit'
-
-// Create Virtual Routes
-
-const RecipesImport = createFileRoute('/recipes')()
-const RecipesCategorySubcategoryRecipeImport = createFileRoute(
+const RecipesRouteImport = createFileRoute('/recipes')()
+const RecipesCategorySubcategoryRecipeRouteImport = createFileRoute(
   '/recipes/$category/$subcategory/$recipe',
 )()
 
-// Create/Update Routes
-
-const RecipesRoute = RecipesImport.update({
+const RecipesRoute = RecipesRouteImport.update({
   id: '/recipes',
   path: '/recipes',
-  getParentRoute: () => rootRoute,
+  getParentRoute: () => rootRouteImport,
 } as any)
-
-const LogoutRoute = LogoutImport.update({
+const LogoutRoute = LogoutRouteImport.update({
   id: '/logout',
   path: '/logout',
-  getParentRoute: () => rootRoute,
+  getParentRoute: () => rootRouteImport,
 } as any)
-
-const LoginRoute = LoginImport.update({
+const LoginRoute = LoginRouteImport.update({
   id: '/login',
   path: '/login',
-  getParentRoute: () => rootRoute,
+  getParentRoute: () => rootRouteImport,
 } as any)
-
-const PublicRoute = PublicImport.update({
+const PublicRoute = PublicRouteImport.update({
   id: '/_public',
-  getParentRoute: () => rootRoute,
+  getParentRoute: () => rootRouteImport,
 } as any)
-
-const PrivateRoute = PrivateImport.update({
+const PrivateRoute = PrivateRouteImport.update({
   id: '/_private',
-  getParentRoute: () => rootRoute,
+  getParentRoute: () => rootRouteImport,
 } as any)
-
-const IndexRoute = IndexImport.update({
+const IndexRoute = IndexRouteImport.update({
   id: '/',
   path: '/',
-  getParentRoute: () => rootRoute,
+  getParentRoute: () => rootRouteImport,
 } as any)
-
-const RecipesListRoute = RecipesListImport.update({
+const RecipesListRoute = RecipesListRouteImport.update({
   id: '/list',
   path: '/list',
   getParentRoute: () => RecipesRoute,
 } as any)
-
-const RecipesFavoritesRoute = RecipesFavoritesImport.update({
+const RecipesFavoritesRoute = RecipesFavoritesRouteImport.update({
   id: '/favorites',
   path: '/favorites',
   getParentRoute: () => RecipesRoute,
 } as any)
-
-const RecipesPrivateRoute = RecipesPrivateImport.update({
+const RecipesPrivateRoute = RecipesPrivateRouteImport.update({
   id: '/_private',
   getParentRoute: () => RecipesRoute,
 } as any)
-
-const PrivateProfileRoute = PrivateProfileImport.update({
+const PrivateProfileRoute = PrivateProfileRouteImport.update({
   id: '/profile',
   path: '/profile',
   getParentRoute: () => PrivateRoute,
 } as any)
-
-const RecipesCategoryIndexRoute = RecipesCategoryIndexImport.update({
+const RecipesCategoryIndexRoute = RecipesCategoryIndexRouteImport.update({
   id: '/$category/',
   path: '/$category/',
   getParentRoute: () => RecipesRoute,
 } as any)
-
-const RecipesPrivateAddRoute = RecipesPrivateAddImport.update({
+const RecipesPrivateAddRoute = RecipesPrivateAddRouteImport.update({
   id: '/add',
   path: '/add',
   getParentRoute: () => RecipesPrivateRoute,
 } as any)
-
-const RecipesCategorySubcategoryRecipeRoute = RecipesCategorySubcategoryRecipeImport.update({
-  id: '/$category/$subcategory/$recipe',
-  path: '/$category/$subcategory/$recipe',
-  getParentRoute: () => RecipesRoute,
-} as any)
-
-const RecipesCategorySubcategoryIndexRoute = RecipesCategorySubcategoryIndexImport.update({
-  id: '/$category/$subcategory/',
-  path: '/$category/$subcategory/',
-  getParentRoute: () => RecipesRoute,
-} as any)
-
-const RecipesCategorySubcategoryRecipeViewRoute = RecipesCategorySubcategoryRecipeViewImport.update(
-  {
+const RecipesCategorySubcategoryRecipeRoute =
+  RecipesCategorySubcategoryRecipeRouteImport.update({
+    id: '/$category/$subcategory/$recipe',
+    path: '/$category/$subcategory/$recipe',
+    getParentRoute: () => RecipesRoute,
+  } as any)
+const RecipesCategorySubcategoryIndexRoute =
+  RecipesCategorySubcategoryIndexRouteImport.update({
+    id: '/$category/$subcategory/',
+    path: '/$category/$subcategory/',
+    getParentRoute: () => RecipesRoute,
+  } as any)
+const RecipesCategorySubcategoryRecipeViewRoute =
+  RecipesCategorySubcategoryRecipeViewRouteImport.update({
     id: '/view',
     path: '/view',
     getParentRoute: () => RecipesCategorySubcategoryRecipeRoute,
-  } as any,
-)
-
+  } as any)
 const RecipesCategorySubcategoryRecipePrivateRoute =
-  RecipesCategorySubcategoryRecipePrivateImport.update({
+  RecipesCategorySubcategoryRecipePrivateRouteImport.update({
     id: '/_private',
     getParentRoute: () => RecipesCategorySubcategoryRecipeRoute,
   } as any)
-
 const RecipesCategorySubcategoryRecipePrivateEditRoute =
-  RecipesCategorySubcategoryRecipePrivateEditImport.update({
+  RecipesCategorySubcategoryRecipePrivateEditRouteImport.update({
     id: '/edit',
     path: '/edit',
     getParentRoute: () => RecipesCategorySubcategoryRecipePrivateRoute,
   } as any)
 
-// Populate the FileRoutesByPath interface
+export interface FileRoutesByFullPath {
+  '/': typeof IndexRoute
+  '/login': typeof LoginRoute
+  '/logout': typeof LogoutRoute
+  '/profile': typeof PrivateProfileRoute
+  '/recipes': typeof RecipesPrivateRouteWithChildren
+  '/recipes/favorites': typeof RecipesFavoritesRoute
+  '/recipes/list': typeof RecipesListRoute
+  '/recipes/add': typeof RecipesPrivateAddRoute
+  '/recipes/$category': typeof RecipesCategoryIndexRoute
+  '/recipes/$category/$subcategory': typeof RecipesCategorySubcategoryIndexRoute
+  '/recipes/$category/$subcategory/$recipe': typeof RecipesCategorySubcategoryRecipePrivateRouteWithChildren
+  '/recipes/$category/$subcategory/$recipe/view': typeof RecipesCategorySubcategoryRecipeViewRoute
+  '/recipes/$category/$subcategory/$recipe/edit': typeof RecipesCategorySubcategoryRecipePrivateEditRoute
+}
+export interface FileRoutesByTo {
+  '/': typeof IndexRoute
+  '/login': typeof LoginRoute
+  '/logout': typeof LogoutRoute
+  '/profile': typeof PrivateProfileRoute
+  '/recipes': typeof RecipesPrivateRouteWithChildren
+  '/recipes/favorites': typeof RecipesFavoritesRoute
+  '/recipes/list': typeof RecipesListRoute
+  '/recipes/add': typeof RecipesPrivateAddRoute
+  '/recipes/$category': typeof RecipesCategoryIndexRoute
+  '/recipes/$category/$subcategory': typeof RecipesCategorySubcategoryIndexRoute
+  '/recipes/$category/$subcategory/$recipe': typeof RecipesCategorySubcategoryRecipePrivateRouteWithChildren
+  '/recipes/$category/$subcategory/$recipe/view': typeof RecipesCategorySubcategoryRecipeViewRoute
+  '/recipes/$category/$subcategory/$recipe/edit': typeof RecipesCategorySubcategoryRecipePrivateEditRoute
+}
+export interface FileRoutesById {
+  __root__: typeof rootRouteImport
+  '/': typeof IndexRoute
+  '/_private': typeof PrivateRouteWithChildren
+  '/_public': typeof PublicRoute
+  '/login': typeof LoginRoute
+  '/logout': typeof LogoutRoute
+  '/_private/profile': typeof PrivateProfileRoute
+  '/recipes': typeof RecipesRouteWithChildren
+  '/recipes/_private': typeof RecipesPrivateRouteWithChildren
+  '/recipes/favorites': typeof RecipesFavoritesRoute
+  '/recipes/list': typeof RecipesListRoute
+  '/recipes/_private/add': typeof RecipesPrivateAddRoute
+  '/recipes/$category/': typeof RecipesCategoryIndexRoute
+  '/recipes/$category/$subcategory/': typeof RecipesCategorySubcategoryIndexRoute
+  '/recipes/$category/$subcategory/$recipe': typeof RecipesCategorySubcategoryRecipeRouteWithChildren
+  '/recipes/$category/$subcategory/$recipe/_private': typeof RecipesCategorySubcategoryRecipePrivateRouteWithChildren
+  '/recipes/$category/$subcategory/$recipe/view': typeof RecipesCategorySubcategoryRecipeViewRoute
+  '/recipes/$category/$subcategory/$recipe/_private/edit': typeof RecipesCategorySubcategoryRecipePrivateEditRoute
+}
+export interface FileRouteTypes {
+  fileRoutesByFullPath: FileRoutesByFullPath
+  fullPaths:
+    | '/'
+    | '/login'
+    | '/logout'
+    | '/profile'
+    | '/recipes'
+    | '/recipes/favorites'
+    | '/recipes/list'
+    | '/recipes/add'
+    | '/recipes/$category'
+    | '/recipes/$category/$subcategory'
+    | '/recipes/$category/$subcategory/$recipe'
+    | '/recipes/$category/$subcategory/$recipe/view'
+    | '/recipes/$category/$subcategory/$recipe/edit'
+  fileRoutesByTo: FileRoutesByTo
+  to:
+    | '/'
+    | '/login'
+    | '/logout'
+    | '/profile'
+    | '/recipes'
+    | '/recipes/favorites'
+    | '/recipes/list'
+    | '/recipes/add'
+    | '/recipes/$category'
+    | '/recipes/$category/$subcategory'
+    | '/recipes/$category/$subcategory/$recipe'
+    | '/recipes/$category/$subcategory/$recipe/view'
+    | '/recipes/$category/$subcategory/$recipe/edit'
+  id:
+    | '__root__'
+    | '/'
+    | '/_private'
+    | '/_public'
+    | '/login'
+    | '/logout'
+    | '/_private/profile'
+    | '/recipes'
+    | '/recipes/_private'
+    | '/recipes/favorites'
+    | '/recipes/list'
+    | '/recipes/_private/add'
+    | '/recipes/$category/'
+    | '/recipes/$category/$subcategory/'
+    | '/recipes/$category/$subcategory/$recipe'
+    | '/recipes/$category/$subcategory/$recipe/_private'
+    | '/recipes/$category/$subcategory/$recipe/view'
+    | '/recipes/$category/$subcategory/$recipe/_private/edit'
+  fileRoutesById: FileRoutesById
+}
+export interface RootRouteChildren {
+  IndexRoute: typeof IndexRoute
+  PrivateRoute: typeof PrivateRouteWithChildren
+  PublicRoute: typeof PublicRoute
+  LoginRoute: typeof LoginRoute
+  LogoutRoute: typeof LogoutRoute
+  RecipesRoute: typeof RecipesRouteWithChildren
+}
 
 declare module '@tanstack/react-router' {
   interface FileRoutesByPath {
-    '/': {
-      id: '/'
-      path: '/'
-      fullPath: '/'
-      preLoaderRoute: typeof IndexImport
-      parentRoute: typeof rootRoute
-    }
-    '/_private': {
-      id: '/_private'
-      path: ''
-      fullPath: ''
-      preLoaderRoute: typeof PrivateImport
-      parentRoute: typeof rootRoute
-    }
-    '/_public': {
-      id: '/_public'
-      path: ''
-      fullPath: ''
-      preLoaderRoute: typeof PublicImport
-      parentRoute: typeof rootRoute
-    }
-    '/login': {
-      id: '/login'
-      path: '/login'
-      fullPath: '/login'
-      preLoaderRoute: typeof LoginImport
-      parentRoute: typeof rootRoute
+    '/recipes': {
+      id: '/recipes'
+      path: '/recipes'
+      fullPath: '/recipes'
+      preLoaderRoute: typeof RecipesRouteImport
+      parentRoute: typeof rootRouteImport
     }
     '/logout': {
       id: '/logout'
       path: '/logout'
       fullPath: '/logout'
-      preLoaderRoute: typeof LogoutImport
-      parentRoute: typeof rootRoute
+      preLoaderRoute: typeof LogoutRouteImport
+      parentRoute: typeof rootRouteImport
     }
-    '/_private/profile': {
-      id: '/_private/profile'
-      path: '/profile'
-      fullPath: '/profile'
-      preLoaderRoute: typeof PrivateProfileImport
-      parentRoute: typeof PrivateImport
+    '/login': {
+      id: '/login'
+      path: '/login'
+      fullPath: '/login'
+      preLoaderRoute: typeof LoginRouteImport
+      parentRoute: typeof rootRouteImport
     }
-    '/recipes': {
-      id: '/recipes'
-      path: '/recipes'
-      fullPath: '/recipes'
-      preLoaderRoute: typeof RecipesImport
-      parentRoute: typeof rootRoute
+    '/_public': {
+      id: '/_public'
+      path: ''
+      fullPath: ''
+      preLoaderRoute: typeof PublicRouteImport
+      parentRoute: typeof rootRouteImport
     }
-    '/recipes/_private': {
-      id: '/recipes/_private'
-      path: '/recipes'
-      fullPath: '/recipes'
-      preLoaderRoute: typeof RecipesPrivateImport
+    '/_private': {
+      id: '/_private'
+      path: ''
+      fullPath: ''
+      preLoaderRoute: typeof PrivateRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/': {
+      id: '/'
+      path: '/'
+      fullPath: '/'
+      preLoaderRoute: typeof IndexRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/recipes/list': {
+      id: '/recipes/list'
+      path: '/list'
+      fullPath: '/recipes/list'
+      preLoaderRoute: typeof RecipesListRouteImport
       parentRoute: typeof RecipesRoute
     }
     '/recipes/favorites': {
       id: '/recipes/favorites'
       path: '/favorites'
       fullPath: '/recipes/favorites'
-      preLoaderRoute: typeof RecipesFavoritesImport
-      parentRoute: typeof RecipesImport
+      preLoaderRoute: typeof RecipesFavoritesRouteImport
+      parentRoute: typeof RecipesRoute
     }
-    '/recipes/list': {
-      id: '/recipes/list'
-      path: '/list'
-      fullPath: '/recipes/list'
-      preLoaderRoute: typeof RecipesListImport
-      parentRoute: typeof RecipesImport
+    '/recipes/_private': {
+      id: '/recipes/_private'
+      path: '/recipes'
+      fullPath: '/recipes'
+      preLoaderRoute: typeof RecipesPrivateRouteImport
+      parentRoute: typeof RecipesRoute
     }
-    '/recipes/_private/add': {
-      id: '/recipes/_private/add'
-      path: '/add'
-      fullPath: '/recipes/add'
-      preLoaderRoute: typeof RecipesPrivateAddImport
-      parentRoute: typeof RecipesPrivateImport
+    '/_private/profile': {
+      id: '/_private/profile'
+      path: '/profile'
+      fullPath: '/profile'
+      preLoaderRoute: typeof PrivateProfileRouteImport
+      parentRoute: typeof PrivateRoute
     }
     '/recipes/$category/': {
       id: '/recipes/$category/'
       path: '/$category'
       fullPath: '/recipes/$category'
-      preLoaderRoute: typeof RecipesCategoryIndexImport
-      parentRoute: typeof RecipesImport
+      preLoaderRoute: typeof RecipesCategoryIndexRouteImport
+      parentRoute: typeof RecipesRoute
     }
-    '/recipes/$category/$subcategory/': {
-      id: '/recipes/$category/$subcategory/'
-      path: '/$category/$subcategory'
-      fullPath: '/recipes/$category/$subcategory'
-      preLoaderRoute: typeof RecipesCategorySubcategoryIndexImport
-      parentRoute: typeof RecipesImport
+    '/recipes/_private/add': {
+      id: '/recipes/_private/add'
+      path: '/add'
+      fullPath: '/recipes/add'
+      preLoaderRoute: typeof RecipesPrivateAddRouteImport
+      parentRoute: typeof RecipesPrivateRoute
     }
     '/recipes/$category/$subcategory/$recipe': {
       id: '/recipes/$category/$subcategory/$recipe'
       path: '/$category/$subcategory/$recipe'
       fullPath: '/recipes/$category/$subcategory/$recipe'
-      preLoaderRoute: typeof RecipesCategorySubcategoryRecipeImport
-      parentRoute: typeof RecipesImport
+      preLoaderRoute: typeof RecipesCategorySubcategoryRecipeRouteImport
+      parentRoute: typeof RecipesRoute
     }
-    '/recipes/$category/$subcategory/$recipe/_private': {
-      id: '/recipes/$category/$subcategory/$recipe/_private'
-      path: '/$category/$subcategory/$recipe'
-      fullPath: '/recipes/$category/$subcategory/$recipe'
-      preLoaderRoute: typeof RecipesCategorySubcategoryRecipePrivateImport
-      parentRoute: typeof RecipesCategorySubcategoryRecipeRoute
+    '/recipes/$category/$subcategory/': {
+      id: '/recipes/$category/$subcategory/'
+      path: '/$category/$subcategory'
+      fullPath: '/recipes/$category/$subcategory'
+      preLoaderRoute: typeof RecipesCategorySubcategoryIndexRouteImport
+      parentRoute: typeof RecipesRoute
     }
     '/recipes/$category/$subcategory/$recipe/view': {
       id: '/recipes/$category/$subcategory/$recipe/view'
       path: '/view'
       fullPath: '/recipes/$category/$subcategory/$recipe/view'
-      preLoaderRoute: typeof RecipesCategorySubcategoryRecipeViewImport
-      parentRoute: typeof RecipesCategorySubcategoryRecipeImport
+      preLoaderRoute: typeof RecipesCategorySubcategoryRecipeViewRouteImport
+      parentRoute: typeof RecipesCategorySubcategoryRecipeRoute
+    }
+    '/recipes/$category/$subcategory/$recipe/_private': {
+      id: '/recipes/$category/$subcategory/$recipe/_private'
+      path: '/$category/$subcategory/$recipe'
+      fullPath: '/recipes/$category/$subcategory/$recipe'
+      preLoaderRoute: typeof RecipesCategorySubcategoryRecipePrivateRouteImport
+      parentRoute: typeof RecipesCategorySubcategoryRecipeRoute
     }
     '/recipes/$category/$subcategory/$recipe/_private/edit': {
       id: '/recipes/$category/$subcategory/$recipe/_private/edit'
       path: '/edit'
       fullPath: '/recipes/$category/$subcategory/$recipe/edit'
-      preLoaderRoute: typeof RecipesCategorySubcategoryRecipePrivateEditImport
-      parentRoute: typeof RecipesCategorySubcategoryRecipePrivateImport
+      preLoaderRoute: typeof RecipesCategorySubcategoryRecipePrivateEditRouteImport
+      parentRoute: typeof RecipesCategorySubcategoryRecipePrivateRoute
     }
   }
 }
-
-// Create and export the route tree
 
 interface PrivateRouteChildren {
   PrivateProfileRoute: typeof PrivateProfileRoute
@@ -276,7 +362,8 @@ const PrivateRouteChildren: PrivateRouteChildren = {
   PrivateProfileRoute: PrivateProfileRoute,
 }
 
-const PrivateRouteWithChildren = PrivateRoute._addFileChildren(PrivateRouteChildren)
+const PrivateRouteWithChildren =
+  PrivateRoute._addFileChildren(PrivateRouteChildren)
 
 interface RecipesPrivateRouteChildren {
   RecipesPrivateAddRoute: typeof RecipesPrivateAddRoute
@@ -314,7 +401,8 @@ const RecipesCategorySubcategoryRecipeRouteChildren: RecipesCategorySubcategoryR
   {
     RecipesCategorySubcategoryRecipePrivateRoute:
       RecipesCategorySubcategoryRecipePrivateRouteWithChildren,
-    RecipesCategorySubcategoryRecipeViewRoute: RecipesCategorySubcategoryRecipeViewRoute,
+    RecipesCategorySubcategoryRecipeViewRoute:
+      RecipesCategorySubcategoryRecipeViewRoute,
   }
 
 const RecipesCategorySubcategoryRecipeRouteWithChildren =
@@ -337,129 +425,12 @@ const RecipesRouteChildren: RecipesRouteChildren = {
   RecipesListRoute: RecipesListRoute,
   RecipesCategoryIndexRoute: RecipesCategoryIndexRoute,
   RecipesCategorySubcategoryIndexRoute: RecipesCategorySubcategoryIndexRoute,
-  RecipesCategorySubcategoryRecipeRoute: RecipesCategorySubcategoryRecipeRouteWithChildren,
+  RecipesCategorySubcategoryRecipeRoute:
+    RecipesCategorySubcategoryRecipeRouteWithChildren,
 }
 
-const RecipesRouteWithChildren = RecipesRoute._addFileChildren(RecipesRouteChildren)
-
-export interface FileRoutesByFullPath {
-  '/': typeof IndexRoute
-  '': typeof PublicRoute
-  '/login': typeof LoginRoute
-  '/logout': typeof LogoutRoute
-  '/profile': typeof PrivateProfileRoute
-  '/recipes': typeof RecipesPrivateRouteWithChildren
-  '/recipes/favorites': typeof RecipesFavoritesRoute
-  '/recipes/list': typeof RecipesListRoute
-  '/recipes/add': typeof RecipesPrivateAddRoute
-  '/recipes/$category': typeof RecipesCategoryIndexRoute
-  '/recipes/$category/$subcategory': typeof RecipesCategorySubcategoryIndexRoute
-  '/recipes/$category/$subcategory/$recipe': typeof RecipesCategorySubcategoryRecipePrivateRouteWithChildren
-  '/recipes/$category/$subcategory/$recipe/view': typeof RecipesCategorySubcategoryRecipeViewRoute
-  '/recipes/$category/$subcategory/$recipe/edit': typeof RecipesCategorySubcategoryRecipePrivateEditRoute
-}
-
-export interface FileRoutesByTo {
-  '/': typeof IndexRoute
-  '': typeof PublicRoute
-  '/login': typeof LoginRoute
-  '/logout': typeof LogoutRoute
-  '/profile': typeof PrivateProfileRoute
-  '/recipes': typeof RecipesPrivateRouteWithChildren
-  '/recipes/favorites': typeof RecipesFavoritesRoute
-  '/recipes/list': typeof RecipesListRoute
-  '/recipes/add': typeof RecipesPrivateAddRoute
-  '/recipes/$category': typeof RecipesCategoryIndexRoute
-  '/recipes/$category/$subcategory': typeof RecipesCategorySubcategoryIndexRoute
-  '/recipes/$category/$subcategory/$recipe': typeof RecipesCategorySubcategoryRecipePrivateRouteWithChildren
-  '/recipes/$category/$subcategory/$recipe/view': typeof RecipesCategorySubcategoryRecipeViewRoute
-  '/recipes/$category/$subcategory/$recipe/edit': typeof RecipesCategorySubcategoryRecipePrivateEditRoute
-}
-
-export interface FileRoutesById {
-  __root__: typeof rootRoute
-  '/': typeof IndexRoute
-  '/_private': typeof PrivateRouteWithChildren
-  '/_public': typeof PublicRoute
-  '/login': typeof LoginRoute
-  '/logout': typeof LogoutRoute
-  '/_private/profile': typeof PrivateProfileRoute
-  '/recipes': typeof RecipesRouteWithChildren
-  '/recipes/_private': typeof RecipesPrivateRouteWithChildren
-  '/recipes/favorites': typeof RecipesFavoritesRoute
-  '/recipes/list': typeof RecipesListRoute
-  '/recipes/_private/add': typeof RecipesPrivateAddRoute
-  '/recipes/$category/': typeof RecipesCategoryIndexRoute
-  '/recipes/$category/$subcategory/': typeof RecipesCategorySubcategoryIndexRoute
-  '/recipes/$category/$subcategory/$recipe': typeof RecipesCategorySubcategoryRecipeRouteWithChildren
-  '/recipes/$category/$subcategory/$recipe/_private': typeof RecipesCategorySubcategoryRecipePrivateRouteWithChildren
-  '/recipes/$category/$subcategory/$recipe/view': typeof RecipesCategorySubcategoryRecipeViewRoute
-  '/recipes/$category/$subcategory/$recipe/_private/edit': typeof RecipesCategorySubcategoryRecipePrivateEditRoute
-}
-
-export interface FileRouteTypes {
-  fileRoutesByFullPath: FileRoutesByFullPath
-  fullPaths:
-    | '/'
-    | ''
-    | '/login'
-    | '/logout'
-    | '/profile'
-    | '/recipes'
-    | '/recipes/favorites'
-    | '/recipes/list'
-    | '/recipes/add'
-    | '/recipes/$category'
-    | '/recipes/$category/$subcategory'
-    | '/recipes/$category/$subcategory/$recipe'
-    | '/recipes/$category/$subcategory/$recipe/view'
-    | '/recipes/$category/$subcategory/$recipe/edit'
-  fileRoutesByTo: FileRoutesByTo
-  to:
-    | '/'
-    | ''
-    | '/login'
-    | '/logout'
-    | '/profile'
-    | '/recipes'
-    | '/recipes/favorites'
-    | '/recipes/list'
-    | '/recipes/add'
-    | '/recipes/$category'
-    | '/recipes/$category/$subcategory'
-    | '/recipes/$category/$subcategory/$recipe'
-    | '/recipes/$category/$subcategory/$recipe/view'
-    | '/recipes/$category/$subcategory/$recipe/edit'
-  id:
-    | '__root__'
-    | '/'
-    | '/_private'
-    | '/_public'
-    | '/login'
-    | '/logout'
-    | '/_private/profile'
-    | '/recipes'
-    | '/recipes/_private'
-    | '/recipes/favorites'
-    | '/recipes/list'
-    | '/recipes/_private/add'
-    | '/recipes/$category/'
-    | '/recipes/$category/$subcategory/'
-    | '/recipes/$category/$subcategory/$recipe'
-    | '/recipes/$category/$subcategory/$recipe/_private'
-    | '/recipes/$category/$subcategory/$recipe/view'
-    | '/recipes/$category/$subcategory/$recipe/_private/edit'
-  fileRoutesById: FileRoutesById
-}
-
-export interface RootRouteChildren {
-  IndexRoute: typeof IndexRoute
-  PrivateRoute: typeof PrivateRouteWithChildren
-  PublicRoute: typeof PublicRoute
-  LoginRoute: typeof LoginRoute
-  LogoutRoute: typeof LogoutRoute
-  RecipesRoute: typeof RecipesRouteWithChildren
-}
+const RecipesRouteWithChildren =
+  RecipesRoute._addFileChildren(RecipesRouteChildren)
 
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
@@ -469,108 +440,6 @@ const rootRouteChildren: RootRouteChildren = {
   LogoutRoute: LogoutRoute,
   RecipesRoute: RecipesRouteWithChildren,
 }
-
-export const routeTree = rootRoute
+export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)
   ._addFileTypes<FileRouteTypes>()
-
-/* ROUTE_MANIFEST_START
-{
-  "routes": {
-    "__root__": {
-      "filePath": "__root.tsx",
-      "children": [
-        "/",
-        "/_private",
-        "/_public",
-        "/login",
-        "/logout",
-        "/recipes"
-      ]
-    },
-    "/": {
-      "filePath": "index.tsx"
-    },
-    "/_private": {
-      "filePath": "_private.tsx",
-      "children": [
-        "/_private/profile"
-      ]
-    },
-    "/_public": {
-      "filePath": "_public.tsx"
-    },
-    "/login": {
-      "filePath": "login.tsx"
-    },
-    "/logout": {
-      "filePath": "logout.tsx"
-    },
-    "/_private/profile": {
-      "filePath": "_private.profile.tsx",
-      "parent": "/_private"
-    },
-    "/recipes": {
-      "filePath": "recipes",
-      "children": [
-        "/recipes/_private",
-        "/recipes/favorites",
-        "/recipes/list",
-        "/recipes/$category/",
-        "/recipes/$category/$subcategory/",
-        "/recipes/$category/$subcategory/$recipe"
-      ]
-    },
-    "/recipes/_private": {
-      "filePath": "recipes/_private.tsx",
-      "parent": "/recipes",
-      "children": [
-        "/recipes/_private/add"
-      ]
-    },
-    "/recipes/favorites": {
-      "filePath": "recipes/favorites.tsx",
-      "parent": "/recipes"
-    },
-    "/recipes/list": {
-      "filePath": "recipes/list.tsx",
-      "parent": "/recipes"
-    },
-    "/recipes/_private/add": {
-      "filePath": "recipes/_private.add.tsx",
-      "parent": "/recipes/_private"
-    },
-    "/recipes/$category/": {
-      "filePath": "recipes/$category/index.tsx",
-      "parent": "/recipes"
-    },
-    "/recipes/$category/$subcategory/": {
-      "filePath": "recipes/$category/$subcategory/index.tsx",
-      "parent": "/recipes"
-    },
-    "/recipes/$category/$subcategory/$recipe": {
-      "filePath": "recipes/$category/$subcategory/$recipe",
-      "parent": "/recipes",
-      "children": [
-        "/recipes/$category/$subcategory/$recipe/_private",
-        "/recipes/$category/$subcategory/$recipe/view"
-      ]
-    },
-    "/recipes/$category/$subcategory/$recipe/_private": {
-      "filePath": "recipes/$category/$subcategory/$recipe/_private.tsx",
-      "parent": "/recipes/$category/$subcategory/$recipe",
-      "children": [
-        "/recipes/$category/$subcategory/$recipe/_private/edit"
-      ]
-    },
-    "/recipes/$category/$subcategory/$recipe/view": {
-      "filePath": "recipes/$category/$subcategory/$recipe/view.tsx",
-      "parent": "/recipes/$category/$subcategory/$recipe"
-    },
-    "/recipes/$category/$subcategory/$recipe/_private/edit": {
-      "filePath": "recipes/$category/$subcategory/$recipe/_private.edit.tsx",
-      "parent": "/recipes/$category/$subcategory/$recipe/_private"
-    }
-  }
-}
-ROUTE_MANIFEST_END */
