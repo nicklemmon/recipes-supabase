@@ -65,7 +65,13 @@ describe('toLegibleDate', () => {
   })
 
   it('should use navigator.language as default when no locale provided', () => {
-    const spy = vi.spyOn(Intl, 'DateTimeFormat')
+    const OriginalDateTimeFormat = Intl.DateTimeFormat
+    const spy = vi.spyOn(Intl, 'DateTimeFormat').mockImplementation(function (
+      this: any,
+      ...args: any[]
+    ) {
+      return new OriginalDateTimeFormat(...args)
+    } as any)
     const isoTimestamp = '2025-01-01T12:00:00.000000+00:00'
 
     toLegibleDate(isoTimestamp)
