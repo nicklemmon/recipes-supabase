@@ -1,5 +1,5 @@
-import { createFileRoute, Await, defer } from '@tanstack/react-router'
-import { Suspense } from 'react'
+import { createFileRoute } from '@tanstack/react-router'
+import { useQuery } from '@tanstack/react-query'
 import { getSubcategories } from '../../../api/subcategories'
 import { getCategoryBySlug } from '../../../api/categories'
 import { CategoryLink } from '../../../components/category-link'
@@ -14,12 +14,10 @@ import { title } from '../../../helpers/dom'
 export const Route = createFileRoute('/recipes/$category/')({
   component: RouteComponent,
   loader: async ({ params }) => {
-    const categoryPromise = getCategoryBySlug(params.category)
-    const category = await categoryPromise
+    const category = await getCategoryBySlug(params.category)
 
     return {
       category,
-      subcategories: defer(getSubcategories(category.id)),
     }
   },
   head: ({ loaderData }) => {
@@ -34,7 +32,12 @@ export const Route = createFileRoute('/recipes/$category/')({
 })
 
 function RouteComponent() {
-  const { category, subcategories } = Route.useLoaderData()
+  const { category } = Route.useLoaderData()
+
+  const { data: subcategories, isLoading } = useQuery({
+    queryKey: ['subcategories', 'category', category.id],
+    queryFn: () => getSubcategories(category.id),
+  })
 
   return (
     <div>
@@ -44,41 +47,55 @@ function RouteComponent() {
       </PageHeader>
 
       <PageBody>
-        <Suspense
-          fallback={
-            <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-6">
-              {Array.from({ length: 3 }).map((_, index) => (
-                <CategoryLinkSkeleton key={index} delay={index * 100} />
-              ))}
-            </div>
-          }
-        >
-          <Await promise={subcategories}>
-            {(resolvedSubcategories) => (
-              <ul className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-6">
-                {resolvedSubcategories.map((subcategory) => {
-                  return (
-                    <li key={subcategory.id}>
-                      <CategoryLink
-                        to="/recipes/$category/$subcategory"
-                        params={{
-                          category: category.slug,
-                          subcategory: subcategory.slug,
-                        }}
-                      >
-                        <Stack spacing="xs" align="center">
-                          <div className="text-xl">{subcategory.emoji}</div>
-                          <div>{subcategory.title}</div>
-                        </Stack>
-                      </CategoryLink>
-                    </li>
-                  )
-                })}
-              </ul>
-            )}
-          </Await>
-        </Suspense>
+        {isLoading ? (
+          <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-6">
+            {Array.from({ length: 3 }).map((_, index) => (
+              <CategoryLinkSkeleton key={index} delay={index * 100} />
+            ))}
+          </div>
+        ) : subcategories ? (
+          <SubcategoriesList subcategories={subcategories} category={category} />
+        ) : null}
       </PageBody>
     </div>
+  )
+}
+
+function SubcategoriesList({
+  subcategories,
+  category,
+}: {
+  subcategories: Array<{
+    id: number
+    slug: string
+    title: string
+    emoji: string
+  }>
+  category: {
+    slug: string
+    title: string
+  }
+}) {
+  return (
+    <ul className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-6">
+      {subcategories.map((subcategory) => {
+        return (
+          <li key={subcategory.id}>
+            <CategoryLink
+              to="/recipes/$category/$subcategory"
+              params={{
+                category: category.slug,
+                subcategory: subcategory.slug,
+              }}
+            >
+              <Stack spacing="xs" align="center">
+                <div className="text-xl">{subcategory.emoji}</div>
+                <div>{subcategory.title}</div>
+              </Stack>
+            </CategoryLink>
+          </li>
+        )
+      })}
+    </ul>
   )
 }
