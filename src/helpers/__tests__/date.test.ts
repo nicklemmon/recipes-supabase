@@ -67,10 +67,13 @@ describe('toLegibleDate', () => {
   it('should use navigator.language as default when no locale provided', () => {
     const OriginalDateTimeFormat = Intl.DateTimeFormat
     const spy = vi.spyOn(Intl, 'DateTimeFormat').mockImplementation(function (
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
       this: any,
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
       ...args: any[]
     ) {
       return new OriginalDateTimeFormat(...args)
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
     } as any)
     const isoTimestamp = '2025-01-01T12:00:00.000000+00:00'
 
