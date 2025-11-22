@@ -1,19 +1,10 @@
 type RecipeTableSkeletonProps = {
-  delay?: number
   showDietaryPref?: boolean
 }
 
-export function RecipeTableSkeleton({
-  delay = 0,
-  showDietaryPref = true,
-}: RecipeTableSkeletonProps) {
+export function RecipeTableSkeleton({ showDietaryPref = true }: RecipeTableSkeletonProps) {
   return (
-    <tr
-      className="border-b border-slate-200 animate-pulse"
-      style={{
-        animationDelay: `${delay}ms`,
-      }}
-    >
+    <tr className="border-b border-slate-200 animate-pulse">
       <td className="p-4">
         <div className="h-5 w-56 bg-gray-200 rounded" />
       </td>

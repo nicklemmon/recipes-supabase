@@ -1,5 +1,4 @@
-import { createFileRoute, Await, defer } from '@tanstack/react-router'
-import { Suspense } from 'react'
+import { createFileRoute, Await } from '@tanstack/react-router'
 import { getSubcategories } from '../../../api/subcategories'
 import { getCategoryBySlug } from '../../../api/categories'
 import { CategoryLink } from '../../../components/category-link'
@@ -14,12 +13,11 @@ import { title } from '../../../helpers/dom'
 export const Route = createFileRoute('/recipes/$category/')({
   component: RouteComponent,
   loader: async ({ params }) => {
-    const categoryPromise = getCategoryBySlug(params.category)
-    const category = await categoryPromise
+    const category = await getCategoryBySlug(params.category)
 
     return {
       category,
-      subcategories: defer(getSubcategories(category.id)),
+      subcategories: getSubcategories(category.id),
     }
   },
   head: ({ loaderData }) => {
@@ -44,40 +42,39 @@ function RouteComponent() {
       </PageHeader>
 
       <PageBody>
-        <Suspense
+        <Await
+          promise={subcategories}
           fallback={
             <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-6">
               {Array.from({ length: 3 }).map((_, index) => (
-                <CategoryLinkSkeleton key={index} delay={index * 100} />
+                <CategoryLinkSkeleton key={index} />
               ))}
             </div>
           }
         >
-          <Await promise={subcategories}>
-            {(resolvedSubcategories) => (
-              <ul className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-6">
-                {resolvedSubcategories.map((subcategory) => {
-                  return (
-                    <li key={subcategory.id}>
-                      <CategoryLink
-                        to="/recipes/$category/$subcategory"
-                        params={{
-                          category: category.slug,
-                          subcategory: subcategory.slug,
-                        }}
-                      >
-                        <Stack spacing="xs" align="center">
-                          <div className="text-xl">{subcategory.emoji}</div>
-                          <div>{subcategory.title}</div>
-                        </Stack>
-                      </CategoryLink>
-                    </li>
-                  )
-                })}
-              </ul>
-            )}
-          </Await>
-        </Suspense>
+          {(resolvedSubcategories) => (
+            <ul className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-6">
+              {resolvedSubcategories.map((subcategory) => {
+                return (
+                  <li key={subcategory.id}>
+                    <CategoryLink
+                      to="/recipes/$category/$subcategory"
+                      params={{
+                        category: category.slug,
+                        subcategory: subcategory.slug,
+                      }}
+                    >
+                      <Stack spacing="xs" align="center">
+                        <div className="text-xl">{subcategory.emoji}</div>
+                        <div>{subcategory.title}</div>
+                      </Stack>
+                    </CategoryLink>
+                  </li>
+                )
+              })}
+            </ul>
+          )}
+        </Await>
       </PageBody>
     </div>
   )

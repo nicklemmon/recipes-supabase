@@ -6,7 +6,6 @@ import { ErrorBoundary } from './components/error-boundary'
 // Set up a Router instance
 const router = createRouter({
   routeTree,
-  defaultPreload: 'intent',
   context: {
     session: undefined,
     user: undefined,
