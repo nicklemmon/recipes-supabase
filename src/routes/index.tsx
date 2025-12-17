@@ -9,7 +9,7 @@ import { PageHeading } from '../components/page-heading'
 import { PageBody } from '../components/page-body'
 
 export const Route = createFileRoute('/')({
-  component: HomeComponent,
+  component: RouteComponent,
   loader: async () => {
     return {
       categories: defer(getCategories()),
@@ -17,7 +17,7 @@ export const Route = createFileRoute('/')({
   },
 })
 
-function HomeComponent() {
+function RouteComponent() {
   const { categories } = Route.useLoaderData()
 
   return (
