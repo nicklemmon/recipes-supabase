@@ -68,7 +68,7 @@ function RouteComponent() {
               </thead>
               <tbody>
                 {Array.from({ length: 5 }).map((_, index) => (
-                  <RecipeTableSkeleton key={index} delay={index * 100} showDietaryPref={false} />
+                  <RecipeTableSkeleton key={index} showDietaryPref={false} />
                 ))}
               </tbody>
             </table>
