@@ -1,5 +1,5 @@
 import { createFileRoute, useRouter } from '@tanstack/react-router'
-import { useRef, useState } from 'react'
+import { useState } from 'react'
 import { toast } from 'sonner'
 import { RecipeSchema } from '../../../../../types/recipes'
 import { PageBody } from '../../../../../components/page-body'
@@ -64,10 +64,10 @@ function RouteComponent() {
     subcategory: subcategorySlug,
     category: categorySlug,
   } = Route.useParams()
-  const formRef = useRef<HTMLFormElement>(null)
   const { recipe, categories, subcategories } = Route.useLoaderData()
   const router = useRouter()
   const [selectedCategory, setSelectedCategory] = useState<number>(recipe.category_id)
+  const [updateReqStatus, setUpdateReqStatus] = useState<'loading' | 'idle'>('idle')
   const subcategoriesByCategory = subcategories.filter((subcategory) => {
     // The category list is empty until a category is selected
     if (!selectedCategory) return false
@@ -102,15 +102,24 @@ function RouteComponent() {
         dietary_pref: [],
       })
 
+      setUpdateReqStatus('loading')
+
       await updateRecipe(partialRecipe)
 
-      // Clear the form
-      formRef.current?.reset()
-
       toast.success(`Recipe ${title} updated`)
-      router.invalidate()
+
+      // Navigate back to the view page after successful update
+      router.navigate({
+        to: '/recipes/$category/$subcategory/$recipe/view',
+        params: {
+          recipe: recipeSlug,
+          category: categorySlug,
+          subcategory: subcategorySlug,
+        },
+      })
     } catch (err) {
       toast.error(String(err))
+      setUpdateReqStatus('idle')
 
       throw err
     }
@@ -139,7 +148,7 @@ function RouteComponent() {
       </PageHeader>
 
       <PageBody>
-        <form onSubmit={handleSubmit} ref={formRef}>
+        <form onSubmit={handleSubmit}>
           <Stack>
             <div className="bg-slate-100 rounded-xl w-full p-4 grid grid-cols-1 md:grid-cols-2 gap-4">
               <Stack>
@@ -147,7 +156,13 @@ function RouteComponent() {
 
                 <FormControl>
                   <FormLabel htmlFor="title-input">Title</FormLabel>
-                  <FormInput id="title-input" name="title" required defaultValue={recipe.title} />
+                  <FormInput
+                    id="title-input"
+                    name="title"
+                    required
+                    defaultValue={recipe.title}
+                    disabled={updateReqStatus === 'loading'}
+                  />
                 </FormControl>
 
                 <FormControl>
@@ -164,6 +179,7 @@ function RouteComponent() {
                       setSelectedCategory(categoryId)
                     }}
                     required
+                    disabled={updateReqStatus === 'loading'}
                   >
                     <option disabled value="">
                       Select category
@@ -186,7 +202,7 @@ function RouteComponent() {
                     name="subcategory_id"
                     defaultValue={recipe.subcategory_id}
                     required
-                    disabled={subcategoriesByCategory.length === 0}
+                    disabled={subcategoriesByCategory.length === 0 || updateReqStatus === 'loading'}
                   >
                     <option disabled value="">
                       Select subcategory
@@ -206,7 +222,12 @@ function RouteComponent() {
               <Stack>
                 <FormControl>
                   <FormLabel htmlFor="rating-select">Rating</FormLabel>
-                  <FormSelect id="rating-select" name="rating" defaultValue={recipe.rating}>
+                  <FormSelect
+                    id="rating-select"
+                    name="rating"
+                    defaultValue={recipe.rating}
+                    disabled={updateReqStatus === 'loading'}
+                  >
                     <option disabled value="">
                       Select rating
                     </option>
@@ -220,7 +241,12 @@ function RouteComponent() {
 
                 <FormControl>
                   <FormLabel htmlFor="source-input">Source</FormLabel>
-                  <FormInput id="source-input" name="source" defaultValue={recipe.source} />
+                  <FormInput
+                    id="source-input"
+                    name="source"
+                    defaultValue={recipe.source}
+                    disabled={updateReqStatus === 'loading'}
+                  />
                 </FormControl>
               </Stack>
             </div>
@@ -233,6 +259,7 @@ function RouteComponent() {
                 rows={4}
                 required
                 defaultValue={recipe.ingredients_md}
+                disabled={updateReqStatus === 'loading'}
               />
             </FormControl>
 
@@ -244,10 +271,13 @@ function RouteComponent() {
                 rows={4}
                 required
                 defaultValue={recipe.directions_md}
+                disabled={updateReqStatus === 'loading'}
               />
             </FormControl>
 
-            <Button type="submit">Save recipe</Button>
+            <Button type="submit" loading={updateReqStatus === 'loading'}>
+              Save recipe
+            </Button>
           </Stack>
         </form>
       </PageBody>
