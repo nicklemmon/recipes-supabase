@@ -167,16 +167,18 @@ function RouteComponent() {
                 </Drawer.Trigger>
 
                 <Drawer.Portal>
-                  <Drawer.Overlay className="fixed inset-0 bg-black/40 backdrop-blur-lg" />
-                  <Drawer.Content className="bg-gray-100 fixed bottom-0 left-0 right-0 outline-none">
-                    <div className="h-[85vh] md:h-[50vh] py-8 bg-white">
+                  <Drawer.Overlay className="fixed inset-0 bg-black/40 dark:bg-black/60 backdrop-blur-lg" />
+                  <Drawer.Content className="bg-gray-100 dark:bg-slate-900 fixed bottom-0 left-0 right-0 outline-none">
+                    <div className="h-[85vh] md:h-[50vh] py-8 bg-white dark:bg-slate-800">
                       <Container>
                         <Stack>
                           <Drawer.Title asChild>
-                            <h3 className="font-bold text-slate-800 text-xl">Confirm deletion</h3>
+                            <h3 className="font-bold text-slate-800 dark:text-slate-100 text-xl">
+                              Confirm deletion
+                            </h3>
                           </Drawer.Title>
 
-                          <p className="text-slate-600">
+                          <p className="text-slate-600 dark:text-slate-400">
                             Are you sure you want to delete{' '}
                             <span className="font-semibold">{recipe.title}</span>? This cannot be
                             undone.
@@ -212,19 +214,23 @@ function RouteComponent() {
           <div>
             <Stack>
               <Stack spacing="xs">
-                <h2 className="text-lg md:text-2xl font-bold text-slate-700">Ingredients</h2>
+                <h2 className="text-lg md:text-2xl font-bold text-slate-700 dark:text-slate-200">
+                  Ingredients
+                </h2>
 
                 <div
-                  className="prose text-slate-600"
+                  className="prose dark:prose-invert text-slate-600 dark:text-slate-400"
                   dangerouslySetInnerHTML={{ __html: DOMPurify.sanitize(ingredients) }}
                 />
               </Stack>
 
               <Stack spacing="xs">
-                <h2 className="text-lg md:text-2xl font-bold text-slate-700">Directions</h2>
+                <h2 className="text-lg md:text-2xl font-bold text-slate-700 dark:text-slate-200">
+                  Directions
+                </h2>
 
                 <div
-                  className="prose text-slate-600"
+                  className="prose dark:prose-invert text-slate-600 dark:text-slate-400"
                   dangerouslySetInnerHTML={{ __html: DOMPurify.sanitize(directions) }}
                 />
               </Stack>
@@ -232,16 +238,20 @@ function RouteComponent() {
           </div>
 
           <div>
-            <div className="rounded-xl bg-slate-100 text-slate-700 p-4">
+            <div className="rounded-xl bg-slate-100 dark:bg-slate-800 text-slate-700 dark:text-slate-300 p-4">
               <Stack spacing="sm">
                 <Stack spacing="xs">
-                  <div className="text-md font-semibold text-slate-900">Source</div>
-                  <div className="text-slate-600">{recipe.source}</div>
+                  <div className="text-md font-semibold text-slate-900 dark:text-slate-100">
+                    Source
+                  </div>
+                  <div className="text-slate-600 dark:text-slate-400">{recipe.source}</div>
                 </Stack>
 
                 <Stack spacing="xs">
-                  <div className="text-md font-semibold text-slate-900">Rating</div>
-                  <div className="text-slate-600">
+                  <div className="text-md font-semibold text-slate-900 dark:text-slate-100">
+                    Rating
+                  </div>
+                  <div className="text-slate-600 dark:text-slate-400">
                     <Inline spacing="xs">
                       {[...new Array(recipe.rating)].map((_star, index) => (
                         <Star
@@ -255,14 +265,22 @@ function RouteComponent() {
                 </Stack>
 
                 <Stack spacing="xs">
-                  <div className="text-md font-semibold text-slate-900">Created at</div>
-                  <div className="text-slate-600">{toLegibleDate(recipe.created_at)}</div>
+                  <div className="text-md font-semibold text-slate-900 dark:text-slate-100">
+                    Created at
+                  </div>
+                  <div className="text-slate-600 dark:text-slate-400">
+                    {toLegibleDate(recipe.created_at)}
+                  </div>
                 </Stack>
 
                 {recipe.dietary_pref.length > 0 ? (
                   <Stack spacing="xs">
-                    <div className="text-md font-semibold text-slate-900">Dietary preferences</div>
-                    <div className="text-slate-600">{recipe.dietary_pref.map((pref) => pref)}</div>
+                    <div className="text-md font-semibold text-slate-900 dark:text-slate-100">
+                      Dietary preferences
+                    </div>
+                    <div className="text-slate-600 dark:text-slate-400">
+                      {recipe.dietary_pref.map((pref) => pref)}
+                    </div>
                   </Stack>
                 ) : null}
               </Stack>

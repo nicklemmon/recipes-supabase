@@ -8,13 +8,16 @@ const pageActionClasses = cva([
   'inline-flex',
   'items-center',
   'text-indigo-600',
+  'dark:text-indigo-300',
   'bg-indigo-100',
+  'dark:bg-indigo-900',
   'font-medium',
   'rounded-lg',
   'px-3',
   'py-1',
   'transition',
   'hover:bg-indigo-200',
+  'dark:hover:bg-indigo-800',
   'text-sm',
   'cursor-pointer',
 ])
@@ -63,7 +66,11 @@ export function PageDeleteButton({
 }: { className?: string; children?: React.ReactNode } & React.ComponentProps<'button'>) {
   return (
     <button
-      className={cn(pageActionClasses(), 'bg-red-200 text-red-900 hover:bg-red-300', className)}
+      className={cn(
+        pageActionClasses(),
+        'bg-red-200 dark:bg-red-900 text-red-900 dark:text-red-200 hover:bg-red-300 dark:hover:bg-red-800',
+        className,
+      )}
       {...props}
     >
       <Inline spacing="sm" align="center">

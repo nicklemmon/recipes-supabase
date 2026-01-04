@@ -10,7 +10,7 @@ export function PageBody({
 }) {
   return (
     <div className={cn('', className)}>
-      <Container className="bg-white md:translate-y-[-40px] py-8 md:p-8 md:rounded-3xl shadow-lg shadow-slate-100 border border-slate-100">
+      <Container className="bg-white dark:bg-slate-900 md:translate-y-[-40px] py-8 md:p-8 md:rounded-3xl shadow-lg shadow-slate-100 dark:shadow-slate-950/50 border border-slate-100 dark:border-slate-800">
         {children}
       </Container>
     </div>

@@ -5,7 +5,7 @@ export function CategoryLink({ className, ...props }: { className?: string } & L
   return (
     <Link
       className={cn(
-        'h-42 w-full justify-center items-center bg-gradient-to-b to-white from-white hover:from-white hover:to-indigo-50 text-indigo-500 shadow-lg shadow-indigo-100/50 border border-indigo-200 focus-visible:inset-ring-4 inset-ring-indigo-700 inline-flex rounded-4xl font-semibold transition',
+        'h-42 w-full justify-center items-center bg-gradient-to-b to-white from-white hover:from-white hover:to-indigo-50 dark:to-slate-800 dark:from-slate-800 dark:hover:from-slate-800 dark:hover:to-slate-700 text-indigo-500 dark:text-indigo-400 shadow-lg shadow-indigo-100/50 dark:shadow-indigo-950/30 border border-indigo-200 dark:border-indigo-800 focus-visible:inset-ring-4 inset-ring-indigo-700 dark:inset-ring-indigo-500 inline-flex rounded-4xl font-semibold transition',
         className,
       )}
       {...props}

@@ -34,7 +34,7 @@ export class ErrorBoundary extends Component<Props, State> {
   render() {
     if (this.state.hasError) {
       return (
-        <div className="min-h-screen bg-slate-50 flex items-center justify-center">
+        <div className="min-h-screen bg-slate-50 dark:bg-slate-900 flex items-center justify-center">
           <Container>
             <div className="max-w-md mx-auto text-center">
               <Stack spacing="lg">
@@ -43,8 +43,10 @@ export class ErrorBoundary extends Component<Props, State> {
                 </div>
 
                 <Stack spacing="sm">
-                  <h1 className="text-2xl font-bold text-slate-900">Something went wrong</h1>
-                  <p className="text-slate-600">
+                  <h1 className="text-2xl font-bold text-slate-900 dark:text-slate-100">
+                    Something went wrong
+                  </h1>
+                  <p className="text-slate-600 dark:text-slate-400">
                     We&apos;re sorry, but something unexpected happened. Please try reloading the
                     page.
                   </p>
@@ -58,11 +60,11 @@ export class ErrorBoundary extends Component<Props, State> {
                 </div>
 
                 {process.env.NODE_ENV === 'development' && this.state.error && (
-                  <details className="text-left text-sm bg-red-50 border border-red-200 rounded p-4">
-                    <summary className="font-medium text-red-800 cursor-pointer">
+                  <details className="text-left text-sm bg-red-50 dark:bg-red-950 border border-red-200 dark:border-red-800 rounded p-4">
+                    <summary className="font-medium text-red-800 dark:text-red-300 cursor-pointer">
                       Error details
                     </summary>
-                    <pre className="mt-2 text-red-700 whitespace-pre-wrap break-words">
+                    <pre className="mt-2 text-red-700 dark:text-red-400 whitespace-pre-wrap break-words">
                       {this.state.error.toString()}
                     </pre>
                   </details>

@@ -25,21 +25,33 @@ const buttonClasses = cva(
       variant: {
         primary: [
           'bg-indigo-600',
+          'dark:bg-indigo-700',
           'text-indigo-50',
+          'dark:text-indigo-100',
           'hover:bg-indigo-700',
+          'dark:hover:bg-indigo-800',
           'focus-visible:ring-indigo-400',
+          'dark:focus-visible:ring-indigo-500',
         ],
         secondary: [
           'bg-indigo-100',
+          'dark:bg-indigo-900',
           'text-indigo-600',
+          'dark:text-indigo-200',
           'hover:bg-indigo-200',
+          'dark:hover:bg-indigo-800',
           'focus-visible:ring-indigo-400',
+          'dark:focus-visible:ring-indigo-500',
         ],
         destructive: [
           'bg-red-100',
+          'dark:bg-red-900',
           'text-red-600',
+          'dark:text-red-200',
           'hover:bg-red-200',
+          'dark:hover:bg-red-800',
           'focus-visible:ring-red-400',
+          'dark:focus-visible:ring-red-500',
         ],
       },
       size: {

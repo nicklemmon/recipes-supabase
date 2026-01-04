@@ -62,15 +62,17 @@ export function NavSearch() {
       </Tooltip.Root>
 
       <Drawer.Portal>
-        <Drawer.Overlay className="fixed inset-0 bg-black/40 backdrop-blur-lg" />
+        <Drawer.Overlay className="fixed inset-0 bg-black/40 dark:bg-black/60 backdrop-blur-lg" />
 
-        <Drawer.Content className="bg-gray-100 fixed bottom-0 left-0 right-0 outline-none">
-          <div className="h-[85vh] md:h-[50vh] py-8 bg-white">
+        <Drawer.Content className="bg-gray-100 dark:bg-slate-900 fixed bottom-0 left-0 right-0 outline-none">
+          <div className="h-[85vh] md:h-[50vh] py-8 bg-white dark:bg-slate-800">
             <Container>
               <form onSubmit={handleSubmit}>
                 <Stack>
                   <Drawer.Title asChild>
-                    <h3 className="font-bold text-slate-800 text-xl">Search for recipes</h3>
+                    <h3 className="font-bold text-slate-800 dark:text-slate-100 text-xl">
+                      Search for recipes
+                    </h3>
                   </Drawer.Title>
 
                   <FormControl className="max-w-140">

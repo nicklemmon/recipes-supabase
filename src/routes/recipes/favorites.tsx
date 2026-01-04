@@ -56,14 +56,14 @@ function RouteComponent() {
       <PageBody>
         <Suspense
           fallback={
-            <table className="w-full text-left text-md border-collapse text-slate-700">
+            <table className="w-full text-left text-md border-collapse text-slate-700 dark:text-slate-300">
               <caption className="sr-only">Recipes</caption>
 
-              <thead className="border-b-2 border-slate-200">
+              <thead className="border-b-2 border-slate-200 dark:border-slate-700">
                 <tr>
-                  <th className="font-medium p-4">Recipe</th>
-                  <th className="font-medium p-4">Dietary pref.</th>
-                  <th className="font-medium p-4">Rating</th>
+                  <th className="font-medium p-4 dark:text-slate-200">Recipe</th>
+                  <th className="font-medium p-4 dark:text-slate-200">Dietary pref.</th>
+                  <th className="font-medium p-4 dark:text-slate-200">Rating</th>
                 </tr>
               </thead>
               <tbody>
@@ -76,14 +76,14 @@ function RouteComponent() {
         >
           <Await promise={recipesData}>
             {(recipesWithSlugs) => (
-              <table className="w-full text-left text-md border-collapse text-slate-700">
+              <table className="w-full text-left text-md border-collapse text-slate-700 dark:text-slate-300">
                 <caption className="sr-only">Recipes</caption>
 
-                <thead className="border-b-2 border-slate-200">
+                <thead className="border-b-2 border-slate-200 dark:border-slate-700">
                   <tr>
-                    <th className="font-medium p-4">Recipe</th>
-                    <th className="font-medium p-4">Dietary pref.</th>
-                    <th className="font-medium p-4">Rating</th>
+                    <th className="font-medium p-4 dark:text-slate-200">Recipe</th>
+                    <th className="font-medium p-4 dark:text-slate-200">Dietary pref.</th>
+                    <th className="font-medium p-4 dark:text-slate-200">Rating</th>
                   </tr>
                 </thead>
                 <tbody>
@@ -96,10 +96,13 @@ function RouteComponent() {
                     }
 
                     return (
-                      <tr key={recipe.id} className="border-b border-slate-200">
+                      <tr
+                        key={recipe.id}
+                        className="border-b border-slate-200 dark:border-slate-800"
+                      >
                         <td className="p-4">
                           <Link
-                            className="text-indigo-600 font-medium"
+                            className="text-indigo-600 dark:text-indigo-400 font-medium"
                             to="/recipes/$category/$subcategory/$recipe/view"
                             params={{
                               category: recipe.categorySlug,
