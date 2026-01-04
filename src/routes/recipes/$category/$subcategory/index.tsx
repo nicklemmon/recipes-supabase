@@ -67,9 +67,7 @@ function RouteComponent() {
               <thead className="border-b-2 border-slate-200">
                 <tr>
                   <th className="font-medium p-4">Recipe</th>
-                  <th className="font-medium p-4 hidden md:table-cell">
-                    Dietary preferences
-                  </th>
+                  <th className="font-medium p-4 hidden md:table-cell">Dietary preferences</th>
                   <th className="font-medium p-4 text-right">Rating</th>
                 </tr>
               </thead>
