@@ -16,6 +16,8 @@ export const Route = createFileRoute('/')({
   },
 })
 
+const GRID_CLASSES = 'grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-6'
+
 function RouteComponent() {
   const { categories } = Route.useLoaderData()
 
@@ -29,7 +31,7 @@ function RouteComponent() {
         <Await
           promise={categories}
           fallback={
-            <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-6">
+            <div className={GRID_CLASSES}>
               {Array.from({ length: 6 }).map((_, index) => (
                 <CategoryLinkSkeleton key={index} />
               ))}
@@ -37,7 +39,7 @@ function RouteComponent() {
           }
         >
           {(resolvedCategories) => (
-            <ul className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-6">
+            <ul className={GRID_CLASSES}>
               {resolvedCategories.map((category) => {
                 return (
                   <li key={category.id}>
