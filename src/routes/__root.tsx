@@ -1,4 +1,4 @@
-import { Await, HeadContent, Link, Outlet, createRootRoute } from '@tanstack/react-router'
+import { HeadContent, Link, Outlet, createRootRoute } from '@tanstack/react-router'
 import { Citrus, LogIn, LogOut, Plus, User } from 'lucide-react'
 import { Toaster } from 'sonner'
 import { Tooltip } from '@base-ui-components/react/tooltip'
@@ -22,20 +22,10 @@ export const Route = createRootRoute({
   }),
   component: RootComponent,
   loader: async () => {
-    return { session: supabase.auth.getSession() }
+    const session = await supabase.auth.getSession()
+    return { session }
   },
 })
-
-function NavActionsSkeleton() {
-  return (
-    <Inline spacing="sm">
-      <div className="w-8 h-8 bg-slate-600 dark:bg-zinc-800 rounded-lg animate-pulse" />
-      <div className="w-8 h-8 bg-slate-600 dark:bg-zinc-800 rounded-lg animate-pulse" />
-      <div className="w-8 h-8 bg-slate-600 dark:bg-zinc-800 rounded-lg animate-pulse" />
-      <div className="w-8 h-8 bg-slate-600 dark:bg-zinc-800 rounded-lg animate-pulse" />
-    </Inline>
-  )
-}
 
 type NavActionsProps = {
   authed?: boolean
@@ -128,33 +118,18 @@ function AppLayout({ children }: { children: React.ReactNode }) {
 }
 
 function RootComponent() {
-  const loaderData = Route.useLoaderData()
+  const { session } = Route.useLoaderData()
+  const authed = Boolean(session.data.session)
 
   return (
     <>
       <HeadContent />
 
-      <Await promise={loaderData.session} fallback={<RootRouteLoader />}>
-        {(session) => {
-          const authed = Boolean(session.data.session)
-
-          return (
-            <AppLayout>
-              <NavActions authed={authed} />
-            </AppLayout>
-          )
-        }}
-      </Await>
+      <AppLayout>
+        <NavActions authed={authed} />
+      </AppLayout>
 
       <Toaster richColors />
     </>
-  )
-}
-
-function RootRouteLoader() {
-  return (
-    <AppLayout>
-      <NavActionsSkeleton />
-    </AppLayout>
   )
 }
