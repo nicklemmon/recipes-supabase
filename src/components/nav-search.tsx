@@ -64,13 +64,13 @@ export function NavSearch() {
       <Drawer.Portal>
         <Drawer.Overlay className="fixed inset-0 bg-black/40 dark:bg-black/60 backdrop-blur-lg" />
 
-        <Drawer.Content className="bg-gray-100 dark:bg-slate-900 fixed bottom-0 left-0 right-0 outline-none">
-          <div className="h-[85vh] md:h-[50vh] py-8 bg-white dark:bg-slate-800">
+        <Drawer.Content className="bg-gray-100 dark:bg-zinc-950 fixed bottom-0 left-0 right-0 outline-none">
+          <div className="h-[85vh] md:h-[50vh] py-8 bg-white dark:bg-zinc-900">
             <Container>
               <form onSubmit={handleSubmit}>
                 <Stack>
                   <Drawer.Title asChild>
-                    <h3 className="font-bold text-slate-800 dark:text-slate-100 text-xl">
+                    <h3 className="font-bold text-slate-800 dark:text-zinc-50 text-xl">
                       Search for recipes
                     </h3>
                   </Drawer.Title>

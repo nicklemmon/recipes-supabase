@@ -8,9 +8,9 @@ const tagClasses = cva(
     'h-12',
     'px-4',
     'bg-slate-400',
-    'dark:bg-slate-700',
+    'dark:bg-zinc-800',
     'text-slate-800',
-    'dark:text-slate-200',
+    'dark:text-zinc-50',
   ],
   {
     variants: {

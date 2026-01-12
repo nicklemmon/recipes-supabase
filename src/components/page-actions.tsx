@@ -10,14 +10,14 @@ const pageActionClasses = cva([
   'text-indigo-600',
   'dark:text-indigo-300',
   'bg-indigo-100',
-  'dark:bg-indigo-900',
+  'dark:bg-zinc-800',
   'font-medium',
   'rounded-lg',
   'px-3',
   'py-1',
   'transition',
   'hover:bg-indigo-200',
-  'dark:hover:bg-indigo-800',
+  'dark:hover:bg-zinc-700',
   'text-sm',
   'cursor-pointer',
 ])
@@ -68,7 +68,7 @@ export function PageDeleteButton({
     <button
       className={cn(
         pageActionClasses(),
-        'bg-red-200 dark:bg-red-900 text-red-900 dark:text-red-200 hover:bg-red-300 dark:hover:bg-red-800',
+        'bg-red-200 dark:bg-red-600 text-red-900 dark:text-white hover:bg-red-300 dark:hover:bg-red-700',
         className,
       )}
       {...props}
