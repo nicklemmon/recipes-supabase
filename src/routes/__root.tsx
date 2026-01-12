@@ -29,10 +29,10 @@ export const Route = createRootRoute({
 function NavActionsSkeleton() {
   return (
     <Inline spacing="sm">
-      <div className="w-8 h-8 bg-slate-600 rounded-lg animate-pulse" />
-      <div className="w-8 h-8 bg-slate-600 rounded-lg animate-pulse" />
-      <div className="w-8 h-8 bg-slate-600 rounded-lg animate-pulse" />
-      <div className="w-8 h-8 bg-slate-600 rounded-lg animate-pulse" />
+      <div className="w-8 h-8 bg-slate-600 dark:bg-zinc-800 rounded-lg animate-pulse" />
+      <div className="w-8 h-8 bg-slate-600 dark:bg-zinc-800 rounded-lg animate-pulse" />
+      <div className="w-8 h-8 bg-slate-600 dark:bg-zinc-800 rounded-lg animate-pulse" />
+      <div className="w-8 h-8 bg-slate-600 dark:bg-zinc-800 rounded-lg animate-pulse" />
     </Inline>
   )
 }
@@ -101,12 +101,13 @@ function NavActions({ authed = true }: NavActionsProps) {
 function AppLayout({ children }: { children: React.ReactNode }) {
   return (
     <>
-      <header className="py-2 flex gap-2 bg-slate-800 text-slate-300 text-sm">
+      <header className="py-2 flex gap-2 bg-slate-800 dark:bg-zinc-900 text-slate-300 dark:text-zinc-300 text-sm">
         <Container>
           <div className="flex justify-between items-center gap-4">
-            <Link to="/" className="font-semibold text-slate-100">
+            <Link to="/" className="font-semibold text-slate-100 dark:text-zinc-50">
               <Inline spacing="xs">
-                Lemfamy Recipes <Citrus size={NAV_ICON_SIZE} className="text-yellow-300" />
+                Lemfamy Recipes{' '}
+                <Citrus size={NAV_ICON_SIZE} className="text-yellow-300 dark:text-yellow-400" />
               </Inline>
             </Link>
 

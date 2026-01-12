@@ -150,7 +150,7 @@ function RouteComponent() {
       <PageBody>
         <form onSubmit={handleSubmit}>
           <Stack>
-            <div className="bg-slate-100 rounded-xl w-full p-4 grid grid-cols-1 md:grid-cols-2 gap-4">
+            <div className="bg-slate-100 dark:bg-slate-800 rounded-xl w-full p-4 grid grid-cols-1 md:grid-cols-2 gap-4">
               <Stack>
                 <input type="hidden" name="id" value={recipe.id} />
 

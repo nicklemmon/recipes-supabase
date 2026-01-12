@@ -71,20 +71,20 @@ function RouteComponent() {
           promise={recipesData}
           fallback={
             <Stack spacing="lg">
-              <p className="text-slate-600">
+              <p className="text-slate-600 dark:text-slate-400">
                 Showing results for search{' '}
                 <span className="font-bold">&quot;{searchStr}&quot;</span> &mdash; loading...
               </p>
 
-              <div className="border border-x-0 border-slate-200 w-full">
-                <table className="w-full text-left text-md border-collapse text-slate-700">
+              <div className="border border-x-0 border-slate-200 dark:border-slate-700 w-full">
+                <table className="w-full text-left text-md border-collapse text-slate-700 dark:text-slate-300">
                   <caption className="sr-only">Recipes</caption>
 
-                  <thead className="border-b-2 border-slate-200">
+                  <thead className="border-b-2 border-slate-200 dark:border-slate-700">
                     <tr>
-                      <th className="font-medium p-4">Recipe</th>
-                      <th className="font-medium p-4">Dietary pref.</th>
-                      <th className="font-medium p-4">Rating</th>
+                      <th className="font-medium p-4 dark:text-slate-200">Recipe</th>
+                      <th className="font-medium p-4 dark:text-slate-200">Dietary pref.</th>
+                      <th className="font-medium p-4 dark:text-slate-200">Rating</th>
                     </tr>
                   </thead>
                   <tbody>
@@ -100,28 +100,28 @@ function RouteComponent() {
           {(recipesWithSlugs) => (
             <>
               {recipesWithSlugs.length === 0 ? (
-                <p className="text-slate-600">
+                <p className="text-slate-600 dark:text-slate-400">
                   Showing results for search{' '}
                   <span className="font-bold">&quot;{searchStr}&quot;</span> &mdash; no recipes
                   found.
                 </p>
               ) : (
                 <Stack spacing="lg">
-                  <p className="text-slate-600">
+                  <p className="text-slate-600 dark:text-slate-400">
                     Showing results for search{' '}
                     <span className="font-bold">&quot;{searchStr}&quot;</span> &mdash;{' '}
                     {recipesWithSlugs.length} recipes found.
                   </p>
 
-                  <div className="border border-x-0 border-slate-200 w-full">
-                    <table className="w-full text-left text-md border-collapse text-slate-700">
+                  <div className="border border-x-0 border-slate-200 dark:border-slate-700 w-full">
+                    <table className="w-full text-left text-md border-collapse text-slate-700 dark:text-slate-300">
                       <caption className="sr-only">Recipes</caption>
 
-                      <thead className="border-b-2 border-slate-200">
+                      <thead className="border-b-2 border-slate-200 dark:border-slate-700">
                         <tr>
-                          <th className="font-medium p-4">Recipe</th>
-                          <th className="font-medium p-4">Dietary pref.</th>
-                          <th className="font-medium p-4">Rating</th>
+                          <th className="font-medium p-4 dark:text-slate-200">Recipe</th>
+                          <th className="font-medium p-4 dark:text-slate-200">Dietary pref.</th>
+                          <th className="font-medium p-4 dark:text-slate-200">Rating</th>
                         </tr>
                       </thead>
                       <tbody>
@@ -134,10 +134,13 @@ function RouteComponent() {
                           }
 
                           return (
-                            <tr key={recipe.id} className="border-b border-slate-200">
+                            <tr
+                              key={recipe.id}
+                              className="border-b border-slate-200 dark:border-slate-800"
+                            >
                               <td className="p-4">
                                 <Link
-                                  className="text-indigo-600 font-medium"
+                                  className="text-indigo-600 dark:text-indigo-400 font-medium"
                                   to="/recipes/$category/$subcategory/$recipe/view"
                                   params={{
                                     category: recipe.categorySlug,
