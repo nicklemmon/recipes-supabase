@@ -76,7 +76,10 @@ function RouteComponent() {
               <tbody>
                 {recipes.map((recipe) => {
                   return (
-                    <tr key={recipe.id} className="border-b border-slate-200 dark:border-slate-800">
+                    <tr
+                      key={recipe.id}
+                      className="group border-b border-slate-200 dark:border-slate-800"
+                    >
                       <td className="p-4">
                         <Link
                           className="text-indigo-600 dark:text-indigo-400 font-medium"
@@ -89,7 +92,10 @@ function RouteComponent() {
                         >
                           <Inline spacing="sm">
                             {recipe.title}
-                            <ChevronRight size={16} className="hidden md:inline-flex" />
+                            <ChevronRight
+                              size={16}
+                              className="hidden md:inline-flex group-hover:translate-x-1 transition-transform"
+                            />
                           </Inline>
                         </Link>
                       </td>

@@ -136,7 +136,7 @@ function RouteComponent() {
                           return (
                             <tr
                               key={recipe.id}
-                              className="border-b border-slate-200 dark:border-slate-800"
+                              className="group border-b border-slate-200 dark:border-slate-800"
                             >
                               <td className="p-4">
                                 <Link
@@ -150,7 +150,10 @@ function RouteComponent() {
                                 >
                                   <Inline spacing="sm">
                                     {recipe.title}
-                                    <ChevronRight size={16} />
+                                    <ChevronRight
+                                      size={16}
+                                      className="group-hover:translate-x-1 transition-transform"
+                                    />
                                   </Inline>
                                 </Link>
                               </td>
