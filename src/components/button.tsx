@@ -1,6 +1,7 @@
 import { LoaderCircle } from 'lucide-react'
 import { cn } from '../helpers/dom'
 import { cva } from 'cva'
+import React from 'react'
 
 type ButtonVariant = 'primary' | 'secondary' | 'destructive'
 
@@ -76,25 +77,48 @@ export function Button({
   size = 'md',
   loading,
   disabled,
+  asChild,
   children,
   ...props
 }: React.ComponentProps<'button'> & {
   size?: ButtonSize
   variant?: ButtonVariant
   loading?: boolean
+  asChild?: boolean
 }) {
-  return (
-    <button
-      className={cn(buttonClasses({ disabled, loading, size, variant }), className)}
-      disabled={disabled}
-      {...props}
-    >
+  const content = (
+    <>
       {loading ? (
         <span className="absolute top-[50%] left-[50%] translate-[-50%] animate-spin">
           <LoaderCircle />
         </span>
       ) : null}
       <span className={loading ? 'opacity-0' : ''}>{children}</span>
+    </>
+  )
+
+  if (asChild) {
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    const child = React.Children.only(children) as React.ReactElement<any>
+
+    return React.cloneElement(child, {
+      ...(props as Record<string, unknown>),
+      ...(child.props as Record<string, unknown>),
+      className: cn(
+        buttonClasses({ disabled, loading, size, variant }),
+        className,
+        child.props?.className,
+      ),
+    })
+  }
+
+  return (
+    <button
+      className={cn(buttonClasses({ disabled, loading, size, variant }), className)}
+      disabled={disabled}
+      {...props}
+    >
+      {content}
     </button>
   )
 }

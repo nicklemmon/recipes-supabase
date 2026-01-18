@@ -2,7 +2,7 @@ import { HeadContent, Link, Outlet, createRootRoute } from '@tanstack/react-rout
 import { Citrus, LogIn, LogOut, Plus, User } from 'lucide-react'
 import { Toaster } from 'sonner'
 import { Tooltip } from '@base-ui-components/react/tooltip'
-import { NavLink, NAV_ICON_SIZE } from '../components/nav-actions'
+import { NAV_ICON_SIZE, NavButton } from '../components/nav-actions'
 import { Container } from '../components/container'
 import { Inline } from '../components/inline'
 import { NavSearch } from '../components/nav-search'
@@ -38,10 +38,12 @@ function NavActions({ authed = true }: NavActionsProps) {
         <NavTooltip>
           <NavTooltipTrigger
             as={
-              <NavLink to="/recipes/add">
-                <Plus size={NAV_ICON_SIZE} />
-                <SrOnly>Add recipe</SrOnly>
-              </NavLink>
+              <NavButton asChild>
+                <Link to="/recipes/add">
+                  <Plus size={NAV_ICON_SIZE} />
+                  <SrOnly>Add recipe</SrOnly>
+                </Link>
+              </NavButton>
             }
           />
           <NavTooltipBody>Add recipe</NavTooltipBody>
@@ -50,10 +52,12 @@ function NavActions({ authed = true }: NavActionsProps) {
         <NavTooltip>
           <NavTooltipTrigger
             as={
-              <NavLink to="/profile">
-                <User size={NAV_ICON_SIZE} />
-                <SrOnly>Profile</SrOnly>
-              </NavLink>
+              <NavButton asChild>
+                <Link to="/profile">
+                  <User size={NAV_ICON_SIZE} />
+                  <SrOnly>Profile</SrOnly>
+                </Link>
+              </NavButton>
             }
           />
           <NavTooltipBody>Profile</NavTooltipBody>
@@ -64,10 +68,12 @@ function NavActions({ authed = true }: NavActionsProps) {
         <NavTooltip>
           <NavTooltipTrigger
             as={
-              <NavLink to="/logout" preload={false}>
-                <LogOut size={NAV_ICON_SIZE} />
-                <SrOnly>Log out</SrOnly>
-              </NavLink>
+              <NavButton asChild>
+                <Link to="/logout" preload={false}>
+                  <LogOut size={NAV_ICON_SIZE} />
+                  <SrOnly>Log out</SrOnly>
+                </Link>
+              </NavButton>
             }
           />
           <NavTooltipBody>Log out</NavTooltipBody>
@@ -78,10 +84,12 @@ function NavActions({ authed = true }: NavActionsProps) {
 
   return (
     <Tooltip.Provider>
-      <NavLink to="/login">
-        <LogIn size={NAV_ICON_SIZE} />
-        <SrOnly>Log in</SrOnly>
-      </NavLink>
+      <NavButton asChild>
+        <Link to="/login">
+          <LogIn size={NAV_ICON_SIZE} />
+          <SrOnly>Log in</SrOnly>
+        </Link>
+      </NavButton>
 
       <NavSearch />
     </Tooltip.Provider>
@@ -91,13 +99,13 @@ function NavActions({ authed = true }: NavActionsProps) {
 function AppLayout({ children }: { children: React.ReactNode }) {
   return (
     <>
-      <header className="py-2 flex gap-2 bg-slate-800 dark:bg-zinc-900 text-slate-300 dark:text-zinc-300 text-sm">
+      <header className="py-2 flex gap-2 bg-linear-180 to-indigo-50 from-indigo-50 dark:from-zinc-900 dark:to-zinc-900 text-slate-300 dark:text-zinc-300 text-sm">
         <Container>
           <div className="flex justify-between items-center gap-4">
-            <Link to="/" className="font-semibold text-slate-100 dark:text-zinc-50">
+            <Link to="/" className="font-semibold text-indigo-700 dark:text-indigo-50">
               <Inline spacing="xs">
                 Lemfamy Recipes{' '}
-                <Citrus size={NAV_ICON_SIZE} className="text-yellow-300 dark:text-yellow-400" />
+                <Citrus size={NAV_ICON_SIZE} className="text-yellow-600 dark:text-yellow-400" />
               </Inline>
             </Link>
 

@@ -1,29 +1,15 @@
-import { Link } from '@tanstack/react-router'
 import { cn } from '../helpers/dom'
+import { Button } from './button'
 
 export const NAV_ICON_SIZE = 16
 
-export function NavButton({ className, ...props }: React.ComponentProps<'button'>) {
+export function NavButton({ className, ...props }: React.ComponentProps<typeof Button>) {
   return (
-    <button
+    <Button
+      variant="secondary"
       className={cn(
-        'font-medium text-slate-50 dark:text-zinc-50 cursor-pointer rounded-lg p-2',
-        'bg-slate-800 dark:bg-zinc-800',
-        'hover:bg-slate-900 dark:hover:bg-zinc-700 focus-visible:outline-white transition',
-        className,
-      )}
-      {...props}
-    />
-  )
-}
-
-export function NavLink({ className, ...props }: React.ComponentProps<typeof Link>) {
-  return (
-    <Link
-      className={cn(
-        'font-medium text-slate-50 dark:text-zinc-50 cursor-pointer rounded-lg p-2',
-        'bg-slate-800 dark:bg-zinc-800',
-        'hover:bg-slate-900 dark:hover:bg-zinc-700 focus-visible:outline-white transition',
+        'h-auto font-medium cursor-pointer rounded-lg p-2',
+        'focus-visible:ring-0',
         className,
       )}
       {...props}
