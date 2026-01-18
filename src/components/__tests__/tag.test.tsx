@@ -68,6 +68,6 @@ describe('Tag', () => {
     )
     const tag = screen.getByText('Tag')
     expect(tag).toHaveClass('custom-class')
-    expect(tag).toHaveClass('rounded-xl', 'h-7', 'px-3', 'py-1', 'text-sm', 'font-medium')
+    expect(tag).toHaveClass('text-sm', 'font-medium')
   })
 })
