@@ -19,7 +19,7 @@ describe('Container', () => {
       </Container>,
     )
     const container = screen.getByText('Content').parentElement
-    expect(container).toHaveClass('max-w-[1000px]', 'mx-auto', 'w-full', 'px-4')
+    expect(container).toHaveClass('max-w-5xl', 'mx-auto', 'w-full', 'px-4')
   })
 
   it('merges additional className prop', () => {
@@ -29,14 +29,7 @@ describe('Container', () => {
       </Container>,
     )
     const container = screen.getByText('Content').parentElement
-    expect(container).toHaveClass(
-      'max-w-[1000px]',
-      'mx-auto',
-      'w-full',
-      'px-4',
-      'bg-red-500',
-      'py-8',
-    )
+    expect(container).toHaveClass('max-w-5xl', 'mx-auto', 'w-full', 'px-4', 'bg-red-500', 'py-8')
   })
 
   it('handles className conflicts with tailwind-merge', () => {
@@ -53,7 +46,7 @@ describe('Container', () => {
   it('renders without children', () => {
     const { container } = render(<Container />)
     expect(container.firstChild).toBeInTheDocument()
-    expect(container.firstChild).toHaveClass('max-w-[1000px]', 'mx-auto', 'w-full', 'px-4')
+    expect(container.firstChild).toHaveClass('max-w-5xl', 'mx-auto', 'w-full', 'px-4')
   })
 
   it('renders with empty className', () => {
@@ -63,7 +56,7 @@ describe('Container', () => {
       </Container>,
     )
     const container = screen.getByText('Content').parentElement
-    expect(container).toHaveClass('max-w-[1000px]', 'mx-auto', 'w-full', 'px-4')
+    expect(container).toHaveClass('max-w-5xl', 'mx-auto', 'w-full', 'px-4')
   })
 
   it('renders with undefined className', () => {
@@ -73,6 +66,6 @@ describe('Container', () => {
       </Container>,
     )
     const container = screen.getByText('Content').parentElement
-    expect(container).toHaveClass('max-w-[1000px]', 'mx-auto', 'w-full', 'px-4')
+    expect(container).toHaveClass('max-w-5xl', 'mx-auto', 'w-full', 'px-4')
   })
 })
