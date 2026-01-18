@@ -9,8 +9,11 @@ type ButtonSize = 'sm' | 'md'
 
 const buttonClasses = cva(
   [
-    'h-10',
-    'px-5',
+    'inline-flex',
+    'items-center',
+    'justify-center',
+    'h-8',
+    'px-3',
     'py-2',
     'rounded-xl',
     'focus-visible:ring-3',
@@ -40,7 +43,7 @@ const buttonClasses = cva(
           'text-indigo-600',
           'dark:text-indigo-300',
           'hover:bg-indigo-200',
-          'dark:hover:bg-zinc-600',
+          'dark:hover:bg-zinc-800',
           'focus-visible:ring-indigo-400',
           'dark:focus-visible:ring-indigo-500',
         ],

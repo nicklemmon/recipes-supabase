@@ -8,7 +8,7 @@ export function NavButton({ className, ...props }: React.ComponentProps<typeof B
     <Button
       variant="secondary"
       className={cn(
-        'h-auto font-medium cursor-pointer rounded-lg p-2',
+        'h-auto font-medium cursor-pointer rounded-lg p-2 shadow-md shadow-indigo-200 dark:shadow-zinc-900',
         'focus-visible:ring-0',
         className,
       )}
