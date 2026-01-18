@@ -11,37 +11,43 @@ describe('Tag', () => {
   it('applies base styles', () => {
     render(<Tag colorScheme="slate">Tag</Tag>)
     const tag = screen.getByText('Tag')
-    expect(tag).toHaveClass('rounded-xl', 'h-12', 'px-4', 'bg-slate-400', 'text-slate-800')
+    expect(tag).toHaveClass('rounded-xl', 'h-7', 'px-3', 'py-1', 'text-sm', 'font-medium')
   })
 
   it('applies red color scheme', () => {
     render(<Tag colorScheme="red">Red Tag</Tag>)
     const tag = screen.getByText('Red Tag')
-    expect(tag).toBeInTheDocument()
+    expect(tag).toHaveClass('bg-red-100', 'text-red-700')
   })
 
   it('applies yellow color scheme', () => {
     render(<Tag colorScheme="yellow">Yellow Tag</Tag>)
     const tag = screen.getByText('Yellow Tag')
-    expect(tag).toBeInTheDocument()
+    expect(tag).toHaveClass('bg-yellow-100', 'text-yellow-700')
   })
 
   it('applies indigo color scheme', () => {
     render(<Tag colorScheme="indigo">Indigo Tag</Tag>)
     const tag = screen.getByText('Indigo Tag')
-    expect(tag).toBeInTheDocument()
+    expect(tag).toHaveClass('bg-indigo-100', 'text-indigo-700')
   })
 
   it('applies cyan color scheme', () => {
     render(<Tag colorScheme="cyan">Cyan Tag</Tag>)
     const tag = screen.getByText('Cyan Tag')
-    expect(tag).toBeInTheDocument()
+    expect(tag).toHaveClass('bg-cyan-100', 'text-cyan-700')
   })
 
   it('applies slate color scheme', () => {
     render(<Tag colorScheme="slate">Slate Tag</Tag>)
     const tag = screen.getByText('Slate Tag')
-    expect(tag).toBeInTheDocument()
+    expect(tag).toHaveClass('bg-slate-200', 'text-slate-700')
+  })
+
+  it('applies default slate color scheme when not specified', () => {
+    render(<Tag>Default Tag</Tag>)
+    const tag = screen.getByText('Default Tag')
+    expect(tag).toHaveClass('bg-slate-200', 'text-slate-700')
   })
 
   it('accepts additional props', () => {
@@ -68,6 +74,6 @@ describe('Tag', () => {
     )
     const tag = screen.getByText('Tag')
     expect(tag).toHaveClass('custom-class')
-    expect(tag).toHaveClass('rounded-xl', 'h-12', 'px-4', 'bg-slate-400', 'text-slate-800')
+    expect(tag).toHaveClass('rounded-xl', 'h-7', 'px-3', 'py-1', 'text-sm', 'font-medium')
   })
 })

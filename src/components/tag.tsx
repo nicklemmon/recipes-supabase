@@ -1,26 +1,32 @@
 import { cva } from 'cva'
+import { cn } from '../helpers/dom'
 
 type TagColorScheme = 'red' | 'yellow' | 'indigo' | 'cyan' | 'slate'
 
 const tagClasses = cva(
-  [
-    'rounded-xl',
-    'h-12',
-    'px-4',
-    'bg-slate-400',
-    'dark:bg-zinc-800',
-    'text-slate-800',
-    'dark:text-zinc-50',
-  ],
+  ['inline-flex', 'items-center', 'rounded-sm', 'h-6', 'px-3', 'py-1', 'text-sm', 'font-medium'],
   {
     variants: {
       colorScheme: {
-        red: [],
-        yellow: [],
-        indigo: [],
-        cyan: [],
-        slate: [],
+        red: ['bg-red-100', 'text-red-700', 'dark:bg-red-900/50', 'dark:text-red-300'],
+        yellow: [
+          'bg-yellow-100',
+          'text-yellow-700',
+          'dark:bg-yellow-900/50',
+          'dark:text-yellow-300',
+        ],
+        indigo: [
+          'bg-indigo-100',
+          'text-indigo-700',
+          'dark:bg-indigo-900/50',
+          'dark:text-indigo-300',
+        ],
+        cyan: ['bg-cyan-100', 'text-cyan-700', 'dark:bg-cyan-900/50', 'dark:text-cyan-300'],
+        slate: ['bg-slate-200', 'text-slate-700', 'dark:bg-zinc-700', 'dark:text-zinc-200'],
       },
+    },
+    defaultVariants: {
+      colorScheme: 'slate',
     },
   },
 )
@@ -28,11 +34,11 @@ const tagClasses = cva(
 export function Tag({
   children,
   className,
-  colorScheme,
+  colorScheme = 'slate',
   ...props
-}: React.ComponentProps<'span'> & { colorScheme: TagColorScheme }) {
+}: React.ComponentProps<'span'> & { colorScheme?: TagColorScheme }) {
   return (
-    <span className={tagClasses({ colorScheme, className })} {...props}>
+    <span className={cn(tagClasses({ colorScheme }), className)} {...props}>
       {children}
     </span>
   )
