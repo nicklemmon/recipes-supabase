@@ -34,8 +34,8 @@ function RouteComponent() {
 
       <PageBody>
         <Stack spacing="xs">
-          <div className="text-md font-semibold text-slate-800">User email</div>
-          <div className="text-slate-600">{session?.user.email}</div>
+          <div className="text-md font-semibold text-slate-800 dark:text-zinc-50">User email</div>
+          <div className="text-slate-600 dark:text-zinc-400">{session?.user.email}</div>
         </Stack>
       </PageBody>
     </div>
