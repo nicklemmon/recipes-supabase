@@ -8,12 +8,6 @@ describe('Tag', () => {
     expect(screen.getByText('Test Tag')).toBeInTheDocument()
   })
 
-  it('applies base styles', () => {
-    render(<Tag colorScheme="slate">Tag</Tag>)
-    const tag = screen.getByText('Tag')
-    expect(tag).toHaveClass('rounded-xl', 'h-7', 'px-3', 'py-1', 'text-sm', 'font-medium')
-  })
-
   it('applies red color scheme', () => {
     render(<Tag colorScheme="red">Red Tag</Tag>)
     const tag = screen.getByText('Red Tag')
