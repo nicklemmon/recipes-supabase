@@ -39,7 +39,7 @@ const buttonClasses = cva(
         ],
         secondary: [
           'bg-indigo-100',
-          'dark:bg-zinc-700',
+          'dark:bg-zinc-800',
           'text-indigo-600',
           'dark:text-indigo-300',
           'hover:bg-indigo-200',
