@@ -2,10 +2,7 @@
 import * as React from 'react'
 import { Combobox } from '@base-ui/react/combobox'
 
-export function FormCombobox() {
-  const containerRef = React.useRef<HTMLDivElement | null>(null)
-  const id = React.useId()
-
+export function FormCombobox({ className, ...props }: React.ComponentProps<typeof Combobox.Root>) {
   return (
     <Combobox.Root items={langs} multiple>
       <div>

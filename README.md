@@ -38,8 +38,8 @@ npm start
 
 ## Other commands
 
-| Command | Description |
-|---|---|
-| `npm run build` | Build production bundle |
-| `npm run serve` | Preview production build locally |
-| `npm run typecheck` | Run TypeScript type checking |
+| Command             | Description                      |
+| ------------------- | -------------------------------- |
+| `npm run build`     | Build production bundle          |
+| `npm run serve`     | Preview production build locally |
+| `npm run typecheck` | Run TypeScript type checking     |
