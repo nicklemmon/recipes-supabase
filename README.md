@@ -43,3 +43,8 @@ npm start
 | `npm run build`     | Build production bundle          |
 | `npm run serve`     | Preview production build locally |
 | `npm run typecheck` | Run TypeScript type checking     |
+| `npm run lint`      | Run ESLint                       |
+| `npm run prettier`  | Format all source files          |
+| `npm test`          | Run tests in watch mode          |
+| `npm run test:run`  | Run tests once                   |
+| `npm run test:ui`   | Run tests with the Vitest UI     |
