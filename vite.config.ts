@@ -2,11 +2,13 @@ import { defineConfig } from 'vite'
 import react from '@vitejs/plugin-react'
 import { tanstackRouter } from '@tanstack/router-plugin/vite'
 import tailwindcss from '@tailwindcss/vite'
+import { compression } from 'vite-plugin-compression2'
 
-export default defineConfig({
+export default defineConfig(({ mode }) => ({
   plugins: [
     tanstackRouter({ generatedRouteTree: './src/route-tree.gen.ts' }),
     tailwindcss(),
     react(),
+    ...(mode === 'production' ? [compression({ algorithms: ['gzip', 'brotliCompress'] })] : []),
   ],
-})
+}))
