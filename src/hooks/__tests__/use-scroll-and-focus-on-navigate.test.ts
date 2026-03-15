@@ -3,7 +3,9 @@ import { describe, it, expect, vi, beforeEach, afterEach } from 'vitest'
 import { useScrollAndFocusOnNavigate } from '../use-scroll-and-focus-on-navigate'
 
 const mockUnsubscribe = vi.fn()
-const mockSubscribe = vi.fn(() => mockUnsubscribe)
+const mockSubscribe = vi.fn(
+  (_event: string, _handler: (event: { pathChanged: boolean }) => void) => mockUnsubscribe,
+)
 const mockRouter = { subscribe: mockSubscribe }
 
 vi.mock('@tanstack/react-router', () => ({
