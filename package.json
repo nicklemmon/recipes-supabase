@@ -4,15 +4,16 @@
   "private": true,
   "type": "module",
   "scripts": {
-    "typecheck": "tsc --noEmit",
+    "type-check": "tsc --noEmit",
     "lint": "eslint src/**",
     "build": "vite build",
     "prettier": "prettier -w src/**/*",
     "serve": "vite preview",
     "start": "vite",
-    "test": "vitest",
+    "test": "vitest run",
+    "test:watch": "vitest",
     "test:ui": "vitest --ui",
-    "test:run": "vitest run"
+    "qa": "concurrently \"npm run lint\" \"npm run type-check\" \"npm run test\" \"npm run build\""
   },
   "devDependencies": {
     "@eslint/js": "9.39.2",
@@ -28,6 +29,7 @@
     "@types/react-dom": "19.2.3",
     "@vitejs/plugin-react": "5.1.2",
     "@vitest/ui": "4.0.16",
+    "concurrently": "9.2.1",
     "eslint": "9.39.2",
     "eslint-plugin-perfectionist": "4.15.1",
     "eslint-plugin-react": "7.37.5",
