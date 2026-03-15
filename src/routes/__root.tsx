@@ -1,4 +1,5 @@
 import { HeadContent, Link, Outlet, createRootRoute } from '@tanstack/react-router'
+import { useScrollAndFocusOnNavigate } from '../hooks/use-scroll-and-focus-on-navigate'
 import { Citrus, LogIn, LogOut, Plus, User } from 'lucide-react'
 import { Toaster } from 'sonner'
 import { Tooltip } from '@base-ui-components/react/tooltip'
@@ -114,7 +115,7 @@ function AppLayout({ children }: { children: React.ReactNode }) {
         </Container>
       </header>
 
-      <main>
+      <main tabIndex={-1} className="outline-none">
         <Outlet />
       </main>
 
@@ -128,6 +129,8 @@ function AppLayout({ children }: { children: React.ReactNode }) {
 function RootComponent() {
   const { session } = Route.useLoaderData()
   const authed = Boolean(session.data.session)
+
+  useScrollAndFocusOnNavigate()
 
   return (
     <>
