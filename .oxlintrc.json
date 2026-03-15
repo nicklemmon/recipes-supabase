@@ -1,0 +1,10 @@
+{
+  "plugins": ["react", "typescript"],
+  "rules": {
+    "react/react-in-jsx-scope": "off",
+    "no-unused-vars": ["error", { "argsIgnorePattern": "^_" }]
+  },
+  "env": {
+    "browser": true
+  }
+}
