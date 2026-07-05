@@ -11,6 +11,7 @@ import { getSubcategoryBySlug } from '../../../../../api/subcategories'
 import { getCategories } from '../../../../../api/categories'
 import { getSubcategories } from '../../../../../api/subcategories'
 import { getRecipeBySlug, updateRecipe } from '../../../../../api/recipes'
+import { getDietaryPreferences } from '../../../../../api/dietary-preferences'
 import { title } from '../../../../../helpers/dom'
 import { Stack } from '../../../../../components/stack'
 import { FormControl } from '../../../../../components/form-control'
@@ -19,6 +20,7 @@ import { FormInput } from '../../../../../components/form-input'
 import { Button } from '../../../../../components/button'
 import { FormSelect } from '../../../../../components/form-select'
 import { FormTextarea } from '../../../../../components/form-textarea'
+import { FormCombobox } from '../../../../../components/form-combobox'
 
 export const Route = createFileRoute('/recipes/$category/$subcategory/$recipe/_private/edit')({
   component: RouteComponent,
@@ -31,8 +33,11 @@ export const Route = createFileRoute('/recipes/$category/$subcategory/$recipe/_p
       categoryId: category.id,
       subcategoryId: subcategory.id,
     })
-    const categories = await getCategories()
-    const subcategories = await getSubcategories()
+    const [categories, subcategories, dietaryPreferences] = await Promise.all([
+      getCategories(),
+      getSubcategories(),
+      getDietaryPreferences(),
+    ])
 
     return {
       category,
@@ -40,6 +45,7 @@ export const Route = createFileRoute('/recipes/$category/$subcategory/$recipe/_p
       recipe,
       categories,
       subcategories,
+      dietaryPreferences,
     }
   },
   head: ({ loaderData }) => {
@@ -64,9 +70,10 @@ function RouteComponent() {
     subcategory: subcategorySlug,
     category: categorySlug,
   } = Route.useParams()
-  const { recipe, categories, subcategories } = Route.useLoaderData()
+  const { recipe, categories, subcategories, dietaryPreferences } = Route.useLoaderData()
   const router = useRouter()
   const [selectedCategory, setSelectedCategory] = useState<number>(recipe.category_id)
+  const [selectedDietaryPrefs, setSelectedDietaryPrefs] = useState<string[]>(recipe.dietary_pref)
   const [updateReqStatus, setUpdateReqStatus] = useState<'loading' | 'idle'>('idle')
   const subcategoriesByCategory = subcategories.filter((subcategory) => {
     // The category list is empty until a category is selected
@@ -99,7 +106,7 @@ function RouteComponent() {
         subcategory_id: Number(subcategory_id),
         ingredients_md,
         directions_md,
-        dietary_pref: [],
+        dietary_pref: selectedDietaryPrefs,
       })
 
       setUpdateReqStatus('loading')
@@ -246,6 +253,19 @@ function RouteComponent() {
                     name="source"
                     defaultValue={recipe.source}
                     disabled={updateReqStatus === 'loading'}
+                  />
+                </FormControl>
+
+                <FormControl>
+                  <FormLabel>Dietary preferences</FormLabel>
+                  <FormCombobox
+                    options={dietaryPreferences.map((pref) => ({
+                      label: pref.label,
+                      value: pref.slug,
+                    }))}
+                    value={selectedDietaryPrefs}
+                    onValueChange={setSelectedDietaryPrefs}
+                    placeholder="Select preferences..."
                   />
                 </FormControl>
               </Stack>
