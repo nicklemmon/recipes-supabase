@@ -1,42 +1,81 @@
-'use client'
 import * as React from 'react'
 import { Combobox } from '@base-ui/react/combobox'
 
-export function FormCombobox({ className, ...props }: React.ComponentProps<typeof Combobox.Root>) {
+type Option = { label: string; value: string }
+
+type FormComboboxProps = {
+  options: Option[]
+  value: string[]
+  onValueChange: (value: string[]) => void
+  placeholder?: string
+}
+
+export function FormCombobox({ options, value, onValueChange, placeholder }: FormComboboxProps) {
+  const containerRef = React.useRef<HTMLDivElement>(null)
+
+  const selectedOptions = value
+    .map((v) => options.find((o) => o.value === v))
+    .filter((o): o is Option => o !== undefined)
+
+  const handleValueChange = (newValue: Option[]) => {
+    onValueChange(newValue.map((o) => o.value))
+  }
+
   return (
-    <Combobox.Root items={langs} multiple>
-      <div>
-        <label htmlFor={id}>Programming languages</label>
-        <Combobox.Chips ref={containerRef}>
-          <Combobox.Value>
-            {(value: ProgrammingLanguage[]) => (
-              <React.Fragment>
-                {value.map((language) => (
-                  <Combobox.Chip key={language.id} aria-label={language.value}>
-                    {language.value}
-                    <Combobox.ChipRemove aria-label="Remove">
-                      <XIcon />
-                    </Combobox.ChipRemove>
-                  </Combobox.Chip>
-                ))}
-                <Combobox.Input id={id} placeholder={value.length > 0 ? '' : 'e.g. TypeScript'} />
-              </React.Fragment>
-            )}
-          </Combobox.Value>
-        </Combobox.Chips>
-      </div>
+    <Combobox.Root
+      items={options}
+      multiple
+      value={selectedOptions}
+      onValueChange={handleValueChange}
+      isItemEqualToValue={(item, selected) => item.value === selected.value}
+    >
+      <Combobox.Chips
+        ref={containerRef}
+        className="flex flex-wrap gap-1 min-h-10 bg-white dark:bg-zinc-800 border border-slate-300 dark:border-zinc-700 px-2 py-1.5 rounded-lg focus-within:outline-none focus-within:ring-2 ring-indigo-700 dark:ring-indigo-500 transition"
+      >
+        <Combobox.Value>
+          {(selectedValues: Option[]) => (
+            <React.Fragment>
+              {selectedValues.map((option) => (
+                <Combobox.Chip
+                  key={option.value}
+                  className="inline-flex items-center gap-1 bg-indigo-100 dark:bg-indigo-900 text-indigo-800 dark:text-indigo-200 text-xs rounded px-2 py-0.5"
+                >
+                  {option.label}
+                  <Combobox.ChipRemove
+                    aria-label={`Remove ${option.label}`}
+                    className="hover:text-indigo-500 leading-none"
+                  >
+                    <XIcon />
+                  </Combobox.ChipRemove>
+                </Combobox.Chip>
+              ))}
+              <Combobox.Input
+                className="flex-1 min-w-20 bg-transparent text-sm text-slate-700 dark:text-zinc-50 outline-none placeholder:text-slate-400 dark:placeholder:text-zinc-500"
+                placeholder={selectedValues.length > 0 ? '' : placeholder}
+              />
+            </React.Fragment>
+          )}
+        </Combobox.Value>
+      </Combobox.Chips>
 
       <Combobox.Portal>
         <Combobox.Positioner sideOffset={4} anchor={containerRef}>
-          <Combobox.Popup>
-            <Combobox.Empty>No languages found.</Combobox.Empty>
+          <Combobox.Popup className="z-50 min-w-48 bg-white dark:bg-zinc-800 border border-slate-200 dark:border-zinc-700 rounded-lg shadow-md p-1">
+            <Combobox.Empty className="px-3 py-2 text-sm text-slate-500 dark:text-zinc-400">
+              No options found.
+            </Combobox.Empty>
             <Combobox.List>
-              {(language: ProgrammingLanguage) => (
-                <Combobox.Item key={language.id} value={language}>
-                  <Combobox.ItemIndicator>
+              {(option: Option) => (
+                <Combobox.Item
+                  key={option.value}
+                  value={option}
+                  className="flex items-center gap-2 px-3 py-2 text-sm text-slate-700 dark:text-zinc-50 rounded cursor-pointer data-[highlighted]:bg-indigo-50 dark:data-[highlighted]:bg-indigo-900/40 data-[selected]:font-medium"
+                >
+                  <Combobox.ItemIndicator className="text-indigo-600 dark:text-indigo-400">
                     <CheckIcon />
                   </Combobox.ItemIndicator>
-                  <div>{language.value}</div>
+                  {option.label}
                 </Combobox.Item>
               )}
             </Combobox.List>
@@ -59,8 +98,8 @@ function XIcon(props: React.ComponentProps<'svg'>) {
   return (
     <svg
       xmlns="http://www.w3.org/2000/svg"
-      width={16}
-      height={16}
+      width={12}
+      height={12}
       viewBox="0 0 24 24"
       fill="none"
       stroke="currentColor"
@@ -75,22 +114,3 @@ function XIcon(props: React.ComponentProps<'svg'>) {
     </svg>
   )
 }
-
-interface ProgrammingLanguage {
-  id: string
-  value: string
-}
-
-const langs: ProgrammingLanguage[] = [
-  { id: 'js', value: 'JavaScript' },
-  { id: 'ts', value: 'TypeScript' },
-  { id: 'py', value: 'Python' },
-  { id: 'java', value: 'Java' },
-  { id: 'cpp', value: 'C++' },
-  { id: 'cs', value: 'C#' },
-  { id: 'php', value: 'PHP' },
-  { id: 'ruby', value: 'Ruby' },
-  { id: 'go', value: 'Go' },
-  { id: 'rust', value: 'Rust' },
-  { id: 'swift', value: 'Swift' },
-]
