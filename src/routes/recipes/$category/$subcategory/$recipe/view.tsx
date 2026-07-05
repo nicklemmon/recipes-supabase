@@ -9,6 +9,7 @@ import { toast } from 'sonner'
 import { getCategoryBySlug } from '../../../../../api/categories'
 import { getSubcategoryBySlug } from '../../../../../api/subcategories'
 import { deleteRecipe, getRecipeBySlug } from '../../../../../api/recipes'
+import { getDietaryPreferences } from '../../../../../api/dietary-preferences'
 import { DEVICE_CAN_SLEEP } from '../../../../../constants/device'
 import { title } from '../../../../../helpers/dom'
 import { Inline } from '../../../../../components/inline'
@@ -45,16 +46,20 @@ export const Route = createFileRoute('/recipes/$category/$subcategory/$recipe/vi
     const { subcategory: subcategorySlug, category: categorySlug, recipe: recipeSlug } = params
     const category = await getCategoryBySlug(categorySlug)
     const subcategory = await getSubcategoryBySlug(subcategorySlug)
-    const recipe = await getRecipeBySlug({
-      slug: recipeSlug,
-      categoryId: category.id,
-      subcategoryId: subcategory.id,
-    })
+    const [recipe, dietaryPreferences] = await Promise.all([
+      getRecipeBySlug({
+        slug: recipeSlug,
+        categoryId: category.id,
+        subcategoryId: subcategory.id,
+      }),
+      getDietaryPreferences(),
+    ])
 
     return {
       category,
       subcategory,
       recipe,
+      dietaryPreferences,
     }
   },
   head: ({ loaderData }) => {
@@ -74,7 +79,7 @@ export const Route = createFileRoute('/recipes/$category/$subcategory/$recipe/vi
 
 function RouteComponent() {
   const { subcategory: subcategorySlug, category: categorySlug } = Route.useParams()
-  const { recipe, subcategory } = Route.useLoaderData()
+  const { recipe, subcategory, dietaryPreferences } = Route.useLoaderData()
   const { from } = Route.useSearch()
   const [delStatus, setDelStatus] = useState<'pending' | 'idle'>('idle')
   const navigate = useNavigate()
@@ -279,7 +284,11 @@ function RouteComponent() {
                       Dietary preferences
                     </div>
                     <div className="text-slate-600 dark:text-slate-400">
-                      {recipe.dietary_pref.map((pref) => pref)}
+                      {recipe.dietary_pref
+                        .map(
+                          (slug) => dietaryPreferences.find((p) => p.slug === slug)?.label ?? slug,
+                        )
+                        .join(', ')}
                     </div>
                   </Stack>
                 ) : null}
