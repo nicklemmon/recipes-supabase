@@ -15,7 +15,7 @@ import { signIn } from '../api/auth'
 
 const FALLBACK_ROUTE = '/' as const
 
-export const Route = createFileRoute('/login')({
+export const Route = createFileRoute('/_public/login')({
   head: () => ({
     meta: [
       {
