@@ -11,8 +11,6 @@ type FormComboboxProps = {
 }
 
 export function FormCombobox({ options, value, onValueChange, placeholder }: FormComboboxProps) {
-  const containerRef = React.useRef<HTMLDivElement>(null)
-
   const selectedOptions = value
     .map((v) => options.find((o) => o.value === v))
     .filter((o): o is Option => o !== undefined)
@@ -29,10 +27,7 @@ export function FormCombobox({ options, value, onValueChange, placeholder }: For
       onValueChange={handleValueChange}
       isItemEqualToValue={(item, selected) => item.value === selected.value}
     >
-      <Combobox.Chips
-        ref={containerRef}
-        className="flex flex-wrap gap-1 min-h-10 bg-white dark:bg-zinc-800 border border-slate-300 dark:border-zinc-700 px-2 py-1.5 rounded-lg focus-within:outline-none focus-within:ring-2 ring-indigo-700 dark:ring-indigo-500 transition"
-      >
+      <Combobox.Chips className="flex flex-wrap gap-1 min-h-10 bg-white dark:bg-zinc-800 border border-slate-300 dark:border-zinc-700 px-2 py-1.5 rounded-lg focus-within:outline-none focus-within:ring-2 ring-indigo-700 dark:ring-indigo-500 transition">
         <Combobox.Value>
           {(selectedValues: Option[]) => (
             <React.Fragment>
@@ -60,8 +55,8 @@ export function FormCombobox({ options, value, onValueChange, placeholder }: For
       </Combobox.Chips>
 
       <Combobox.Portal>
-        <Combobox.Positioner sideOffset={4} anchor={containerRef}>
-          <Combobox.Popup className="z-50 min-w-48 bg-white dark:bg-zinc-800 border border-slate-200 dark:border-zinc-700 rounded-lg shadow-md p-1">
+        <Combobox.Positioner sideOffset={4}>
+          <Combobox.Popup className="z-50 w-[var(--anchor-width)] min-w-48 bg-white dark:bg-zinc-800 border border-slate-200 dark:border-zinc-700 rounded-lg shadow-md p-1">
             <Combobox.Empty className="px-3 py-2 text-sm text-slate-500 dark:text-zinc-400">
               No options found.
             </Combobox.Empty>
