@@ -11,6 +11,8 @@ type FormComboboxProps = {
 }
 
 export function FormCombobox({ options, value, onValueChange, placeholder }: FormComboboxProps) {
+  const anchorRef = React.useRef<HTMLDivElement>(null)
+
   const selectedOptions = value
     .map((v) => options.find((o) => o.value === v))
     .filter((o): o is Option => o !== undefined)
@@ -20,6 +22,7 @@ export function FormCombobox({ options, value, onValueChange, placeholder }: For
   }
 
   return (
+    <div ref={anchorRef} className="w-full">
     <Combobox.Root
       items={options}
       multiple
@@ -55,7 +58,7 @@ export function FormCombobox({ options, value, onValueChange, placeholder }: For
       </Combobox.Chips>
 
       <Combobox.Portal>
-        <Combobox.Positioner sideOffset={4}>
+        <Combobox.Positioner sideOffset={4} anchor={anchorRef}>
           <Combobox.Popup className="z-50 w-[var(--anchor-width)] min-w-48 bg-white dark:bg-zinc-800 border border-slate-200 dark:border-zinc-700 rounded-lg shadow-md p-1">
             <Combobox.Empty className="px-3 py-2 text-sm text-slate-500 dark:text-zinc-400">
               No options found.
@@ -78,6 +81,7 @@ export function FormCombobox({ options, value, onValueChange, placeholder }: For
         </Combobox.Positioner>
       </Combobox.Portal>
     </Combobox.Root>
+    </div>
   )
 }
 
