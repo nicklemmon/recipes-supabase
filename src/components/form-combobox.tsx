@@ -27,7 +27,7 @@ export function FormCombobox({ options, value, onValueChange, placeholder }: For
       onValueChange={handleValueChange}
       isItemEqualToValue={(item, selected) => item.value === selected.value}
     >
-      <Combobox.Chips className="flex flex-wrap gap-1 min-h-10 bg-white dark:bg-zinc-800 border border-slate-300 dark:border-zinc-700 px-2 py-1.5 rounded-lg focus-within:outline-none focus-within:ring-2 ring-indigo-700 dark:ring-indigo-500 transition">
+      <Combobox.Chips className="flex flex-wrap gap-1 w-full min-h-10 bg-white dark:bg-zinc-800 border border-slate-300 dark:border-zinc-700 px-2 py-1.5 rounded-lg focus-within:outline-none focus-within:ring-2 ring-indigo-700 dark:ring-indigo-500 transition">
         <Combobox.Value>
           {(selectedValues: Option[]) => (
             <React.Fragment>
