@@ -60,7 +60,7 @@ export function FormCombobox({ options, value, onValueChange, placeholder }: For
       <Combobox.Portal>
         <Combobox.Positioner sideOffset={4} anchor={anchorRef}>
           <Combobox.Popup className="z-50 w-[var(--anchor-width)] min-w-48 bg-white dark:bg-zinc-800 border border-slate-200 dark:border-zinc-700 rounded-lg shadow-md p-1">
-            <Combobox.Empty className="px-3 py-2 text-sm text-slate-500 dark:text-zinc-400">
+            <Combobox.Empty className="px-3 py-2 text-sm text-slate-500 dark:text-zinc-400 [&:empty]:hidden">
               No options found.
             </Combobox.Empty>
             <Combobox.List>
