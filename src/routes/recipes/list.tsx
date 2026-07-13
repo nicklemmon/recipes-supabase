@@ -10,6 +10,8 @@ import { RecipeTableSkeleton } from '../../components/recipe-table-skeleton'
 import { getRecipes } from '../../api/recipes'
 import { getCategories } from '../../api/categories'
 import { getSubcategories } from '../../api/subcategories'
+import { getDietaryPreferences } from '../../api/dietary-preferences'
+import { DietaryPreferenceTag } from '../../components/dietary-preference-tag'
 import { Stack } from '../../components/stack'
 
 const SearchSchema = z.object({
@@ -29,8 +31,11 @@ export const Route = createFileRoute('/recipes/list')({
     // @ts-expect-error - unclear why this is happening...
     const s = deps.s || ''
 
+    const dietaryPreferences = await getDietaryPreferences()
+
     return {
       searchStr: s,
+      dietaryPreferences,
       recipesData: (async () => {
         const recipes = await getRecipes({ titleSearch: s })
         const categories = await getCategories()
@@ -58,7 +63,7 @@ export const Route = createFileRoute('/recipes/list')({
 })
 
 function RouteComponent() {
-  const { recipesData, searchStr } = Route.useLoaderData()
+  const { recipesData, searchStr, dietaryPreferences } = Route.useLoaderData()
 
   return (
     <div>
@@ -159,9 +164,17 @@ function RouteComponent() {
                               </td>
 
                               <td className="p-4">
-                                {recipe.dietary_pref.map((pref) => {
-                                  return pref
-                                })}
+                                <div className="flex flex-wrap gap-1">
+                                  {recipe.dietary_pref.map((slug) => (
+                                    <DietaryPreferenceTag
+                                      key={slug}
+                                      label={
+                                        dietaryPreferences.find((p) => p.slug === slug)?.label ??
+                                        slug
+                                      }
+                                    />
+                                  ))}
+                                </div>
                               </td>
 
                               <td className="p-4">

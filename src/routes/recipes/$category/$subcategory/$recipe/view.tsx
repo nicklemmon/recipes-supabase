@@ -30,6 +30,7 @@ import { toLegibleDate } from '../../../../../helpers/date'
 import { allowSleep, preventSleep } from '../../../../../helpers/device'
 import { FormControl } from '../../../../../components/form-control'
 import { FormLabel } from '../../../../../components/form-label'
+import { DietaryPreferenceTag } from '../../../../../components/dietary-preference-tag'
 
 const md = markdownit({
   breaks: true,
@@ -283,12 +284,13 @@ function RouteComponent() {
                     <div className="text-md font-semibold text-slate-900 dark:text-slate-100">
                       Dietary preferences
                     </div>
-                    <div className="text-slate-600 dark:text-slate-400">
-                      {recipe.dietary_pref
-                        .map(
-                          (slug) => dietaryPreferences.find((p) => p.slug === slug)?.label ?? slug,
-                        )
-                        .join(', ')}
+                    <div className="flex flex-wrap gap-1">
+                      {recipe.dietary_pref.map((slug) => (
+                        <DietaryPreferenceTag
+                          key={slug}
+                          label={dietaryPreferences.find((p) => p.slug === slug)?.label ?? slug}
+                        />
+                      ))}
                     </div>
                   </Stack>
                 ) : null}

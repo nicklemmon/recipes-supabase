@@ -10,6 +10,8 @@ import { title } from '../../helpers/dom'
 import { getRecipes } from '../../api/recipes'
 import { getCategories } from '../../api/categories'
 import { getSubcategories } from '../../api/subcategories'
+import { getDietaryPreferences } from '../../api/dietary-preferences'
+import { DietaryPreferenceTag } from '../../components/dietary-preference-tag'
 
 export const Route = createFileRoute('/recipes/favorites')({
   head: () => ({
@@ -20,7 +22,10 @@ export const Route = createFileRoute('/recipes/favorites')({
     ],
   }),
   loader: async () => {
+    const dietaryPreferences = await getDietaryPreferences()
+
     return {
+      dietaryPreferences,
       recipesData: defer(
         (async () => {
           const recipes = await getRecipes({ onlyFavorites: true })
@@ -45,7 +50,7 @@ export const Route = createFileRoute('/recipes/favorites')({
 })
 
 function RouteComponent() {
-  const { recipesData } = Route.useLoaderData()
+  const { recipesData, dietaryPreferences } = Route.useLoaderData()
 
   return (
     <div>
@@ -131,9 +136,16 @@ function RouteComponent() {
                           </td>
 
                           <td className="p-4 hidden md:table-cell">
-                            {recipe.dietary_pref.map((pref) => {
-                              return pref
-                            })}
+                            <div className="flex flex-wrap gap-1">
+                              {recipe.dietary_pref.map((slug) => (
+                                <DietaryPreferenceTag
+                                  key={slug}
+                                  label={
+                                    dietaryPreferences.find((p) => p.slug === slug)?.label ?? slug
+                                  }
+                                />
+                              ))}
+                            </div>
                           </td>
 
                           <td className="p-4 text-right">
