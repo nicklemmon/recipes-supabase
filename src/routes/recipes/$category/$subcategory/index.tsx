@@ -104,14 +104,14 @@ function RouteComponent() {
                       </td>
 
                       <td className="p-4 hidden md:table-cell">
-                        <div className="flex flex-wrap gap-1">
+                        <Inline spacing="xs">
                           {recipe.dietary_pref.map((slug) => (
                             <DietaryPreferenceTag
                               key={slug}
                               label={dietaryPreferences.find((p) => p.slug === slug)?.label ?? slug}
                             />
                           ))}
-                        </div>
+                        </Inline>
                       </td>
 
                       <td className="p-4 text-right">

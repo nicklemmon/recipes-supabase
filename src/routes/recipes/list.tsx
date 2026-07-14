@@ -164,7 +164,7 @@ function RouteComponent() {
                               </td>
 
                               <td className="p-4">
-                                <div className="flex flex-wrap gap-1">
+                                <Inline spacing="xs">
                                   {recipe.dietary_pref.map((slug) => (
                                     <DietaryPreferenceTag
                                       key={slug}
@@ -174,7 +174,7 @@ function RouteComponent() {
                                       }
                                     />
                                   ))}
-                                </div>
+                                </Inline>
                               </td>
 
                               <td className="p-4">
