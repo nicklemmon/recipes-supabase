@@ -14,7 +14,7 @@ repository.
 - `npm start` - Start development server with Vite
 - `npm run build` - Build production bundle
 - `npm run serve` - Preview production build locally
-- `npm run typecheck` - Run TypeScript type checking
+- `npm run type-check` - Run TypeScript type checking
 
 ## Architecture Overview
 
@@ -23,7 +23,7 @@ This is a React-based family recipes app using:
 - **TanStack Router** for file-based routing with type-safe navigation
 - **Supabase** for backend database and authentication
 - **Tailwind CSS v4** for styling
-- **Valibot** for runtime type validation
+- **Zod** for runtime type validation
 - **Base UI Components** for accessible UI primitives
 
 ### Key Architecture Patterns
