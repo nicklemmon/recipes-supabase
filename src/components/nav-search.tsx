@@ -1,5 +1,5 @@
 import { Drawer } from 'vaul'
-import { Tooltip } from '@base-ui-components/react/tooltip'
+import { Tooltip } from '@base-ui/react/tooltip'
 import { SearchIcon } from 'lucide-react'
 import { Button } from './button'
 import { Stack } from './stack'

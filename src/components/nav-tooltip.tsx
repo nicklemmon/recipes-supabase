@@ -1,4 +1,4 @@
-import { Tooltip } from '@base-ui-components/react/tooltip'
+import { Tooltip } from '@base-ui/react/tooltip'
 
 export function NavTooltip({ children }: { children: React.ReactNode }) {
   return <Tooltip.Root>{children}</Tooltip.Root>

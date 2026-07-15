@@ -56,9 +56,7 @@ describe('FormCombobox', () => {
     const user = userEvent.setup()
     const onValueChange = vi.fn()
 
-    render(
-      <FormCombobox options={OPTIONS} value={['vegan']} onValueChange={onValueChange} />,
-    )
+    render(<FormCombobox options={OPTIONS} value={['vegan']} onValueChange={onValueChange} />)
 
     await user.click(screen.getByRole('button', { name: 'Remove Vegan' }))
 
