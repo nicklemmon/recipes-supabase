@@ -31,6 +31,7 @@ import { allowSleep, preventSleep } from '../../../../../helpers/device'
 import { FormControl } from '../../../../../components/form-control'
 import { FormLabel } from '../../../../../components/form-label'
 import { DietaryPreferenceTag } from '../../../../../components/dietary-preference-tag'
+import { findDietaryPrefLabel } from '../../../../../helpers/dietary-preferences'
 
 const md = markdownit({
   breaks: true,
@@ -288,7 +289,7 @@ function RouteComponent() {
                       {recipe.dietary_pref.map((slug) => (
                         <DietaryPreferenceTag
                           key={slug}
-                          label={dietaryPreferences.find((p) => p.slug === slug)?.label ?? slug}
+                          label={findDietaryPrefLabel(dietaryPreferences, slug)}
                         />
                       ))}
                     </Inline>

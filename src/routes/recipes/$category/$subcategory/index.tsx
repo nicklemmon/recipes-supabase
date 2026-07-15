@@ -5,6 +5,7 @@ import { getSubcategoryBySlug } from '../../../../api/subcategories'
 import { getRecipes } from '../../../../api/recipes'
 import { getDietaryPreferences } from '../../../../api/dietary-preferences'
 import { DietaryPreferenceTag } from '../../../../components/dietary-preference-tag'
+import { findDietaryPrefLabel } from '../../../../helpers/dietary-preferences'
 import { title } from '../../../../helpers/dom'
 import { PageBody } from '../../../../components/page-body'
 import { PageHeader } from '../../../../components/page-header'
@@ -17,16 +18,13 @@ export const Route = createFileRoute('/recipes/$category/$subcategory/')({
   loader: async ({ params }) => {
     const { subcategory: subcategorySlug, category: categorySlug } = params
 
-    // Start both promises in parallel
-    const [category, subcategory] = await Promise.all([
+    const [category, subcategory, dietaryPreferences] = await Promise.all([
       getCategoryBySlug(categorySlug),
       getSubcategoryBySlug(subcategorySlug),
-    ])
-
-    const [recipes, dietaryPreferences] = await Promise.all([
-      getRecipes({ categoryId: category.id, subcategoryId: subcategory.id }),
       getDietaryPreferences(),
     ])
+
+    const recipes = await getRecipes({ categoryId: category.id, subcategoryId: subcategory.id })
 
     return {
       category,
@@ -108,7 +106,7 @@ function RouteComponent() {
                           {recipe.dietary_pref.map((slug) => (
                             <DietaryPreferenceTag
                               key={slug}
-                              label={dietaryPreferences.find((p) => p.slug === slug)?.label ?? slug}
+                              label={findDietaryPrefLabel(dietaryPreferences, slug)}
                             />
                           ))}
                         </Inline>

@@ -11,6 +11,7 @@ import { getCategories } from '../../api/categories'
 import { getSubcategories } from '../../api/subcategories'
 import { getDietaryPreferences } from '../../api/dietary-preferences'
 import { FormCombobox } from '../../components/form-combobox'
+import { toDietaryPrefOptions } from '../../helpers/dietary-preferences'
 import { Stack } from '../../components/stack'
 import { FormControl } from '../../components/form-control'
 import { FormLabel } from '../../components/form-label'
@@ -80,6 +81,7 @@ function RouteComponent() {
 
       // Clear the form
       formRef.current?.reset()
+      setSelectedCategory(undefined)
       setSelectedDietaryPrefs([])
 
       // Toast it up
@@ -184,10 +186,7 @@ function RouteComponent() {
                 <FormControl>
                   <FormLabel>Dietary preferences</FormLabel>
                   <FormCombobox
-                    options={dietaryPreferences.map((pref) => ({
-                      label: pref.label,
-                      value: pref.slug,
-                    }))}
+                    options={toDietaryPrefOptions(dietaryPreferences)}
                     value={selectedDietaryPrefs}
                     onValueChange={setSelectedDietaryPrefs}
                     placeholder="Select preferences..."

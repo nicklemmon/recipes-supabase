@@ -13,6 +13,7 @@ import { getSubcategories } from '../../../../../api/subcategories'
 import { getRecipeBySlug, updateRecipe } from '../../../../../api/recipes'
 import { getDietaryPreferences } from '../../../../../api/dietary-preferences'
 import { title } from '../../../../../helpers/dom'
+import { toDietaryPrefOptions } from '../../../../../helpers/dietary-preferences'
 import { Stack } from '../../../../../components/stack'
 import { FormControl } from '../../../../../components/form-control'
 import { FormLabel } from '../../../../../components/form-label'
@@ -26,18 +27,19 @@ export const Route = createFileRoute('/recipes/$category/$subcategory/$recipe/_p
   component: RouteComponent,
   loader: async ({ params }) => {
     const { subcategory: subcategorySlug, category: categorySlug, recipe: recipeSlug } = params
-    const category = await getCategoryBySlug(categorySlug)
-    const subcategory = await getSubcategoryBySlug(subcategorySlug)
+    const [category, subcategory, categories, subcategories, dietaryPreferences] =
+      await Promise.all([
+        getCategoryBySlug(categorySlug),
+        getSubcategoryBySlug(subcategorySlug),
+        getCategories(),
+        getSubcategories(),
+        getDietaryPreferences(),
+      ])
     const recipe = await getRecipeBySlug({
       slug: recipeSlug,
       categoryId: category.id,
       subcategoryId: subcategory.id,
     })
-    const [categories, subcategories, dietaryPreferences] = await Promise.all([
-      getCategories(),
-      getSubcategories(),
-      getDietaryPreferences(),
-    ])
 
     return {
       category,
@@ -259,10 +261,7 @@ function RouteComponent() {
                 <FormControl>
                   <FormLabel>Dietary preferences</FormLabel>
                   <FormCombobox
-                    options={dietaryPreferences.map((pref) => ({
-                      label: pref.label,
-                      value: pref.slug,
-                    }))}
+                    options={toDietaryPrefOptions(dietaryPreferences)}
                     value={selectedDietaryPrefs}
                     onValueChange={setSelectedDietaryPrefs}
                     placeholder="Select preferences..."

@@ -12,6 +12,7 @@ import { getCategories } from '../../api/categories'
 import { getSubcategories } from '../../api/subcategories'
 import { getDietaryPreferences } from '../../api/dietary-preferences'
 import { DietaryPreferenceTag } from '../../components/dietary-preference-tag'
+import { findDietaryPrefLabel } from '../../helpers/dietary-preferences'
 
 export const Route = createFileRoute('/recipes/favorites')({
   head: () => ({
@@ -22,15 +23,15 @@ export const Route = createFileRoute('/recipes/favorites')({
     ],
   }),
   loader: async () => {
-    const dietaryPreferences = await getDietaryPreferences()
-
     return {
-      dietaryPreferences,
       recipesData: defer(
         (async () => {
-          const recipes = await getRecipes({ onlyFavorites: true })
-          const categories = await getCategories()
-          const subCategories = await getSubcategories()
+          const [recipes, categories, subCategories, dietaryPreferences] = await Promise.all([
+            getRecipes({ onlyFavorites: true }),
+            getCategories(),
+            getSubcategories(),
+            getDietaryPreferences(),
+          ])
           const recipesWithSlugs = recipes.map((recipe) => {
             return {
               ...recipe,
@@ -41,7 +42,7 @@ export const Route = createFileRoute('/recipes/favorites')({
             }
           })
 
-          return recipesWithSlugs
+          return { recipesWithSlugs, dietaryPreferences }
         })(),
       ),
     }
@@ -50,7 +51,7 @@ export const Route = createFileRoute('/recipes/favorites')({
 })
 
 function RouteComponent() {
-  const { recipesData, dietaryPreferences } = Route.useLoaderData()
+  const { recipesData } = Route.useLoaderData()
 
   return (
     <div>
@@ -84,7 +85,7 @@ function RouteComponent() {
           }
         >
           <Await promise={recipesData}>
-            {(recipesWithSlugs) => (
+            {({ recipesWithSlugs, dietaryPreferences }) => (
               <div className="border border-x-0 border-slate-200 dark:border-slate-700">
                 <table className="w-full text-left text-md border-collapse text-slate-700 dark:text-slate-300">
                   <caption className="sr-only">Recipes</caption>
@@ -140,9 +141,7 @@ function RouteComponent() {
                               {recipe.dietary_pref.map((slug) => (
                                 <DietaryPreferenceTag
                                   key={slug}
-                                  label={
-                                    dietaryPreferences.find((p) => p.slug === slug)?.label ?? slug
-                                  }
+                                  label={findDietaryPrefLabel(dietaryPreferences, slug)}
                                 />
                               ))}
                             </Inline>
