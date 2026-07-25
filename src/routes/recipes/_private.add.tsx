@@ -66,7 +66,7 @@ function RouteComponent() {
         slug: slugify(String(title)),
         source,
         category_id: Number(category_id),
-        rating: Number(rating),
+        rating: rating ? Number(rating) : null,
         subcategory_id: Number(subcategory_id),
         ingredients_md,
         directions_md,

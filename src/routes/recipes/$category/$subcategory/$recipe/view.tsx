@@ -13,6 +13,7 @@ import { getDietaryPreferences } from '../../../../../api/dietary-preferences'
 import { DEVICE_CAN_SLEEP } from '../../../../../constants/device'
 import { title } from '../../../../../helpers/dom'
 import { Inline } from '../../../../../components/inline'
+import { EmptyCell } from '../../../../../components/empty-cell'
 import {
   PageActions,
   PageBackLink,
@@ -259,15 +260,19 @@ function RouteComponent() {
                     Rating
                   </div>
                   <div className="text-slate-600 dark:text-slate-400">
-                    <Inline spacing="xs">
-                      {[...new Array(recipe.rating)].map((_star, index) => (
-                        <Star
-                          key={`${recipe.id}-start-${index}`}
-                          size={16}
-                          className="text-yellow-500 fill-yellow-200"
-                        />
-                      ))}
-                    </Inline>
+                    {recipe.rating == null ? (
+                      <EmptyCell label="No rating" />
+                    ) : (
+                      <Inline spacing="xs">
+                        {[...new Array(recipe.rating)].map((_star, index) => (
+                          <Star
+                            key={`${recipe.id}-start-${index}`}
+                            size={16}
+                            className="text-yellow-500 fill-yellow-200"
+                          />
+                        ))}
+                      </Inline>
+                    )}
                   </div>
                 </Stack>
 

@@ -6,6 +6,7 @@ import { PageHeading } from '../../components/page-heading'
 import { PageBody } from '../../components/page-body'
 import { Inline } from '../../components/inline'
 import { RecipeTableSkeleton } from '../../components/recipe-table-skeleton'
+import { EmptyCell } from '../../components/empty-cell'
 import { title } from '../../helpers/dom'
 import { getRecipes } from '../../api/recipes'
 import { getCategories } from '../../api/categories'
@@ -148,17 +149,23 @@ function RouteComponent() {
                           </td>
 
                           <td className="p-4 text-right">
-                            <span className="md:hidden">{recipe.rating}&nbsp;stars</span>
+                            {recipe.rating == null ? (
+                              <EmptyCell label="No rating" />
+                            ) : (
+                              <>
+                                <span className="md:hidden">{recipe.rating}&nbsp;stars</span>
 
-                            <Inline spacing="xs" className="hidden md:inline-flex">
-                              {[...new Array(recipe.rating)].map((_star, index) => (
-                                <Star
-                                  key={`${recipe.id}-start-${index}`}
-                                  size={16}
-                                  className="text-yellow-500 fill-yellow-200"
-                                />
-                              ))}
-                            </Inline>
+                                <Inline spacing="xs" className="hidden md:inline-flex">
+                                  {[...new Array(recipe.rating)].map((_star, index) => (
+                                    <Star
+                                      key={`${recipe.id}-start-${index}`}
+                                      size={16}
+                                      className="text-yellow-500 fill-yellow-200"
+                                    />
+                                  ))}
+                                </Inline>
+                              </>
+                            )}
                           </td>
                         </tr>
                       )

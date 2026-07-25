@@ -11,7 +11,7 @@ export const RecipeSchema = z.object({
   subcategory_id: z.number(),
   ingredients_md: z.string(),
   dietary_pref: z.array(z.string()),
-  rating: RecipeRatingSchema,
+  rating: RecipeRatingSchema.nullable(),
   directions_md: z.string(),
   slug: z.string().regex(/^[a-z0-9]+(?:-[a-z0-9]+)*$/),
 })
