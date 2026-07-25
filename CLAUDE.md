@@ -9,6 +9,19 @@ npm run qa
 This file provides guidance to Claude Code (claude.ai/code) when working with code in this
 repository.
 
+## Agent Communication Standards
+
+When communicating with the user (chat responses, commit messages, PR descriptions, comments),
+follow plain-language principles grounded in:
+
+- **ISO 24495-1:2023**: information should be relevant, findable, understandable, and usable.
+- **W3C Cognitive Accessibility Guidance**: clear words, literal language, short text, separate
+  steps, short critical paths, and no reliance on memory. It explicitly considers ADHD, but is
+  advisory rather than required for WCAG conformance.
+- **US Plain Writing Act**: communication must be understandable on the first reading.
+- **JAN ADHD guidance**: recommends written, structured, step-by-step instructions. It is
+  accommodation guidance, not a standard.
+
 ## Development Commands
 
 - `npm start` - Start development server with Vite
