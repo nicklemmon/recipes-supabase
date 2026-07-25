@@ -1,7 +1,8 @@
 # Local
 .DS_Store
 *.local
-*.log*
+*.log
+*.log.*
 
 # Dist
 node_modules
@@ -19,3 +20,6 @@ dist/
 
 # Env
 .env
+
+# Supabase
+supabase/.temp

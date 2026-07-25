@@ -9,6 +9,7 @@ import { toast } from 'sonner'
 import { getCategoryBySlug } from '../../../../../api/categories'
 import { getSubcategoryBySlug } from '../../../../../api/subcategories'
 import { deleteRecipe, getRecipeBySlug } from '../../../../../api/recipes'
+import { getDietaryPreferences } from '../../../../../api/dietary-preferences'
 import { DEVICE_CAN_SLEEP } from '../../../../../constants/device'
 import { title } from '../../../../../helpers/dom'
 import { Inline } from '../../../../../components/inline'
@@ -29,6 +30,8 @@ import { toLegibleDate } from '../../../../../helpers/date'
 import { allowSleep, preventSleep } from '../../../../../helpers/device'
 import { FormControl } from '../../../../../components/form-control'
 import { FormLabel } from '../../../../../components/form-label'
+import { DietaryPreferenceTag } from '../../../../../components/dietary-preference-tag'
+import { findDietaryPrefLabel } from '../../../../../helpers/dietary-preferences'
 
 const md = markdownit({
   breaks: true,
@@ -45,16 +48,20 @@ export const Route = createFileRoute('/recipes/$category/$subcategory/$recipe/vi
     const { subcategory: subcategorySlug, category: categorySlug, recipe: recipeSlug } = params
     const category = await getCategoryBySlug(categorySlug)
     const subcategory = await getSubcategoryBySlug(subcategorySlug)
-    const recipe = await getRecipeBySlug({
-      slug: recipeSlug,
-      categoryId: category.id,
-      subcategoryId: subcategory.id,
-    })
+    const [recipe, dietaryPreferences] = await Promise.all([
+      getRecipeBySlug({
+        slug: recipeSlug,
+        categoryId: category.id,
+        subcategoryId: subcategory.id,
+      }),
+      getDietaryPreferences(),
+    ])
 
     return {
       category,
       subcategory,
       recipe,
+      dietaryPreferences,
     }
   },
   head: ({ loaderData }) => {
@@ -74,7 +81,7 @@ export const Route = createFileRoute('/recipes/$category/$subcategory/$recipe/vi
 
 function RouteComponent() {
   const { subcategory: subcategorySlug, category: categorySlug } = Route.useParams()
-  const { recipe, subcategory } = Route.useLoaderData()
+  const { recipe, subcategory, dietaryPreferences } = Route.useLoaderData()
   const { from } = Route.useSearch()
   const [delStatus, setDelStatus] = useState<'pending' | 'idle'>('idle')
   const navigate = useNavigate()
@@ -278,9 +285,14 @@ function RouteComponent() {
                     <div className="text-md font-semibold text-slate-900 dark:text-slate-100">
                       Dietary preferences
                     </div>
-                    <div className="text-slate-600 dark:text-slate-400">
-                      {recipe.dietary_pref.map((pref) => pref)}
-                    </div>
+                    <Inline spacing="xs">
+                      {recipe.dietary_pref.map((slug) => (
+                        <DietaryPreferenceTag
+                          key={slug}
+                          label={findDietaryPrefLabel(dietaryPreferences, slug)}
+                        />
+                      ))}
+                    </Inline>
                   </Stack>
                 ) : null}
               </Stack>

@@ -10,6 +10,9 @@ import { title } from '../../helpers/dom'
 import { getRecipes } from '../../api/recipes'
 import { getCategories } from '../../api/categories'
 import { getSubcategories } from '../../api/subcategories'
+import { getDietaryPreferences } from '../../api/dietary-preferences'
+import { DietaryPreferenceTag } from '../../components/dietary-preference-tag'
+import { findDietaryPrefLabel } from '../../helpers/dietary-preferences'
 
 export const Route = createFileRoute('/recipes/favorites')({
   head: () => ({
@@ -23,9 +26,12 @@ export const Route = createFileRoute('/recipes/favorites')({
     return {
       recipesData: defer(
         (async () => {
-          const recipes = await getRecipes({ onlyFavorites: true })
-          const categories = await getCategories()
-          const subCategories = await getSubcategories()
+          const [recipes, categories, subCategories, dietaryPreferences] = await Promise.all([
+            getRecipes({ onlyFavorites: true }),
+            getCategories(),
+            getSubcategories(),
+            getDietaryPreferences(),
+          ])
           const recipesWithSlugs = recipes.map((recipe) => {
             return {
               ...recipe,
@@ -36,7 +42,7 @@ export const Route = createFileRoute('/recipes/favorites')({
             }
           })
 
-          return recipesWithSlugs
+          return { recipesWithSlugs, dietaryPreferences }
         })(),
       ),
     }
@@ -79,7 +85,7 @@ function RouteComponent() {
           }
         >
           <Await promise={recipesData}>
-            {(recipesWithSlugs) => (
+            {({ recipesWithSlugs, dietaryPreferences }) => (
               <div className="border border-x-0 border-slate-200 dark:border-slate-700">
                 <table className="w-full text-left text-md border-collapse text-slate-700 dark:text-slate-300">
                   <caption className="sr-only">Recipes</caption>
@@ -131,9 +137,14 @@ function RouteComponent() {
                           </td>
 
                           <td className="p-4 hidden md:table-cell">
-                            {recipe.dietary_pref.map((pref) => {
-                              return pref
-                            })}
+                            <Inline spacing="xs">
+                              {recipe.dietary_pref.map((slug) => (
+                                <DietaryPreferenceTag
+                                  key={slug}
+                                  label={findDietaryPrefLabel(dietaryPreferences, slug)}
+                                />
+                              ))}
+                            </Inline>
                           </td>
 
                           <td className="p-4 text-right">

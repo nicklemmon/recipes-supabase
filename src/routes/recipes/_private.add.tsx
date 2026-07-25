@@ -9,6 +9,9 @@ import { slugify } from '../../helpers/string'
 import { NewRecipeSchema } from '../../types/recipes'
 import { getCategories } from '../../api/categories'
 import { getSubcategories } from '../../api/subcategories'
+import { getDietaryPreferences } from '../../api/dietary-preferences'
+import { FormCombobox } from '../../components/form-combobox'
+import { toDietaryPrefOptions } from '../../helpers/dietary-preferences'
 import { Stack } from '../../components/stack'
 import { FormControl } from '../../components/form-control'
 import { FormLabel } from '../../components/form-label'
@@ -28,18 +31,22 @@ export const Route = createFileRoute('/recipes/_private/add')({
   }),
   component: RouteComponent,
   loader: async () => {
-    const categories = await getCategories()
-    const subcategories = await getSubcategories()
+    const [categories, subcategories, dietaryPreferences] = await Promise.all([
+      getCategories(),
+      getSubcategories(),
+      getDietaryPreferences(),
+    ])
 
-    return { categories, subcategories }
+    return { categories, subcategories, dietaryPreferences }
   },
 })
 
 function RouteComponent() {
   const [addReqStatus, setAddReqStatus] = useState<'loading' | 'idle'>('idle')
   const [selectedCategory, setSelectedCategory] = useState<number>()
+  const [selectedDietaryPrefs, setSelectedDietaryPrefs] = useState<string[]>([])
   const formRef = useRef<HTMLFormElement>(null)
-  const { categories, subcategories } = Route.useLoaderData()
+  const { categories, subcategories, dietaryPreferences } = Route.useLoaderData()
   const subcategoriesByCategory = subcategories.filter((subcategory) => {
     // The category list is empty until a category is selected
     if (!selectedCategory) return false
@@ -63,7 +70,7 @@ function RouteComponent() {
         subcategory_id: Number(subcategory_id),
         ingredients_md,
         directions_md,
-        dietary_pref: [],
+        dietary_pref: selectedDietaryPrefs,
       })
 
       setAddReqStatus('loading')
@@ -74,6 +81,8 @@ function RouteComponent() {
 
       // Clear the form
       formRef.current?.reset()
+      setSelectedCategory(undefined)
+      setSelectedDietaryPrefs([])
 
       // Toast it up
       toast.success(`Recipe "${title}" added`)
@@ -172,6 +181,16 @@ function RouteComponent() {
                 <FormControl>
                   <FormLabel htmlFor="source-input">Source</FormLabel>
                   <FormInput id="source-input" name="source" />
+                </FormControl>
+
+                <FormControl>
+                  <FormLabel>Dietary preferences</FormLabel>
+                  <FormCombobox
+                    options={toDietaryPrefOptions(dietaryPreferences)}
+                    value={selectedDietaryPrefs}
+                    onValueChange={setSelectedDietaryPrefs}
+                    placeholder="Select preferences..."
+                  />
                 </FormControl>
               </Stack>
             </div>

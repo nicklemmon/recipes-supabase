@@ -10,7 +10,10 @@ import { RecipeTableSkeleton } from '../../components/recipe-table-skeleton'
 import { getRecipes } from '../../api/recipes'
 import { getCategories } from '../../api/categories'
 import { getSubcategories } from '../../api/subcategories'
+import { getDietaryPreferences } from '../../api/dietary-preferences'
+import { DietaryPreferenceTag } from '../../components/dietary-preference-tag'
 import { Stack } from '../../components/stack'
+import { findDietaryPrefLabel } from '../../helpers/dietary-preferences'
 
 const SearchSchema = z.object({
   s: z.string().optional(),
@@ -29,24 +32,29 @@ export const Route = createFileRoute('/recipes/list')({
     // @ts-expect-error - unclear why this is happening...
     const s = deps.s || ''
 
+    const dietaryPreferencesPromise = getDietaryPreferences()
+    const recipesData = (async () => {
+      const recipes = await getRecipes({ titleSearch: s })
+      const categories = await getCategories()
+      const subCategories = await getSubcategories()
+      const recipesWithSlugs = recipes.map((recipe) => {
+        return {
+          ...recipe,
+          categorySlug: categories.find((category) => category.id === recipe.category_id)?.slug,
+          subCategorySlug: subCategories.find(
+            (subCategory) => subCategory.id === recipe.subcategory_id,
+          )?.slug,
+        }
+      })
+
+      return recipesWithSlugs
+    })()
+    const dietaryPreferences = await dietaryPreferencesPromise
+
     return {
       searchStr: s,
-      recipesData: (async () => {
-        const recipes = await getRecipes({ titleSearch: s })
-        const categories = await getCategories()
-        const subCategories = await getSubcategories()
-        const recipesWithSlugs = recipes.map((recipe) => {
-          return {
-            ...recipe,
-            categorySlug: categories.find((category) => category.id === recipe.category_id)?.slug,
-            subCategorySlug: subCategories.find(
-              (subCategory) => subCategory.id === recipe.subcategory_id,
-            )?.slug,
-          }
-        })
-
-        return recipesWithSlugs
-      })(),
+      dietaryPreferences,
+      recipesData,
     }
   },
   loaderDeps: ({ search }) => {
@@ -58,7 +66,7 @@ export const Route = createFileRoute('/recipes/list')({
 })
 
 function RouteComponent() {
-  const { recipesData, searchStr } = Route.useLoaderData()
+  const { recipesData, searchStr, dietaryPreferences } = Route.useLoaderData()
 
   return (
     <div>
@@ -159,9 +167,14 @@ function RouteComponent() {
                               </td>
 
                               <td className="p-4">
-                                {recipe.dietary_pref.map((pref) => {
-                                  return pref
-                                })}
+                                <Inline spacing="xs">
+                                  {recipe.dietary_pref.map((slug) => (
+                                    <DietaryPreferenceTag
+                                      key={slug}
+                                      label={findDietaryPrefLabel(dietaryPreferences, slug)}
+                                    />
+                                  ))}
+                                </Inline>
                               </td>
 
                               <td className="p-4">

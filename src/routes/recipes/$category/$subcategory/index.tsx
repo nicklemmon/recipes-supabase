@@ -3,6 +3,9 @@ import { ChevronRight, Star } from 'lucide-react'
 import { getCategoryBySlug } from '../../../../api/categories'
 import { getSubcategoryBySlug } from '../../../../api/subcategories'
 import { getRecipes } from '../../../../api/recipes'
+import { getDietaryPreferences } from '../../../../api/dietary-preferences'
+import { DietaryPreferenceTag } from '../../../../components/dietary-preference-tag'
+import { findDietaryPrefLabel } from '../../../../helpers/dietary-preferences'
 import { title } from '../../../../helpers/dom'
 import { PageBody } from '../../../../components/page-body'
 import { PageHeader } from '../../../../components/page-header'
@@ -15,21 +18,19 @@ export const Route = createFileRoute('/recipes/$category/$subcategory/')({
   loader: async ({ params }) => {
     const { subcategory: subcategorySlug, category: categorySlug } = params
 
-    // Start both promises in parallel
-    const [category, subcategory] = await Promise.all([
+    const [category, subcategory, dietaryPreferences] = await Promise.all([
       getCategoryBySlug(categorySlug),
       getSubcategoryBySlug(subcategorySlug),
+      getDietaryPreferences(),
     ])
 
-    const recipes = await getRecipes({
-      categoryId: category.id,
-      subcategoryId: subcategory.id,
-    })
+    const recipes = await getRecipes({ categoryId: category.id, subcategoryId: subcategory.id })
 
     return {
       category,
       subcategory,
       recipes,
+      dietaryPreferences,
     }
   },
   head: ({ loaderData }) => {
@@ -44,7 +45,7 @@ export const Route = createFileRoute('/recipes/$category/$subcategory/')({
 })
 
 function RouteComponent() {
-  const { category, subcategory, recipes } = Route.useLoaderData()
+  const { category, subcategory, recipes, dietaryPreferences } = Route.useLoaderData()
 
   return (
     <div>
@@ -101,9 +102,14 @@ function RouteComponent() {
                       </td>
 
                       <td className="p-4 hidden md:table-cell">
-                        {recipe.dietary_pref.map((pref) => {
-                          return pref
-                        })}
+                        <Inline spacing="xs">
+                          {recipe.dietary_pref.map((slug) => (
+                            <DietaryPreferenceTag
+                              key={slug}
+                              label={findDietaryPrefLabel(dietaryPreferences, slug)}
+                            />
+                          ))}
+                        </Inline>
                       </td>
 
                       <td className="p-4 text-right">

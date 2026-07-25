@@ -10,12 +10,13 @@
 
 import { Route as rootRouteImport } from './routes/__root'
 import { Route as LogoutRouteImport } from './routes/logout'
-import { Route as LoginRouteImport } from './routes/login'
+import { Route as PublicRouteImport } from './routes/_public'
 import { Route as PrivateRouteImport } from './routes/_private'
 import { Route as IndexRouteImport } from './routes/index'
 import { Route as RecipesListRouteImport } from './routes/recipes/list'
 import { Route as RecipesFavoritesRouteImport } from './routes/recipes/favorites'
 import { Route as RecipesPrivateRouteImport } from './routes/recipes/_private'
+import { Route as PublicLoginRouteImport } from './routes/_public.login'
 import { Route as PrivateProfileRouteImport } from './routes/_private.profile'
 import { Route as RecipesCategoryIndexRouteImport } from './routes/recipes/$category/index'
 import { Route as RecipesPrivateAddRouteImport } from './routes/recipes/_private.add'
@@ -29,9 +30,8 @@ const LogoutRoute = LogoutRouteImport.update({
   path: '/logout',
   getParentRoute: () => rootRouteImport,
 } as any)
-const LoginRoute = LoginRouteImport.update({
-  id: '/login',
-  path: '/login',
+const PublicRoute = PublicRouteImport.update({
+  id: '/_public',
   getParentRoute: () => rootRouteImport,
 } as any)
 const PrivateRoute = PrivateRouteImport.update({
@@ -57,6 +57,11 @@ const RecipesPrivateRoute = RecipesPrivateRouteImport.update({
   id: '/recipes/_private',
   path: '/recipes',
   getParentRoute: () => rootRouteImport,
+} as any)
+const PublicLoginRoute = PublicLoginRouteImport.update({
+  id: '/login',
+  path: '/login',
+  getParentRoute: () => PublicRoute,
 } as any)
 const PrivateProfileRoute = PrivateProfileRouteImport.update({
   id: '/profile',
@@ -100,9 +105,9 @@ const RecipesCategorySubcategoryRecipePrivateEditRoute =
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
-  '/login': typeof LoginRoute
   '/logout': typeof LogoutRoute
   '/profile': typeof PrivateProfileRoute
+  '/login': typeof PublicLoginRoute
   '/recipes': typeof RecipesPrivateRouteWithChildren
   '/recipes/favorites': typeof RecipesFavoritesRoute
   '/recipes/list': typeof RecipesListRoute
@@ -115,9 +120,9 @@ export interface FileRoutesByFullPath {
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
-  '/login': typeof LoginRoute
   '/logout': typeof LogoutRoute
   '/profile': typeof PrivateProfileRoute
+  '/login': typeof PublicLoginRoute
   '/recipes': typeof RecipesPrivateRouteWithChildren
   '/recipes/favorites': typeof RecipesFavoritesRoute
   '/recipes/list': typeof RecipesListRoute
@@ -132,9 +137,10 @@ export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/': typeof IndexRoute
   '/_private': typeof PrivateRouteWithChildren
-  '/login': typeof LoginRoute
+  '/_public': typeof PublicRouteWithChildren
   '/logout': typeof LogoutRoute
   '/_private/profile': typeof PrivateProfileRoute
+  '/_public/login': typeof PublicLoginRoute
   '/recipes/_private': typeof RecipesPrivateRouteWithChildren
   '/recipes/favorites': typeof RecipesFavoritesRoute
   '/recipes/list': typeof RecipesListRoute
@@ -149,9 +155,9 @@ export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
   fullPaths:
     | '/'
-    | '/login'
     | '/logout'
     | '/profile'
+    | '/login'
     | '/recipes'
     | '/recipes/favorites'
     | '/recipes/list'
@@ -164,9 +170,9 @@ export interface FileRouteTypes {
   fileRoutesByTo: FileRoutesByTo
   to:
     | '/'
-    | '/login'
     | '/logout'
     | '/profile'
+    | '/login'
     | '/recipes'
     | '/recipes/favorites'
     | '/recipes/list'
@@ -180,9 +186,10 @@ export interface FileRouteTypes {
     | '__root__'
     | '/'
     | '/_private'
-    | '/login'
+    | '/_public'
     | '/logout'
     | '/_private/profile'
+    | '/_public/login'
     | '/recipes/_private'
     | '/recipes/favorites'
     | '/recipes/list'
@@ -197,7 +204,7 @@ export interface FileRouteTypes {
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
   PrivateRoute: typeof PrivateRouteWithChildren
-  LoginRoute: typeof LoginRoute
+  PublicRoute: typeof PublicRouteWithChildren
   LogoutRoute: typeof LogoutRoute
   RecipesPrivateRoute: typeof RecipesPrivateRouteWithChildren
   RecipesFavoritesRoute: typeof RecipesFavoritesRoute
@@ -217,11 +224,11 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof LogoutRouteImport
       parentRoute: typeof rootRouteImport
     }
-    '/login': {
-      id: '/login'
-      path: '/login'
-      fullPath: '/login'
-      preLoaderRoute: typeof LoginRouteImport
+    '/_public': {
+      id: '/_public'
+      path: ''
+      fullPath: '/'
+      preLoaderRoute: typeof PublicRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/_private': {
@@ -258,6 +265,13 @@ declare module '@tanstack/react-router' {
       fullPath: '/recipes'
       preLoaderRoute: typeof RecipesPrivateRouteImport
       parentRoute: typeof rootRouteImport
+    }
+    '/_public/login': {
+      id: '/_public/login'
+      path: '/login'
+      fullPath: '/login'
+      preLoaderRoute: typeof PublicLoginRouteImport
+      parentRoute: typeof PublicRoute
     }
     '/_private/profile': {
       id: '/_private/profile'
@@ -322,6 +336,17 @@ const PrivateRouteChildren: PrivateRouteChildren = {
 const PrivateRouteWithChildren =
   PrivateRoute._addFileChildren(PrivateRouteChildren)
 
+interface PublicRouteChildren {
+  PublicLoginRoute: typeof PublicLoginRoute
+}
+
+const PublicRouteChildren: PublicRouteChildren = {
+  PublicLoginRoute: PublicLoginRoute,
+}
+
+const PublicRouteWithChildren =
+  PublicRoute._addFileChildren(PublicRouteChildren)
+
 interface RecipesPrivateRouteChildren {
   RecipesPrivateAddRoute: typeof RecipesPrivateAddRoute
 }
@@ -352,7 +377,7 @@ const RecipesCategorySubcategoryRecipePrivateRouteWithChildren =
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
   PrivateRoute: PrivateRouteWithChildren,
-  LoginRoute: LoginRoute,
+  PublicRoute: PublicRouteWithChildren,
   LogoutRoute: LogoutRoute,
   RecipesPrivateRoute: RecipesPrivateRouteWithChildren,
   RecipesFavoritesRoute: RecipesFavoritesRoute,

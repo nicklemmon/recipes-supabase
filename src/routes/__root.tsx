@@ -2,7 +2,7 @@ import { HeadContent, Link, Outlet, createRootRoute } from '@tanstack/react-rout
 import { useScrollAndFocusOnNavigate } from '../hooks/use-scroll-and-focus-on-navigate'
 import { Citrus, LogIn, LogOut, Plus, User } from 'lucide-react'
 import { Toaster } from 'sonner'
-import { Tooltip } from '@base-ui-components/react/tooltip'
+import { Tooltip } from '@base-ui/react/tooltip'
 import { NAV_ICON_SIZE, NavButton } from '../components/nav-actions'
 import { Container } from '../components/container'
 import { Inline } from '../components/inline'
