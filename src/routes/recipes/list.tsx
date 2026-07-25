@@ -7,6 +7,7 @@ import { PageHeader } from '../../components/page-header'
 import { PageHeading } from '../../components/page-heading'
 import { PageBody } from '../../components/page-body'
 import { RecipeTableSkeleton } from '../../components/recipe-table-skeleton'
+import { EmptyCell } from '../../components/empty-cell'
 import { getRecipes } from '../../api/recipes'
 import { getCategories } from '../../api/categories'
 import { getSubcategories } from '../../api/subcategories'
@@ -178,15 +179,19 @@ function RouteComponent() {
                               </td>
 
                               <td className="p-4">
-                                <Inline spacing="xs">
-                                  {[...new Array(recipe.rating)].map((_star, index) => (
-                                    <Star
-                                      key={`${recipe.id}-start-${index}`}
-                                      size={16}
-                                      className="text-yellow-500 fill-yellow-200"
-                                    />
-                                  ))}
-                                </Inline>
+                                {recipe.rating == null ? (
+                                  <EmptyCell label="No rating" />
+                                ) : (
+                                  <Inline spacing="xs">
+                                    {[...new Array(recipe.rating)].map((_star, index) => (
+                                      <Star
+                                        key={`${recipe.id}-start-${index}`}
+                                        size={16}
+                                        className="text-yellow-500 fill-yellow-200"
+                                      />
+                                    ))}
+                                  </Inline>
+                                )}
                               </td>
                             </tr>
                           )

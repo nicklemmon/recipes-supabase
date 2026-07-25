@@ -104,7 +104,7 @@ function RouteComponent() {
         title,
         source,
         category_id: Number(category_id),
-        rating: Number(rating),
+        rating: rating ? Number(rating) : null,
         subcategory_id: Number(subcategory_id),
         ingredients_md,
         directions_md,
@@ -234,7 +234,7 @@ function RouteComponent() {
                   <FormSelect
                     id="rating-select"
                     name="rating"
-                    defaultValue={recipe.rating}
+                    defaultValue={recipe.rating ?? ''}
                     disabled={updateReqStatus === 'loading'}
                   >
                     <option disabled value="">

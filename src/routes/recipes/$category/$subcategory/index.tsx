@@ -12,6 +12,7 @@ import { PageHeader } from '../../../../components/page-header'
 import { PageHeading } from '../../../../components/page-heading'
 import { PageBackLink } from '../../../../components/page-actions'
 import { Inline } from '../../../../components/inline'
+import { EmptyCell } from '../../../../components/empty-cell'
 
 export const Route = createFileRoute('/recipes/$category/$subcategory/')({
   component: RouteComponent,
@@ -113,17 +114,23 @@ function RouteComponent() {
                       </td>
 
                       <td className="p-4 text-right">
-                        <span className="md:hidden">{recipe.rating}&nbsp;stars</span>
+                        {recipe.rating == null ? (
+                          <EmptyCell label="No rating" />
+                        ) : (
+                          <>
+                            <span className="md:hidden">{recipe.rating}&nbsp;stars</span>
 
-                        <Inline spacing="xs" className="hidden md:inline-flex">
-                          {[...new Array(recipe.rating)].map((_star, index) => (
-                            <Star
-                              key={`${recipe.id}-start-${index}`}
-                              size={16}
-                              className="text-yellow-500 fill-yellow-200"
-                            />
-                          ))}
-                        </Inline>
+                            <Inline spacing="xs" className="hidden md:inline-flex">
+                              {[...new Array(recipe.rating)].map((_star, index) => (
+                                <Star
+                                  key={`${recipe.id}-start-${index}`}
+                                  size={16}
+                                  className="text-yellow-500 fill-yellow-200"
+                                />
+                              ))}
+                            </Inline>
+                          </>
+                        )}
                       </td>
                     </tr>
                   )
