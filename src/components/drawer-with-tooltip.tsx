@@ -2,6 +2,7 @@ import { Tooltip } from '@base-ui/react/tooltip'
 import { Drawer } from 'vaul'
 import { NavTooltipBody } from './nav-tooltip'
 
+/** Combines a Drawer trigger with a Tooltip */
 export function DrawerWithTooltip() {
   return (
     <Tooltip.Provider>

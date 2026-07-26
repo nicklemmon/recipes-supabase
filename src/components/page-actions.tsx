@@ -14,6 +14,7 @@ export function PageActions({ className, ...props }: React.ComponentProps<'div'>
   return <div className={cn('flex items-end justify-between gap-2 w-full', className)} {...props} />
 }
 
+/** Link styled as a button for navigating back to a previous page */
 export function PageBackLink({
   className,
   children,
@@ -31,6 +32,7 @@ export function PageBackLink({
   )
 }
 
+/** Link styled as a button for navigating to an edit page */
 export function PageEditLink({
   className,
   children,
@@ -48,6 +50,7 @@ export function PageEditLink({
   )
 }
 
+/** Button styled for a destructive delete action */
 export function PageDeleteButton({
   className,
   children,

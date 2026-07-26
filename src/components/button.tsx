@@ -74,6 +74,7 @@ const buttonClasses = cva(
   },
 )
 
+/** Primary button with variant, size, and loading states */
 export function Button({
   className,
   variant = 'primary',

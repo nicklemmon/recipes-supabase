@@ -67,11 +67,14 @@ This is a React-based family recipes app using:
 
 ### Coding preferences
 
+- Global components in `src/components/` should have a short JSDoc comment above the component
+  function describing its purpose (see `EmptyCell` for an example)
 - Prefer `type` over `interface` in TypeScript files
 - Run the `prettier` command against all files before finishing work
 - Place test files in `__tests__` directories (e.g., `src/components/__tests__/`,
   `src/helpers/__tests__/`)
-- Use `<Inline>` for horizontal wrapping layouts instead of raw `flex` divs; use `<Stack>` for vertical ones
+- Use `<Inline>` for horizontal wrapping layouts instead of raw `flex` divs; use `<Stack>` for
+  vertical ones
 
 ### Environment Setup
 

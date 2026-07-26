@@ -13,6 +13,7 @@ type State = {
   error?: Error
 }
 
+/** Catches render errors in its subtree and displays a fallback UI */
 export class ErrorBoundary extends Component<Props, State> {
   constructor(props: Props) {
     super(props)

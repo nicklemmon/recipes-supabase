@@ -1,6 +1,7 @@
 import { ChevronDown } from 'lucide-react'
 import { cn } from '../helpers/dom'
 
+/** Styled select input with a dropdown indicator */
 export function FormSelect({ className, children, ...props }: React.ComponentProps<'select'>) {
   return (
     <div className={cn('relative h-10', props.disabled === true ? 'grayscale' : '', className)}>

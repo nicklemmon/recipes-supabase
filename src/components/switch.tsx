@@ -2,6 +2,7 @@ import * as React from 'react'
 import { cn } from '../helpers/dom'
 import { Switch as BaseSwitch } from '@base-ui/react/switch'
 
+/** Styled toggle switch */
 export function Switch({
   defaultChecked,
   className,

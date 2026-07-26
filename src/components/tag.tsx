@@ -31,6 +31,7 @@ const tagClasses = cva(
   },
 )
 
+/** Small colored label for tagging content */
 export function Tag({
   children,
   className,

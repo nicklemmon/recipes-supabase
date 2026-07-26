@@ -3,6 +3,7 @@ import { Button } from './button'
 
 export const NAV_ICON_SIZE = 16
 
+/** Icon button styled for use in the nav bar */
 export function NavButton({ className, ...props }: React.ComponentProps<typeof Button>) {
   return (
     <Button

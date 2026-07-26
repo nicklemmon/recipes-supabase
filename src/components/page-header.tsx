@@ -1,6 +1,7 @@
 import { Container } from './container'
 import { Stack } from './stack'
 
+/** Page header section with a decorative gradient background */
 export function PageHeader({ children }: { children: React.ReactNode }) {
   return (
     <div className="pb-6 pt-14 md:pb-20 md:pt-14 relative overflow-hidden bg-indigo-50 dark:bg-zinc-900">

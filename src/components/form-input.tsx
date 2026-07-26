@@ -3,6 +3,7 @@ import { cn } from '../helpers/dom'
 
 export type FormInputProps = React.ComponentProps<'input'>
 
+/** Styled text input for forms */
 export const FormInput = React.forwardRef<HTMLInputElement, FormInputProps>(
   ({ className, ...props }, ref) => {
     return (

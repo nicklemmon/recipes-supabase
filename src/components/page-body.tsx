@@ -1,6 +1,7 @@
 import { Container } from './container'
 import { cn } from '../helpers/dom'
 
+/** Wraps main page content in the site's card-style container */
 export function PageBody({
   children,
   className,
