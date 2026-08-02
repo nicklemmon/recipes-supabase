@@ -13,7 +13,7 @@
     "test": "vitest run",
     "test:watch": "vitest",
     "test:ui": "vitest --ui",
-    "qa": "concurrently \"npm run lint\" \"npm run type-check\" \"npm run test\" \"npm run build\""
+    "qa": "concurrently --group --names lint,types,test,build \"npm run lint\" \"npm run type-check\" \"npm run test\" \"npm run build\""
   },
   "devDependencies": {
     "@tailwindcss/typography": "0.5.19",
