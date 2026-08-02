@@ -8,8 +8,6 @@ export default defineConfig(({ mode }) => ({
   plugins: [
     tanstackRouter({
       generatedRouteTree: './src/route-tree.gen.ts',
-      // Test files live alongside routes but are not routes
-      routeFileIgnorePattern: '\\.(test|spec)\\.(ts|tsx)$',
     }),
     tailwindcss(),
     react(),
