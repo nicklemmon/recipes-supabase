@@ -1,4 +1,4 @@
-import { createFileRoute } from '@tanstack/react-router'
+import { createFileRoute, useRouter } from '@tanstack/react-router'
 import { toast } from 'sonner'
 import { useRef, useState } from 'react'
 import { PageHeader } from '../../components/page-header'
@@ -12,6 +12,7 @@ import { getSubcategories } from '../../api/subcategories'
 import { getDietaryPreferences } from '../../api/dietary-preferences'
 import { FormCombobox } from '../../components/form-combobox'
 import { toDietaryPrefOptions } from '../../helpers/dietary-preferences'
+import { toRecipeRouteParams } from '../../helpers/recipes'
 import { Stack } from '../../components/stack'
 import { FormControl } from '../../components/form-control'
 import { FormLabel } from '../../components/form-label'
@@ -46,6 +47,7 @@ function RouteComponent() {
   const [selectedCategory, setSelectedCategory] = useState<number>()
   const [selectedDietaryPrefs, setSelectedDietaryPrefs] = useState<string[]>([])
   const formRef = useRef<HTMLFormElement>(null)
+  const router = useRouter()
   const { categories, subcategories, dietaryPreferences } = Route.useLoaderData()
   const subcategoriesByCategory = subcategories.filter((subcategory) => {
     // The category list is empty until a category is selected
@@ -75,7 +77,7 @@ function RouteComponent() {
 
       setAddReqStatus('loading')
 
-      await addRecipe(newRecipe)
+      const addedRecipe = await addRecipe(newRecipe)
 
       setAddReqStatus('idle')
 
@@ -86,6 +88,20 @@ function RouteComponent() {
 
       // Toast it up
       toast.success(`Recipe "${title}" added`)
+
+      const routeParams = toRecipeRouteParams({
+        recipe: addedRecipe,
+        categories,
+        subcategories,
+      })
+
+      // Navigate to the new recipe. Stay put if its URL cannot be built.
+      if (routeParams) {
+        router.navigate({
+          to: '/recipes/$category/$subcategory/$recipe/view',
+          params: routeParams,
+        })
+      }
     } catch (err) {
       toast.error(String(err))
       setAddReqStatus('idle')

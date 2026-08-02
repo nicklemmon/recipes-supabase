@@ -66,9 +66,16 @@ export async function getRecipe(id: number) {
   return RecipeSchema.parse(res.data)
 }
 
-/** Adds a recipe */
+/** Adds a recipe and returns the created recipe */
 export async function addRecipe(recipe: NewRecipe) {
-  return await supabase.from(RECIPES_TABLE_ID).insert([recipe]).select().throwOnError()
+  const res = await supabase
+    .from(RECIPES_TABLE_ID)
+    .insert([recipe])
+    .select()
+    .single()
+    .throwOnError()
+
+  return RecipeSchema.parse(res.data)
 }
 
 /** Updates a recipe */
