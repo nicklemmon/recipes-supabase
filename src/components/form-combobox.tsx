@@ -12,6 +12,7 @@ type FormComboboxProps = {
   placeholder?: string
 }
 
+/** Multi-select combobox input with removable chips */
 export function FormCombobox({ options, value, onValueChange, placeholder }: FormComboboxProps) {
   const anchorRef = React.useRef<HTMLDivElement>(null)
 

@@ -1,5 +1,6 @@
 import { cn } from '../helpers/dom'
 
+/** Styled h1 heading for a page */
 export function PageHeading({ className, ...props }: React.ComponentProps<'h1'>) {
   return (
     <h1

@@ -20,6 +20,7 @@ const FormSchema = z.object({
   s: z.string(),
 })
 
+/** Nav bar button that opens a drawer for searching recipes */
 export function NavSearch() {
   const [open, setOpen] = useState(false)
   const inputRef = useRef<HTMLInputElement>(null)

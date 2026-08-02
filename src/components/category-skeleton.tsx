@@ -1,3 +1,4 @@
+/** Loading placeholder for a CategoryLink */
 export function CategoryLinkSkeleton() {
   return (
     <div className="h-42 w-full flex flex-col justify-center items-center bg-gray-100 dark:bg-zinc-800 border border-gray-200 dark:border-zinc-700 shadow-lg shadow-gray-100/50 dark:shadow-zinc-950/30 rounded-4xl animate-pulse">

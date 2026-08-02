@@ -1,6 +1,7 @@
 import type React from 'react'
 import { cn } from '../helpers/dom'
 
+/** Styled label for a form field */
 export function FormLabel({ className, ...props }: React.ComponentProps<'label'>) {
   return (
     <label

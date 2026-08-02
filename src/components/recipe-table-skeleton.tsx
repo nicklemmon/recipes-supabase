@@ -2,6 +2,7 @@ type RecipeTableSkeletonProps = {
   showDietaryPref?: boolean
 }
 
+/** Loading placeholder row for the recipes table */
 export function RecipeTableSkeleton({ showDietaryPref = true }: RecipeTableSkeletonProps) {
   return (
     <tr className="border-b border-slate-200 dark:border-zinc-800 animate-pulse">

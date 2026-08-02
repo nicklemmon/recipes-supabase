@@ -1,6 +1,7 @@
 import { Link, type LinkProps } from '@tanstack/react-router'
 import { cn } from '../helpers/dom'
 
+/** Styled link card for a recipe category */
 export function CategoryLink({ className, ...props }: { className?: string } & LinkProps<'a'>) {
   return (
     <Link

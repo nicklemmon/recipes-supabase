@@ -1,6 +1,7 @@
 import { cn } from '../helpers/dom'
 import { SrOnly } from './sr-only'
 
+/** Placeholder shown in a table cell when there's no value */
 export function EmptyCell({
   label = 'None',
   className,

@@ -1,9 +1,11 @@
 import { Tooltip } from '@base-ui/react/tooltip'
 
+/** Root wrapper for a nav bar tooltip */
 export function NavTooltip({ children }: { children: React.ReactNode }) {
   return <Tooltip.Root>{children}</Tooltip.Root>
 }
 
+/** Trigger element for a nav bar tooltip */
 export function NavTooltipTrigger({
   as,
 }: {
@@ -14,6 +16,7 @@ export function NavTooltipTrigger({
   )
 }
 
+/** Popup content for a nav bar tooltip */
 export function NavTooltipBody({ children }: { children: React.ReactNode }) {
   return (
     <Tooltip.Portal>
