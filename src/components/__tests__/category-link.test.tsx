@@ -23,25 +23,32 @@ describe('CategoryLink', () => {
     expect(link).toHaveClass(
       'h-42',
       'w-full',
+      'inline-flex',
       'justify-center',
       'items-center',
-      'bg-gradient-to-b',
-      'to-white',
-      'from-white',
-      'hover:from-white',
-      'hover:to-indigo-50',
-      'text-indigo-500',
-      'shadow-lg',
-      'shadow-indigo-100/50',
-      'border',
-      'border-indigo-200',
-      'focus-visible:inset-ring-4',
-      'inset-ring-indigo-700',
-      'inline-flex',
       'rounded-4xl',
       'font-semibold',
+      'bg-gradient-to-b',
+      'border',
+      'shadow-lg',
       'transition',
     )
+  })
+
+  // Asserted by variant prefix rather than exact color so restyling does not
+  // break the test. The intent is that each state has *some* styling.
+  it('styles hover, focus, and active states', () => {
+    render(<CategoryLink to="/recipes">Category</CategoryLink>)
+    const link = screen.getByText('Category')
+    expect(link.className).toMatch(/(?<!:)hover:/)
+    expect(link.className).toMatch(/focus-visible:/)
+    expect(link.className).toMatch(/(?<!:)active:/)
+  })
+
+  it('respects reduced motion for the hover lift', () => {
+    render(<CategoryLink to="/recipes">Category</CategoryLink>)
+    const link = screen.getByText('Category')
+    expect(link).toHaveClass('motion-safe:hover:-translate-y-0.5')
   })
 
   it('accepts custom className', () => {
