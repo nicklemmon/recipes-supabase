@@ -8,7 +8,7 @@ import { useTheme } from '../hooks/use-theme'
 import { SrOnly } from './sr-only'
 import { NAV_ICON_SIZE, NavButton } from './nav-actions'
 
-const ICON_SWAP_MS = 700
+const ICON_TRANSFORM_MS = 1000
 
 const THEME_ICONS = {
   system: Monitor,
@@ -84,7 +84,7 @@ function ThemeTriggerIcon({ theme }: { theme: ThemePreference }) {
     }
 
     setExiting(leaving)
-    const timeoutId = window.setTimeout(() => setExiting(null), ICON_SWAP_MS)
+    const timeoutId = window.setTimeout(() => setExiting(null), ICON_TRANSFORM_MS)
     return () => window.clearTimeout(timeoutId)
   }, [theme])
 
@@ -106,11 +106,11 @@ function ThemeTriggerIcon({ theme }: { theme: ThemePreference }) {
               className={cn(
                 'col-start-1 row-start-1 block size-4',
                 isActive || isExiting
-                  ? 'motion-safe:transition-[opacity,transform] motion-safe:duration-700 motion-safe:ease-in-out'
+                  ? 'motion-safe:[transition-property:opacity,transform] motion-safe:[transition-duration:200ms,1000ms] motion-safe:[transition-timing-function:ease-out,ease-in-out]'
                   : 'transition-none',
                 isActive && 'translate-y-0 opacity-100',
-                isExiting && '-translate-y-full opacity-0',
-                !isActive && !isExiting && 'translate-y-full opacity-0',
+                isExiting && '-translate-y-full opacity-40',
+                !isActive && !isExiting && 'translate-y-full opacity-40',
               )}
             />
           )
