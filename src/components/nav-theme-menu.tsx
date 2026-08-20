@@ -1,3 +1,4 @@
+import { useEffect, useRef, useState } from 'react'
 import { Menu } from '@base-ui/react/menu'
 import { Check, Monitor, Moon, Sun } from 'lucide-react'
 import { THEME_OPTIONS } from '../types/theme'
@@ -6,6 +7,8 @@ import { cn } from '../helpers/dom'
 import { useTheme } from '../hooks/use-theme'
 import { SrOnly } from './sr-only'
 import { NAV_ICON_SIZE, NavButton } from './nav-actions'
+
+const ICON_SWAP_MS = 700
 
 const THEME_ICONS = {
   system: Monitor,
@@ -64,8 +67,27 @@ export function NavThemeMenu() {
   )
 }
 
-/** Crossfades the header theme icon when the choice changes */
+/** Slides the current header icon out and the new one in */
 function ThemeTriggerIcon({ theme }: { theme: ThemePreference }) {
+  const previousTheme = useRef(theme)
+  const [exiting, setExiting] = useState<ThemePreference | null>(null)
+
+  useEffect(() => {
+    if (previousTheme.current === theme) return
+
+    const leaving = previousTheme.current
+    previousTheme.current = theme
+
+    if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
+      setExiting(null)
+      return
+    }
+
+    setExiting(leaving)
+    const timeoutId = window.setTimeout(() => setExiting(null), ICON_SWAP_MS)
+    return () => window.clearTimeout(timeoutId)
+  }, [theme])
+
   return (
     <span
       className="inline-block size-4 shrink-0 overflow-hidden align-middle leading-none"
@@ -75,6 +97,7 @@ function ThemeTriggerIcon({ theme }: { theme: ThemePreference }) {
         {THEME_OPTIONS.map((option) => {
           const Icon = THEME_ICONS[option.value]
           const isActive = theme === option.value
+          const isExiting = exiting === option.value
 
           return (
             <Icon
@@ -82,8 +105,12 @@ function ThemeTriggerIcon({ theme }: { theme: ThemePreference }) {
               size={NAV_ICON_SIZE}
               className={cn(
                 'col-start-1 row-start-1 block size-4',
-                'motion-safe:transition-[opacity,transform] motion-safe:duration-700 motion-safe:ease-in-out',
-                isActive ? 'scale-100 opacity-100' : 'scale-50 opacity-0',
+                isActive || isExiting
+                  ? 'motion-safe:transition-[opacity,transform] motion-safe:duration-700 motion-safe:ease-in-out'
+                  : 'transition-none',
+                isActive && 'translate-y-0 opacity-100',
+                isExiting && '-translate-y-full opacity-0',
+                !isActive && !isExiting && 'translate-y-full opacity-0',
               )}
             />
           )
