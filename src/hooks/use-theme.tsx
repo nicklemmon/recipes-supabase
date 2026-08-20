@@ -2,18 +2,15 @@ import {
   createContext,
   useCallback,
   useContext,
-  useEffect,
   useMemo,
   useState,
   useSyncExternalStore,
 } from 'react'
 import {
-  applyStoredTheme,
   applyTheme,
   getStoredTheme,
   prefersColorSchemeIsDark,
   setStoredTheme,
-  watchSystemTheme,
   type ThemePreference,
 } from '../helpers/theme'
 
@@ -34,25 +31,17 @@ function subscribeToSystemTheme(onStoreChange: () => void) {
 
 /** Shares the theme choice with the rest of the app */
 export function ThemeProvider({ children }: { children: React.ReactNode }) {
-  const [theme, setThemeState] = useState<ThemePreference>(() => {
-    applyStoredTheme()
-    return getStoredTheme()
-  })
-
+  const [theme, setThemeState] = useState<ThemePreference>(getStoredTheme)
   const systemIsDark = useSyncExternalStore(
     subscribeToSystemTheme,
     prefersColorSchemeIsDark,
     () => false,
   )
 
-  useEffect(() => {
-    watchSystemTheme()
-    applyTheme(theme)
-  }, [theme, systemIsDark])
+  applyTheme(theme === 'system' ? (systemIsDark ? 'dark' : 'light') : theme)
 
   const setTheme = useCallback((next: ThemePreference) => {
     setStoredTheme(next)
-    applyTheme(next)
     setThemeState(next)
   }, [])
 

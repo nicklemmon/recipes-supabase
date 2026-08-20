@@ -10,8 +10,6 @@ export type { ResolvedTheme, ThemePreference }
 
 export const THEME_STORAGE_KEY = 'theme-preference'
 
-let stopWatchingSystemTheme: (() => void) | undefined
-
 /** Returns true when the value is system, light, or dark */
 export function isThemePreference(value: unknown): value is ThemePreference {
   return ThemePreferenceSchema.safeParse(value).success
@@ -71,30 +69,5 @@ export function applyTheme(preference: ThemePreference) {
 
 /** Reads the saved theme and applies it */
 export function applyStoredTheme() {
-  watchSystemTheme()
   applyTheme(getStoredTheme())
-}
-
-/** Keeps the page in sync when the OS theme changes and the saved choice is system */
-export function watchSystemTheme() {
-  if (stopWatchingSystemTheme) return
-  if (typeof window === 'undefined' || typeof window.matchMedia !== 'function') return
-
-  const media = window.matchMedia('(prefers-color-scheme: dark)')
-  const onChange = () => {
-    if (getStoredTheme() === 'system') {
-      applyTheme('system')
-    }
-  }
-
-  media.addEventListener('change', onChange)
-  stopWatchingSystemTheme = () => {
-    media.removeEventListener('change', onChange)
-    stopWatchingSystemTheme = undefined
-  }
-}
-
-/** Stops listening for OS theme changes. Used by tests. */
-export function unwatchSystemTheme() {
-  stopWatchingSystemTheme?.()
 }

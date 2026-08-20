@@ -1,7 +1,8 @@
 import { Menu } from '@base-ui/react/menu'
 import { Check, Monitor, Moon, Sun } from 'lucide-react'
 import { THEME_OPTIONS } from '../types/theme'
-import { isThemePreference } from '../helpers/theme'
+import { isThemePreference, type ThemePreference } from '../helpers/theme'
+import { cn } from '../helpers/dom'
 import { useTheme } from '../hooks/use-theme'
 import { SrOnly } from './sr-only'
 import { NAV_ICON_SIZE, NavButton } from './nav-actions'
@@ -15,14 +16,13 @@ const THEME_ICONS = {
 /** Header menu for choosing system, light, or dark theme */
 export function NavThemeMenu() {
   const { theme, setTheme } = useTheme()
-  const TriggerIcon = THEME_ICONS[theme]
 
   return (
     <Menu.Root>
       <Menu.Trigger
         render={
           <NavButton>
-            <TriggerIcon size={NAV_ICON_SIZE} />
+            <ThemeTriggerIcon theme={theme} />
             <SrOnly>Theme</SrOnly>
           </NavButton>
         }
@@ -46,7 +46,7 @@ export function NavThemeMenu() {
                     key={option.value}
                     value={option.value}
                     label={option.label}
-                    className="grid cursor-pointer grid-cols-[1rem_1rem_1fr] items-center gap-2 px-3 py-2 text-sm text-slate-700 dark:text-zinc-50 outline-hidden select-none data-highlighted:bg-indigo-50 dark:data-highlighted:bg-indigo-900/40"
+                    className="grid cursor-pointer grid-cols-[1rem_1rem_1fr] items-center gap-1.5 px-2 py-1 text-sm text-slate-700 dark:text-zinc-50 outline-hidden select-none data-highlighted:bg-indigo-50 dark:data-highlighted:bg-indigo-900/40"
                   >
                     <Menu.RadioItemIndicator className="col-start-1 text-indigo-600 dark:text-indigo-400">
                       <Check size={12} />
@@ -61,5 +61,28 @@ export function NavThemeMenu() {
         </Menu.Positioner>
       </Menu.Portal>
     </Menu.Root>
+  )
+}
+
+/** Crossfades the header theme icon when the choice changes */
+function ThemeTriggerIcon({ theme }: { theme: ThemePreference }) {
+  return (
+    <span className="relative inline-flex size-4 items-center justify-center" aria-hidden>
+      {THEME_OPTIONS.map((option) => {
+        const Icon = THEME_ICONS[option.value]
+        const isActive = theme === option.value
+
+        return (
+          <Icon
+            key={option.value}
+            size={NAV_ICON_SIZE}
+            className={cn(
+              'absolute motion-safe:transition-all motion-safe:duration-200 motion-safe:ease-out',
+              isActive ? 'scale-100 opacity-100' : 'scale-75 opacity-0',
+            )}
+          />
+        )
+      })}
+    </span>
   )
 }

@@ -1,9 +1,9 @@
 import { render, screen } from '@testing-library/react'
 import { userEvent } from '@testing-library/user-event'
-import { describe, it, expect, beforeEach, afterEach } from 'vitest'
+import { describe, it, expect, beforeEach } from 'vitest'
 import { ThemeToggle } from '../theme-toggle'
 import { ThemeProvider } from '../../hooks/use-theme'
-import { THEME_STORAGE_KEY, unwatchSystemTheme } from '../../helpers/theme'
+import { THEME_STORAGE_KEY } from '../../helpers/theme'
 
 function renderToggle() {
   return render(
@@ -21,10 +21,6 @@ describe('ThemeToggle', () => {
   beforeEach(() => {
     localStorage.clear()
     document.documentElement.classList.remove('dark')
-  })
-
-  afterEach(() => {
-    unwatchSystemTheme()
   })
 
   it('renders the three theme options', () => {
