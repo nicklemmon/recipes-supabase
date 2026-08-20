@@ -3,6 +3,9 @@ import { RouterProvider, createRouter } from '@tanstack/react-router'
 import { routeTree } from './route-tree.gen'
 import { ErrorBoundary } from './components/error-boundary'
 import { ThemeProvider } from './hooks/use-theme'
+import { applyStoredTheme } from './helpers/theme'
+
+applyStoredTheme()
 
 // Set up a Router instance
 const router = createRouter({

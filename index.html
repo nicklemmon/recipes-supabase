@@ -18,16 +18,24 @@
 
     <script>
       (function () {
+        var preference = 'system'
         try {
           var stored = localStorage.getItem('theme-preference')
-          var preference =
-            stored === 'light' || stored === 'dark' || stored === 'system' ? stored : 'system'
-          var isDark =
-            preference === 'dark' ||
-            (preference !== 'light' &&
-              window.matchMedia('(prefers-color-scheme: dark)').matches)
-          document.documentElement.classList.toggle('dark', isDark)
+          if (stored === 'light' || stored === 'dark' || stored === 'system') {
+            preference = stored
+          }
         } catch (e) {}
+
+        var isDark = preference === 'dark'
+        if (preference === 'system') {
+          try {
+            isDark =
+              typeof window.matchMedia === 'function' &&
+              window.matchMedia('(prefers-color-scheme: dark)').matches
+          } catch (e) {}
+        }
+
+        document.documentElement.classList.toggle('dark', isDark)
       })()
     </script>
   </head>

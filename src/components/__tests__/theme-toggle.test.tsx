@@ -1,9 +1,9 @@
 import { render, screen } from '@testing-library/react'
 import { userEvent } from '@testing-library/user-event'
-import { describe, it, expect, beforeEach } from 'vitest'
+import { describe, it, expect, beforeEach, afterEach } from 'vitest'
 import { ThemeToggle } from '../theme-toggle'
 import { ThemeProvider } from '../../hooks/use-theme'
-import { THEME_STORAGE_KEY } from '../../helpers/theme'
+import { THEME_STORAGE_KEY, unwatchSystemTheme } from '../../helpers/theme'
 
 function renderToggle() {
   return render(
@@ -13,36 +13,44 @@ function renderToggle() {
   )
 }
 
+function getOption(name: string) {
+  return screen.getByRole('radio', { name })
+}
+
 describe('ThemeToggle', () => {
   beforeEach(() => {
     localStorage.clear()
     document.documentElement.classList.remove('dark')
   })
 
+  afterEach(() => {
+    unwatchSystemTheme()
+  })
+
   it('renders the three theme options', () => {
     renderToggle()
 
-    expect(screen.getByRole('button', { name: 'System' })).toBeInTheDocument()
-    expect(screen.getByRole('button', { name: 'Light' })).toBeInTheDocument()
-    expect(screen.getByRole('button', { name: 'Dark' })).toBeInTheDocument()
+    expect(getOption('System')).toBeInTheDocument()
+    expect(getOption('Light')).toBeInTheDocument()
+    expect(getOption('Dark')).toBeInTheDocument()
   })
 
-  it('marks System as pressed by default', () => {
+  it('marks System as selected by default', () => {
     renderToggle()
 
-    expect(screen.getByRole('button', { name: 'System' })).toHaveAttribute('aria-pressed', 'true')
-    expect(screen.getByRole('button', { name: 'Light' })).toHaveAttribute('aria-pressed', 'false')
-    expect(screen.getByRole('button', { name: 'Dark' })).toHaveAttribute('aria-pressed', 'false')
+    expect(getOption('System')).toBeChecked()
+    expect(getOption('Light')).not.toBeChecked()
+    expect(getOption('Dark')).not.toBeChecked()
   })
 
   it('selects Dark and persists the preference', async () => {
     const user = userEvent.setup()
     renderToggle()
 
-    await user.click(screen.getByRole('button', { name: 'Dark' }))
+    await user.click(getOption('Dark'))
 
-    expect(screen.getByRole('button', { name: 'Dark' })).toHaveAttribute('aria-pressed', 'true')
-    expect(screen.getByRole('button', { name: 'System' })).toHaveAttribute('aria-pressed', 'false')
+    expect(getOption('Dark')).toBeChecked()
+    expect(getOption('System')).not.toBeChecked()
     expect(localStorage.getItem(THEME_STORAGE_KEY)).toBe('dark')
     expect(document.documentElement).toHaveClass('dark')
   })
@@ -54,11 +62,23 @@ describe('ThemeToggle', () => {
 
     renderToggle()
 
-    await user.click(screen.getByRole('button', { name: 'Light' }))
+    await user.click(getOption('Light'))
 
-    expect(screen.getByRole('button', { name: 'Light' })).toHaveAttribute('aria-pressed', 'true')
+    expect(getOption('Light')).toBeChecked()
     expect(localStorage.getItem(THEME_STORAGE_KEY)).toBe('light')
     expect(document.documentElement).not.toHaveClass('dark')
+  })
+
+  it('keeps the selected option when it is clicked again', async () => {
+    const user = userEvent.setup()
+    renderToggle()
+
+    await user.click(getOption('System'))
+
+    expect(getOption('System')).toBeChecked()
+    expect(getOption('Light')).not.toBeChecked()
+    expect(getOption('Dark')).not.toBeChecked()
+    expect(localStorage.getItem(THEME_STORAGE_KEY)).toBeNull()
   })
 
   it('is keyboard focusable', async () => {
@@ -67,6 +87,6 @@ describe('ThemeToggle', () => {
 
     await user.tab()
 
-    expect(screen.getByRole('button', { name: 'System' })).toHaveFocus()
+    expect(getOption('System')).toHaveFocus()
   })
 })

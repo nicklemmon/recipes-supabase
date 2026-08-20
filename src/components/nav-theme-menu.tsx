@@ -1,6 +1,7 @@
 import { Menu } from '@base-ui/react/menu'
 import { Check, Monitor, Moon, Sun } from 'lucide-react'
-import { THEME_OPTIONS, isThemePreference } from '../helpers/theme'
+import { THEME_OPTIONS } from '../types/theme'
+import { isThemePreference } from '../helpers/theme'
 import { useTheme } from '../hooks/use-theme'
 import { SrOnly } from './sr-only'
 import { NAV_ICON_SIZE, NavButton } from './nav-actions'

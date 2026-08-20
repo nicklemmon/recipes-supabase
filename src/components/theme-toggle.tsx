@@ -1,8 +1,10 @@
-import { Toggle } from '@base-ui/react/toggle'
-import { ToggleGroup } from '@base-ui/react/toggle-group'
-import { THEME_OPTIONS, isThemePreference } from '../helpers/theme'
+import { Radio } from '@base-ui/react/radio'
+import { RadioGroup } from '@base-ui/react/radio-group'
+import { THEME_OPTIONS } from '../types/theme'
+import { isThemePreference } from '../helpers/theme'
 import { cn } from '../helpers/dom'
 import { useTheme } from '../hooks/use-theme'
+import { Inline } from './inline'
 
 type ThemeToggleProps = {
   className?: string
@@ -10,7 +12,7 @@ type ThemeToggleProps = {
   'aria-label'?: string
 }
 
-/** Segmented control for choosing system, light, or dark theme */
+/** Choose system, light, or dark theme */
 export function ThemeToggle({
   className,
   'aria-labelledby': ariaLabelledBy,
@@ -19,22 +21,29 @@ export function ThemeToggle({
   const { theme, setTheme } = useTheme()
 
   return (
-    <ToggleGroup
-      value={[theme]}
-      onValueChange={(values) => {
-        const next = values[0]
-        if (!isThemePreference(next)) return
-        setTheme(next)
+    <RadioGroup
+      value={theme}
+      onValueChange={(value) => {
+        if (!isThemePreference(value)) return
+        setTheme(value)
       }}
       aria-labelledby={ariaLabelledBy}
       aria-label={ariaLabelledBy ? undefined : ariaLabel}
       className={cn(
-        'inline-flex w-fit rounded-lg border border-slate-300 dark:border-zinc-700 bg-white dark:bg-zinc-800 p-0.5',
+        'w-fit rounded-lg border border-slate-300 dark:border-zinc-700 bg-white dark:bg-zinc-800 p-0.5',
         className,
       )}
+      render={(props) => {
+        const { children, ...rest } = props
+        return (
+          <Inline spacing="0" {...rest}>
+            {children}
+          </Inline>
+        )
+      }}
     >
       {THEME_OPTIONS.map((option) => (
-        <Toggle
+        <Radio.Root
           key={option.value}
           value={option.value}
           className={cn(
@@ -42,13 +51,13 @@ export function ThemeToggle({
             'text-slate-600 dark:text-zinc-300',
             'hover:bg-indigo-50 dark:hover:bg-zinc-700',
             'focus-visible:outline-0 focus-visible:ring-2 ring-indigo-700 dark:ring-indigo-500',
-            'data-pressed:bg-indigo-600 data-pressed:text-indigo-50',
-            'dark:data-pressed:bg-indigo-600 dark:data-pressed:text-indigo-50',
+            'data-checked:bg-indigo-600 data-checked:text-indigo-50',
+            'dark:data-checked:bg-indigo-600 dark:data-checked:text-indigo-50',
           )}
         >
           {option.label}
-        </Toggle>
+        </Radio.Root>
       ))}
-    </ToggleGroup>
+    </RadioGroup>
   )
 }

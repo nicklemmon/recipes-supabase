@@ -1,9 +1,9 @@
 import { render, screen } from '@testing-library/react'
 import { userEvent } from '@testing-library/user-event'
-import { describe, it, expect, beforeEach } from 'vitest'
+import { describe, it, expect, beforeEach, afterEach } from 'vitest'
 import { NavThemeMenu } from '../nav-theme-menu'
 import { ThemeProvider } from '../../hooks/use-theme'
-import { THEME_STORAGE_KEY } from '../../helpers/theme'
+import { THEME_STORAGE_KEY, unwatchSystemTheme } from '../../helpers/theme'
 
 function renderMenu() {
   return render(
@@ -17,6 +17,10 @@ describe('NavThemeMenu', () => {
   beforeEach(() => {
     localStorage.clear()
     document.documentElement.classList.remove('dark')
+  })
+
+  afterEach(() => {
+    unwatchSystemTheme()
   })
 
   it('renders a theme button', () => {

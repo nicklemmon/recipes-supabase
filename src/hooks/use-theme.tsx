@@ -1,5 +1,21 @@
-import { createContext, useCallback, useContext, useEffect, useMemo, useState } from 'react'
-import { applyTheme, getStoredTheme, setStoredTheme, type ThemePreference } from '../helpers/theme'
+import {
+  createContext,
+  useCallback,
+  useContext,
+  useEffect,
+  useMemo,
+  useState,
+  useSyncExternalStore,
+} from 'react'
+import {
+  applyStoredTheme,
+  applyTheme,
+  getStoredTheme,
+  prefersColorSchemeIsDark,
+  setStoredTheme,
+  watchSystemTheme,
+  type ThemePreference,
+} from '../helpers/theme'
 
 type ThemeContextValue = {
   theme: ThemePreference
@@ -8,25 +24,31 @@ type ThemeContextValue = {
 
 const ThemeContext = createContext<ThemeContextValue | null>(null)
 
-/** Provides the current theme preference and a setter to descendant components */
+function subscribeToSystemTheme(onStoreChange: () => void) {
+  if (typeof window.matchMedia !== 'function') return () => {}
+
+  const media = window.matchMedia('(prefers-color-scheme: dark)')
+  media.addEventListener('change', onStoreChange)
+  return () => media.removeEventListener('change', onStoreChange)
+}
+
+/** Shares the theme choice with the rest of the app */
 export function ThemeProvider({ children }: { children: React.ReactNode }) {
-  const [theme, setThemeState] = useState<ThemePreference>(() => getStoredTheme())
+  const [theme, setThemeState] = useState<ThemePreference>(() => {
+    applyStoredTheme()
+    return getStoredTheme()
+  })
+
+  const systemIsDark = useSyncExternalStore(
+    subscribeToSystemTheme,
+    prefersColorSchemeIsDark,
+    () => false,
+  )
 
   useEffect(() => {
+    watchSystemTheme()
     applyTheme(theme)
-  }, [theme])
-
-  useEffect(() => {
-    if (theme !== 'system') return
-    if (typeof window.matchMedia !== 'function') return
-
-    const media = window.matchMedia('(prefers-color-scheme: dark)')
-    const onChange = () => applyTheme('system')
-
-    media.addEventListener('change', onChange)
-
-    return () => media.removeEventListener('change', onChange)
-  }, [theme])
+  }, [theme, systemIsDark])
 
   const setTheme = useCallback((next: ThemePreference) => {
     setStoredTheme(next)
@@ -39,7 +61,7 @@ export function ThemeProvider({ children }: { children: React.ReactNode }) {
   return <ThemeContext.Provider value={value}>{children}</ThemeContext.Provider>
 }
 
-/** Reads the current theme preference from ThemeProvider */
+/** Returns the current theme choice */
 export function useTheme() {
   const context = useContext(ThemeContext)
 
