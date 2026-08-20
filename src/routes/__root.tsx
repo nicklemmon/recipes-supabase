@@ -4,6 +4,7 @@ import { Citrus, LogIn, LogOut, Plus, User } from 'lucide-react'
 import { Toaster } from 'sonner'
 import { Tooltip } from '@base-ui/react/tooltip'
 import { NAV_ICON_SIZE, NavButton } from '../components/nav-actions'
+import { NavThemeMenu } from '../components/nav-theme-menu'
 import { Container } from '../components/container'
 import { Inline } from '../components/inline'
 import { NavSearch } from '../components/nav-search'
@@ -66,6 +67,8 @@ function NavActions({ authed = true }: NavActionsProps) {
 
         <NavSearch />
 
+        <NavThemeMenu />
+
         <NavTooltip>
           <NavTooltipTrigger
             as={
@@ -93,6 +96,8 @@ function NavActions({ authed = true }: NavActionsProps) {
       </NavButton>
 
       <NavSearch />
+
+      <NavThemeMenu />
     </Tooltip.Provider>
   )
 }
