@@ -21,7 +21,7 @@ export function NavThemeMenu() {
     <Menu.Root>
       <Menu.Trigger
         render={
-          <NavButton>
+          <NavButton className="leading-none">
             <ThemeTriggerIcon theme={theme} />
             <SrOnly>Theme</SrOnly>
           </NavButton>
@@ -67,22 +67,28 @@ export function NavThemeMenu() {
 /** Crossfades the header theme icon when the choice changes */
 function ThemeTriggerIcon({ theme }: { theme: ThemePreference }) {
   return (
-    <span className="relative inline-flex size-4 items-center justify-center" aria-hidden>
-      {THEME_OPTIONS.map((option) => {
-        const Icon = THEME_ICONS[option.value]
-        const isActive = theme === option.value
+    <span
+      className="inline-block size-4 shrink-0 overflow-hidden align-middle leading-none"
+      aria-hidden
+    >
+      <span className="grid size-4 place-items-center">
+        {THEME_OPTIONS.map((option) => {
+          const Icon = THEME_ICONS[option.value]
+          const isActive = theme === option.value
 
-        return (
-          <Icon
-            key={option.value}
-            size={NAV_ICON_SIZE}
-            className={cn(
-              'absolute motion-safe:transition-all motion-safe:duration-200 motion-safe:ease-out',
-              isActive ? 'scale-100 opacity-100' : 'scale-75 opacity-0',
-            )}
-          />
-        )
-      })}
+          return (
+            <Icon
+              key={option.value}
+              size={NAV_ICON_SIZE}
+              className={cn(
+                'col-start-1 row-start-1 block size-4',
+                'motion-safe:transition-[opacity,transform] motion-safe:duration-700 motion-safe:ease-in-out',
+                isActive ? 'scale-100 opacity-100' : 'scale-50 opacity-0',
+              )}
+            />
+          )
+        })}
+      </span>
     </span>
   )
 }
