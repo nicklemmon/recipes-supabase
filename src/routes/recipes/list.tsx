@@ -1,8 +1,9 @@
-import { createFileRoute, Link, Await } from '@tanstack/react-router'
+import { createFileRoute, Await } from '@tanstack/react-router'
 import { z } from 'zod'
-import { Star, ChevronRight } from 'lucide-react'
+import { Star } from 'lucide-react'
 import { title } from '../../helpers/dom'
 import { Inline } from '../../components/inline'
+import { TableLink } from '../../components/table-link'
 import { PageHeader } from '../../components/page-header'
 import { PageHeading } from '../../components/page-heading'
 import { PageBody } from '../../components/page-body'
@@ -148,8 +149,7 @@ function RouteComponent() {
                               className="group border-b border-slate-200 dark:border-slate-800"
                             >
                               <td className="p-4">
-                                <Link
-                                  className="text-indigo-600 dark:text-indigo-400 font-medium"
+                                <TableLink
                                   to="/recipes/$category/$subcategory/$recipe/view"
                                   params={{
                                     category: recipe.categorySlug,
@@ -157,14 +157,8 @@ function RouteComponent() {
                                     recipe: recipe.slug,
                                   }}
                                 >
-                                  <Inline spacing="sm">
-                                    {recipe.title}
-                                    <ChevronRight
-                                      size={16}
-                                      className="group-hover:translate-x-1 transition-transform"
-                                    />
-                                  </Inline>
-                                </Link>
+                                  {recipe.title}
+                                </TableLink>
                               </td>
 
                               <td className="p-4">

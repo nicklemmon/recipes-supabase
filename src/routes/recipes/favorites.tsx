@@ -1,10 +1,11 @@
-import { createFileRoute, Link, Await, defer } from '@tanstack/react-router'
+import { createFileRoute, Await, defer } from '@tanstack/react-router'
 import { Suspense } from 'react'
-import { ChevronRight, Star } from 'lucide-react'
+import { Star } from 'lucide-react'
 import { PageHeader } from '../../components/page-header'
 import { PageHeading } from '../../components/page-heading'
 import { PageBody } from '../../components/page-body'
 import { Inline } from '../../components/inline'
+import { TableLink } from '../../components/table-link'
 import { RecipeTableSkeleton } from '../../components/recipe-table-skeleton'
 import { EmptyCell } from '../../components/empty-cell'
 import { title } from '../../helpers/dom'
@@ -115,8 +116,7 @@ function RouteComponent() {
                           className="group border-b border-slate-200 dark:border-slate-800"
                         >
                           <td className="p-4">
-                            <Link
-                              className="text-indigo-600 dark:text-indigo-400 font-medium"
+                            <TableLink
                               to="/recipes/$category/$subcategory/$recipe/view"
                               params={{
                                 category: recipe.categorySlug,
@@ -126,15 +126,10 @@ function RouteComponent() {
                               search={{
                                 from: 'favorites',
                               }}
+                              hideChevronOnMobile
                             >
-                              <Inline spacing="sm">
-                                {recipe.title}
-                                <ChevronRight
-                                  size={16}
-                                  className="hidden md:inline-flex group-hover:translate-x-1 transition-transform"
-                                />
-                              </Inline>
-                            </Link>
+                              {recipe.title}
+                            </TableLink>
                           </td>
 
                           <td className="p-4 hidden md:table-cell">
