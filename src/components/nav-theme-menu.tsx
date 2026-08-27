@@ -1,4 +1,4 @@
-import { useEffect, useRef, useState } from 'react'
+import { useEffect, useState } from 'react'
 import { Menu } from '@base-ui/react/menu'
 import { Check, Monitor, Moon, Sun } from 'lucide-react'
 import { THEME_OPTIONS } from '../types/theme'
@@ -49,6 +49,7 @@ export function NavThemeMenu() {
                     key={option.value}
                     value={option.value}
                     label={option.label}
+                    closeOnClick
                     className="grid cursor-pointer grid-cols-[1rem_1rem_1fr] items-center gap-1.5 px-2 py-1 text-sm text-slate-700 dark:text-zinc-50 outline-hidden select-none data-highlighted:bg-indigo-50 dark:data-highlighted:bg-indigo-900/40"
                   >
                     <Menu.RadioItemIndicator className="col-start-1 text-indigo-600 dark:text-indigo-400">
@@ -69,24 +70,22 @@ export function NavThemeMenu() {
 
 /** Slides the current header icon out and the new one in */
 function ThemeTriggerIcon({ theme }: { theme: ThemePreference }) {
-  const previousTheme = useRef(theme)
   const [exiting, setExiting] = useState<ThemePreference | null>(null)
+  const [displayedTheme, setDisplayedTheme] = useState(theme)
+
+  // Track theme changes during render so we don't sync setState in an effect.
+  if (theme !== displayedTheme) {
+    setDisplayedTheme(theme)
+    const prefersReducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches
+    setExiting(prefersReducedMotion ? null : displayedTheme)
+  }
 
   useEffect(() => {
-    if (previousTheme.current === theme) return
+    if (exiting === null) return
 
-    const leaving = previousTheme.current
-    previousTheme.current = theme
-
-    if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
-      setExiting(null)
-      return
-    }
-
-    setExiting(leaving)
     const timeoutId = window.setTimeout(() => setExiting(null), ICON_TRANSFORM_MS)
     return () => window.clearTimeout(timeoutId)
-  }, [theme])
+  }, [exiting])
 
   return (
     <span
