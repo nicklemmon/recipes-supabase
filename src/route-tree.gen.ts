@@ -9,43 +9,53 @@
 // Additionally, you should also exclude this file from your linter and/or formatter to prevent it from being checked or modified.
 
 import { Route as rootRouteImport } from './routes/__root'
-import { Route as LogoutRouteImport } from './routes/logout'
-import { Route as PublicRouteImport } from './routes/_public'
-import { Route as PrivateRouteImport } from './routes/_private'
 import { Route as IndexRouteImport } from './routes/index'
-import { Route as RecipesListRouteImport } from './routes/recipes/list'
-import { Route as RecipesFavoritesRouteImport } from './routes/recipes/favorites'
-import { Route as RecipesPrivateRouteImport } from './routes/recipes/_private'
-import { Route as PublicLoginRouteImport } from './routes/_public.login'
+import { Route as PrivateRouteImport } from './routes/_private'
+import { Route as PublicRouteImport } from './routes/_public'
+import { Route as LogoutRouteImport } from './routes/logout'
 import { Route as PrivateProfileRouteImport } from './routes/_private.profile'
+import { Route as PublicLoginRouteImport } from './routes/_public.login'
+import { Route as RecipesPrivateRouteImport } from './routes/recipes/_private'
+import { Route as RecipesFavoritesRouteImport } from './routes/recipes/favorites'
+import { Route as RecipesListRouteImport } from './routes/recipes/list'
 import { Route as RecipesCategoryIndexRouteImport } from './routes/recipes/$category/index'
 import { Route as RecipesPrivateAddRouteImport } from './routes/recipes/_private.add'
 import { Route as RecipesCategorySubcategoryIndexRouteImport } from './routes/recipes/$category/$subcategory/index'
-import { Route as RecipesCategorySubcategoryRecipeViewRouteImport } from './routes/recipes/$category/$subcategory/$recipe/view'
 import { Route as RecipesCategorySubcategoryRecipePrivateRouteImport } from './routes/recipes/$category/$subcategory/$recipe/_private'
+import { Route as RecipesCategorySubcategoryRecipeViewRouteImport } from './routes/recipes/$category/$subcategory/$recipe/view'
 import { Route as RecipesCategorySubcategoryRecipePrivateEditRouteImport } from './routes/recipes/$category/$subcategory/$recipe/_private.edit'
 
-const LogoutRoute = LogoutRouteImport.update({
-  id: '/logout',
-  path: '/logout',
-  getParentRoute: () => rootRouteImport,
-} as any)
-const PublicRoute = PublicRouteImport.update({
-  id: '/_public',
+const IndexRoute = IndexRouteImport.update({
+  id: '/',
+  path: '/',
   getParentRoute: () => rootRouteImport,
 } as any)
 const PrivateRoute = PrivateRouteImport.update({
   id: '/_private',
   getParentRoute: () => rootRouteImport,
 } as any)
-const IndexRoute = IndexRouteImport.update({
-  id: '/',
-  path: '/',
+const PublicRoute = PublicRouteImport.update({
+  id: '/_public',
   getParentRoute: () => rootRouteImport,
 } as any)
-const RecipesListRoute = RecipesListRouteImport.update({
-  id: '/recipes/list',
-  path: '/recipes/list',
+const LogoutRoute = LogoutRouteImport.update({
+  id: '/logout',
+  path: '/logout',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const PrivateProfileRoute = PrivateProfileRouteImport.update({
+  id: '/profile',
+  path: '/profile',
+  getParentRoute: () => PrivateRoute,
+} as any)
+const PublicLoginRoute = PublicLoginRouteImport.update({
+  id: '/login',
+  path: '/login',
+  getParentRoute: () => PublicRoute,
+} as any)
+const RecipesPrivateRoute = RecipesPrivateRouteImport.update({
+  id: '/recipes/_private',
+  path: '/recipes',
   getParentRoute: () => rootRouteImport,
 } as any)
 const RecipesFavoritesRoute = RecipesFavoritesRouteImport.update({
@@ -53,20 +63,10 @@ const RecipesFavoritesRoute = RecipesFavoritesRouteImport.update({
   path: '/recipes/favorites',
   getParentRoute: () => rootRouteImport,
 } as any)
-const RecipesPrivateRoute = RecipesPrivateRouteImport.update({
-  id: '/recipes/_private',
-  path: '/recipes',
+const RecipesListRoute = RecipesListRouteImport.update({
+  id: '/recipes/list',
+  path: '/recipes/list',
   getParentRoute: () => rootRouteImport,
-} as any)
-const PublicLoginRoute = PublicLoginRouteImport.update({
-  id: '/login',
-  path: '/login',
-  getParentRoute: () => PublicRoute,
-} as any)
-const PrivateProfileRoute = PrivateProfileRouteImport.update({
-  id: '/profile',
-  path: '/profile',
-  getParentRoute: () => PrivateRoute,
 } as any)
 const RecipesCategoryIndexRoute = RecipesCategoryIndexRouteImport.update({
   id: '/recipes/$category/',
@@ -84,16 +84,16 @@ const RecipesCategorySubcategoryIndexRoute =
     path: '/recipes/$category/$subcategory/',
     getParentRoute: () => rootRouteImport,
   } as any)
-const RecipesCategorySubcategoryRecipeViewRoute =
-  RecipesCategorySubcategoryRecipeViewRouteImport.update({
-    id: '/recipes/$category/$subcategory/$recipe/view',
-    path: '/recipes/$category/$subcategory/$recipe/view',
-    getParentRoute: () => rootRouteImport,
-  } as any)
 const RecipesCategorySubcategoryRecipePrivateRoute =
   RecipesCategorySubcategoryRecipePrivateRouteImport.update({
     id: '/recipes/$category/$subcategory/$recipe/_private',
     path: '/recipes/$category/$subcategory/$recipe',
+    getParentRoute: () => rootRouteImport,
+  } as any)
+const RecipesCategorySubcategoryRecipeViewRoute =
+  RecipesCategorySubcategoryRecipeViewRouteImport.update({
+    id: '/recipes/$category/$subcategory/$recipe/view',
+    path: '/recipes/$category/$subcategory/$recipe/view',
     getParentRoute: () => rootRouteImport,
   } as any)
 const RecipesCategorySubcategoryRecipePrivateEditRoute =
@@ -217,18 +217,11 @@ export interface RootRouteChildren {
 
 declare module '@tanstack/react-router' {
   interface FileRoutesByPath {
-    '/logout': {
-      id: '/logout'
-      path: '/logout'
-      fullPath: '/logout'
-      preLoaderRoute: typeof LogoutRouteImport
-      parentRoute: typeof rootRouteImport
-    }
-    '/_public': {
-      id: '/_public'
-      path: ''
+    '/': {
+      id: '/'
+      path: '/'
       fullPath: '/'
-      preLoaderRoute: typeof PublicRouteImport
+      preLoaderRoute: typeof IndexRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/_private': {
@@ -238,18 +231,39 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof PrivateRouteImport
       parentRoute: typeof rootRouteImport
     }
-    '/': {
-      id: '/'
-      path: '/'
+    '/_public': {
+      id: '/_public'
+      path: ''
       fullPath: '/'
-      preLoaderRoute: typeof IndexRouteImport
+      preLoaderRoute: typeof PublicRouteImport
       parentRoute: typeof rootRouteImport
     }
-    '/recipes/list': {
-      id: '/recipes/list'
-      path: '/recipes/list'
-      fullPath: '/recipes/list'
-      preLoaderRoute: typeof RecipesListRouteImport
+    '/logout': {
+      id: '/logout'
+      path: '/logout'
+      fullPath: '/logout'
+      preLoaderRoute: typeof LogoutRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/_private/profile': {
+      id: '/_private/profile'
+      path: '/profile'
+      fullPath: '/profile'
+      preLoaderRoute: typeof PrivateProfileRouteImport
+      parentRoute: typeof PrivateRoute
+    }
+    '/_public/login': {
+      id: '/_public/login'
+      path: '/login'
+      fullPath: '/login'
+      preLoaderRoute: typeof PublicLoginRouteImport
+      parentRoute: typeof PublicRoute
+    }
+    '/recipes/_private': {
+      id: '/recipes/_private'
+      path: '/recipes'
+      fullPath: '/recipes'
+      preLoaderRoute: typeof RecipesPrivateRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/recipes/favorites': {
@@ -259,26 +273,12 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof RecipesFavoritesRouteImport
       parentRoute: typeof rootRouteImport
     }
-    '/recipes/_private': {
-      id: '/recipes/_private'
-      path: '/recipes'
-      fullPath: '/recipes'
-      preLoaderRoute: typeof RecipesPrivateRouteImport
+    '/recipes/list': {
+      id: '/recipes/list'
+      path: '/recipes/list'
+      fullPath: '/recipes/list'
+      preLoaderRoute: typeof RecipesListRouteImport
       parentRoute: typeof rootRouteImport
-    }
-    '/_public/login': {
-      id: '/_public/login'
-      path: '/login'
-      fullPath: '/login'
-      preLoaderRoute: typeof PublicLoginRouteImport
-      parentRoute: typeof PublicRoute
-    }
-    '/_private/profile': {
-      id: '/_private/profile'
-      path: '/profile'
-      fullPath: '/profile'
-      preLoaderRoute: typeof PrivateProfileRouteImport
-      parentRoute: typeof PrivateRoute
     }
     '/recipes/$category/': {
       id: '/recipes/$category/'
@@ -301,18 +301,18 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof RecipesCategorySubcategoryIndexRouteImport
       parentRoute: typeof rootRouteImport
     }
-    '/recipes/$category/$subcategory/$recipe/view': {
-      id: '/recipes/$category/$subcategory/$recipe/view'
-      path: '/recipes/$category/$subcategory/$recipe/view'
-      fullPath: '/recipes/$category/$subcategory/$recipe/view'
-      preLoaderRoute: typeof RecipesCategorySubcategoryRecipeViewRouteImport
-      parentRoute: typeof rootRouteImport
-    }
     '/recipes/$category/$subcategory/$recipe/_private': {
       id: '/recipes/$category/$subcategory/$recipe/_private'
       path: '/recipes/$category/$subcategory/$recipe'
       fullPath: '/recipes/$category/$subcategory/$recipe'
       preLoaderRoute: typeof RecipesCategorySubcategoryRecipePrivateRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/recipes/$category/$subcategory/$recipe/view': {
+      id: '/recipes/$category/$subcategory/$recipe/view'
+      path: '/recipes/$category/$subcategory/$recipe/view'
+      fullPath: '/recipes/$category/$subcategory/$recipe/view'
+      preLoaderRoute: typeof RecipesCategorySubcategoryRecipeViewRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/recipes/$category/$subcategory/$recipe/_private/edit': {

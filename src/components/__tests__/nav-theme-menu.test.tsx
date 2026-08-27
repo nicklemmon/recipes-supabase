@@ -45,4 +45,16 @@ describe('NavThemeMenu', () => {
     expect(localStorage.getItem(THEME_STORAGE_KEY)).toBe('dark')
     expect(document.documentElement).toHaveClass('dark')
   })
+
+  it('closes the menu after selecting a theme', async () => {
+    const user = userEvent.setup()
+    renderMenu()
+
+    await user.click(screen.getByRole('button', { name: 'Theme' }))
+    expect(screen.getByRole('menuitemradio', { name: 'Dark' })).toBeInTheDocument()
+
+    await user.click(screen.getByRole('menuitemradio', { name: 'Dark' }))
+
+    expect(screen.queryByRole('menuitemradio', { name: 'Dark' })).not.toBeInTheDocument()
+  })
 })
