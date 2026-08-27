@@ -15,10 +15,21 @@ describe('TableLink', () => {
     expect(link).toHaveClass('text-indigo-600', 'dark:text-indigo-400', 'font-medium')
   })
 
-  it('glues the chevron to the text with a non-breaking space', async () => {
+  it('wraps the last word and chevron together so the chevron never wraps alone', async () => {
+    renderWithRouter(<TableLink to="/recipes">A Very Long Recipe Title</TableLink>)
+    const link = await screen.findByRole('link')
+    const nowrapSpan = link.querySelector('span')
+    expect(nowrapSpan).toHaveClass('whitespace-nowrap')
+    expect(nowrapSpan).toContainElement(link.querySelector('svg'))
+    expect(nowrapSpan?.textContent).toBe('Title ')
+    expect(link.textContent).toBe('A Very Long Recipe Title ')
+  })
+
+  it('wraps a single-word title with the chevron too', async () => {
     renderWithRouter(<TableLink to="/recipes">Recipe</TableLink>)
     const link = await screen.findByRole('link')
-    expect(link.textContent).toBe(`Recipe\u00A0`)
+    const nowrapSpan = link.querySelector('span')
+    expect(nowrapSpan?.textContent).toBe('Recipe ')
   })
 
   it('shows the chevron by default', async () => {
