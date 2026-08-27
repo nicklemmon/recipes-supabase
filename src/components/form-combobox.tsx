@@ -42,7 +42,7 @@ export function FormCombobox({ options, value, onValueChange, placeholder }: For
                     {option.label}
                     <Combobox.ChipRemove
                       aria-label={`Remove ${option.label}`}
-                      className="hover:text-indigo-500 leading-none"
+                      className="hover:text-zinc-900 dark:hover:text-zinc-50 leading-none"
                     >
                       <X size={12} aria-hidden />
                     </Combobox.ChipRemove>
