@@ -1,9 +1,6 @@
 import { createFileRoute } from '@tanstack/react-router'
+import { useSuspenseQuery } from '@tanstack/react-query'
 import { Star } from 'lucide-react'
-import { getCategoryBySlug } from '../../../../api/categories'
-import { getSubcategoryBySlug } from '../../../../api/subcategories'
-import { getRecipes } from '../../../../api/recipes'
-import { getDietaryPreferences } from '../../../../api/dietary-preferences'
 import { DietaryPreferenceTag } from '../../../../components/dietary-preference-tag'
 import { findDietaryPrefLabel } from '../../../../helpers/dietary-preferences'
 import { title } from '../../../../helpers/dom'
@@ -14,19 +11,27 @@ import { PageBackLink } from '../../../../components/page-actions'
 import { Inline } from '../../../../components/inline'
 import { EmptyCell } from '../../../../components/empty-cell'
 import { TableLink } from '../../../../components/table-link'
+import { RecipeTablePending } from '../../../../components/recipe-table-pending'
+import { categoryBySlugQueryOptions } from '../../../../queries/categories'
+import { subcategoryBySlugQueryOptions } from '../../../../queries/subcategories'
+import { dietaryPreferencesQueryOptions } from '../../../../queries/dietary-preferences'
+import { recipesQueryOptions } from '../../../../queries/recipes'
 
 export const Route = createFileRoute('/recipes/$category/$subcategory/')({
   component: RouteComponent,
-  loader: async ({ params }) => {
+  pendingComponent: SubcategoryPending,
+  loader: async ({ context, params }) => {
     const { subcategory: subcategorySlug, category: categorySlug } = params
 
     const [category, subcategory, dietaryPreferences] = await Promise.all([
-      getCategoryBySlug(categorySlug),
-      getSubcategoryBySlug(subcategorySlug),
-      getDietaryPreferences(),
+      context.queryClient.ensureQueryData(categoryBySlugQueryOptions(categorySlug)),
+      context.queryClient.ensureQueryData(subcategoryBySlugQueryOptions(subcategorySlug)),
+      context.queryClient.ensureQueryData(dietaryPreferencesQueryOptions),
     ])
 
-    const recipes = await getRecipes({ categoryId: category.id, subcategoryId: subcategory.id })
+    const recipes = await context.queryClient.ensureQueryData(
+      recipesQueryOptions({ categoryId: category.id, subcategoryId: subcategory.id }),
+    )
 
     return {
       category,
@@ -46,8 +51,27 @@ export const Route = createFileRoute('/recipes/$category/$subcategory/')({
   },
 })
 
+function SubcategoryPending() {
+  return (
+    <div>
+      <PageHeader>
+        <div className="h-8 w-48 bg-gray-200 dark:bg-zinc-800 rounded animate-pulse" />
+      </PageHeader>
+      <PageBody>
+        <RecipeTablePending />
+      </PageBody>
+    </div>
+  )
+}
+
 function RouteComponent() {
-  const { category, subcategory, recipes, dietaryPreferences } = Route.useLoaderData()
+  const { category: categorySlug, subcategory: subcategorySlug } = Route.useParams()
+  const { data: category } = useSuspenseQuery(categoryBySlugQueryOptions(categorySlug))
+  const { data: subcategory } = useSuspenseQuery(subcategoryBySlugQueryOptions(subcategorySlug))
+  const { data: dietaryPreferences } = useSuspenseQuery(dietaryPreferencesQueryOptions)
+  const { data: recipes } = useSuspenseQuery(
+    recipesQueryOptions({ categoryId: category.id, subcategoryId: subcategory.id }),
+  )
 
   return (
     <div>

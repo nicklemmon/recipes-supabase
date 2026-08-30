@@ -58,6 +58,7 @@ function RouteComponent() {
 
       router.update({
         context: {
+          ...router.options.context,
           user: res.user,
           session: res.session,
         },
