@@ -115,27 +115,33 @@ Components should still read via `useSuspenseQuery` (subscribe to cache), not on
 
 ## PR 0 — Characterization tests (before behavior changes)
 
-Goal: lock **observable** user-facing behavior so the Query migration is a refactor under a safety net. Tests should mock `src/api/*`, not Query internals.
+Goal: lock **observable** user-facing behavior so the Query migration is a refactor under a safety net.
 
-Add focused route/integration tests (Vitest + Testing Library), colocated under existing `__tests__` patterns. Prefer vertical slices: one behavior → green → next.
+Follow **[AGENTS.md](../../AGENTS.md)** testing rules:
+
+- Use **MSW** to intercept Supabase/network HTTP. Do **not** mock `src/api/*` or other app modules to fake responses.
+- Avoid tautological tests. Assert what the user sees or what the public API returns after a realistic MSW response.
+
+Add focused route/integration tests (Vitest + Testing Library + MSW), colocated under existing `__tests__` patterns. Prefer vertical slices: one behavior → green → next.
 
 **Behaviors to lock first (high value):**
 
 | Behavior | Suggested coverage |
 | --- | --- |
-| Home lists categories + Favorites entry | `/` route with mocked `getCategories` |
+| Home lists categories + Favorites entry | `/` with MSW category payloads |
 | Category page lists subcategories | `/$category` |
 | Subcategory page lists recipes (titles visible) | `/$category/$subcategory` |
 | Recipe view shows title (and basic body) | `.../view` |
 | List search uses `s` and shows matching titles | `/recipes/list` |
 | Favorites shows only favorite recipes | `/recipes/favorites` |
-| Add recipe redirects to the new recipe view | already partly covered in `-_private.add.test.tsx` — keep green |
-| Delete recipe navigates to subcategory | `view` delete handler with mocked `deleteRecipe` |
-| Document title / head for a detail route | assert `Route.options.head` output given loader-shaped data, or render + check `document.title` if `HeadContent` is in the tree |
+| Add recipe redirects to the new recipe view | keep existing coverage green; migrate off module mocks toward MSW when touched |
+| Delete recipe navigates to subcategory | `view` delete with MSW delete + follow-up navigation |
+| Document title / head for a detail route | assert Router `head` / `document.title` after real loader data from MSW |
 
 **Test harness work in this PR:**
 
-- Extend `src/test-helpers/render-with-router.tsx` (or add `renderRoute`) so route tests can mount a real route module with memory history and mocked APIs.
+- Add MSW setup (handlers + server lifecycle in Vitest setup).
+- Extend `src/test-helpers/render-with-router.tsx` (or add `renderRoute`) so route tests can mount a real route module with memory history against MSW.
 - Do **not** introduce Query yet in PR 0 unless a helper needs a no-op provider later — keep PR 0 about current behavior.
 
 **Done when:** new characterization tests pass on `main`/`feat/client-side-cache` **before** Query lands; they describe behavior, not loader implementation details.
@@ -238,7 +244,7 @@ Optional: `useMutation` wrappers — nice-to-have, not required if invalidate ca
 
 | Risk | Mitigation |
 | --- | --- |
-| Characterization tests couple to Query later | Assert UI/API outcomes; mock `src/api`, not Query keys |
+| Characterization tests couple to Query later | Assert UI outcomes via MSW; do not mock `src/api` or Query keys |
 | `pendingComponent` flash on cache hits | Tune `pendingMs` / `pendingMinMs` |
 | Loader waterfalls | `Promise.all` for independent ensures |
 | Dual sources of truth (`useLoaderData` vs Query) | Render from `useSuspenseQuery`; return loader data primarily for `head` |
