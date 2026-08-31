@@ -10,15 +10,18 @@ import { PageBackLink } from '../../../components/page-actions'
 import { title } from '../../../helpers/dom'
 import { categoryBySlugQueryOptions } from '../../../queries/categories'
 import { subcategoriesQueryOptions } from '../../../queries/subcategories'
+import { loadQuery } from '../../../queries/query-client'
 
 export const Route = createFileRoute('/recipes/$category/')({
   component: RouteComponent,
   pendingComponent: CategoryPending,
   loader: async ({ context, params }) => {
-    const category = await context.queryClient.ensureQueryData(
+    const category = await loadQuery(
+      context.queryClient,
       categoryBySlugQueryOptions(params.category),
     )
-    const subcategories = await context.queryClient.ensureQueryData(
+    const subcategories = await loadQuery(
+      context.queryClient,
       subcategoriesQueryOptions(category.id),
     )
 

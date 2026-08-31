@@ -7,11 +7,12 @@ import { PageHeader } from '../components/page-header'
 import { PageHeading } from '../components/page-heading'
 import { PageBody } from '../components/page-body'
 import { categoriesQueryOptions } from '../queries/categories'
+import { loadQuery } from '../queries/query-client'
 
 export const Route = createFileRoute('/')({
   component: RouteComponent,
   pendingComponent: HomePending,
-  loader: ({ context }) => context.queryClient.ensureQueryData(categoriesQueryOptions),
+  loader: ({ context }) => loadQuery(context.queryClient, categoriesQueryOptions),
 })
 
 const GRID_CLASSES = 'grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-6'

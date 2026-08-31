@@ -5,12 +5,12 @@ import {
   createRouter,
   type AnyRouter,
 } from '@tanstack/react-router'
-import { QueryClientProvider } from '@tanstack/react-query'
+import { QueryClientProvider, type QueryClient } from '@tanstack/react-query'
 import { routeTree } from '../route-tree.gen'
 import { ThemeProvider } from '../hooks/use-theme'
 import { createAppQueryClient } from '../queries/query-client'
 
-type RenderRouteResult = RenderResult & { router: AnyRouter }
+type RenderRouteResult = RenderResult & { router: AnyRouter; queryClient: QueryClient }
 
 /**
  * Mounts the real app route tree at a memory-history path so loaders and
@@ -43,5 +43,5 @@ export async function renderRoute(path: string): Promise<RenderRouteResult> {
     await router.load()
   })
 
-  return { ...result, router }
+  return { ...result, router, queryClient }
 }

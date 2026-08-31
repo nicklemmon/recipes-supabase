@@ -15,6 +15,7 @@ import { categoriesQueryOptions } from '../../queries/categories'
 import { subcategoriesQueryOptions } from '../../queries/subcategories'
 import { dietaryPreferencesQueryOptions } from '../../queries/dietary-preferences'
 import { recipesQueryOptions } from '../../queries/recipes'
+import { loadQuery } from '../../queries/query-client'
 
 export const Route = createFileRoute('/recipes/favorites')({
   head: () => ({
@@ -27,10 +28,10 @@ export const Route = createFileRoute('/recipes/favorites')({
   pendingComponent: FavoritesPending,
   loader: async ({ context }) => {
     const [recipes, categories, subCategories, dietaryPreferences] = await Promise.all([
-      context.queryClient.ensureQueryData(recipesQueryOptions({ onlyFavorites: true })),
-      context.queryClient.ensureQueryData(categoriesQueryOptions),
-      context.queryClient.ensureQueryData(subcategoriesQueryOptions()),
-      context.queryClient.ensureQueryData(dietaryPreferencesQueryOptions),
+      loadQuery(context.queryClient, recipesQueryOptions({ onlyFavorites: true })),
+      loadQuery(context.queryClient, categoriesQueryOptions),
+      loadQuery(context.queryClient, subcategoriesQueryOptions()),
+      loadQuery(context.queryClient, dietaryPreferencesQueryOptions),
     ])
 
     return { recipes, categories, subCategories, dietaryPreferences }

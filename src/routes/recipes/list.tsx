@@ -17,6 +17,7 @@ import { categoriesQueryOptions } from '../../queries/categories'
 import { subcategoriesQueryOptions } from '../../queries/subcategories'
 import { dietaryPreferencesQueryOptions } from '../../queries/dietary-preferences'
 import { recipesQueryOptions } from '../../queries/recipes'
+import { loadQuery } from '../../queries/query-client'
 
 const SearchSchema = z.object({
   s: z.string().optional(),
@@ -38,10 +39,10 @@ export const Route = createFileRoute('/recipes/list')({
     const titleSearch = s || undefined
 
     const [dietaryPreferences, recipes, categories, subCategories] = await Promise.all([
-      context.queryClient.ensureQueryData(dietaryPreferencesQueryOptions),
-      context.queryClient.ensureQueryData(recipesQueryOptions({ titleSearch })),
-      context.queryClient.ensureQueryData(categoriesQueryOptions),
-      context.queryClient.ensureQueryData(subcategoriesQueryOptions()),
+      loadQuery(context.queryClient, dietaryPreferencesQueryOptions),
+      loadQuery(context.queryClient, recipesQueryOptions({ titleSearch })),
+      loadQuery(context.queryClient, categoriesQueryOptions),
+      loadQuery(context.queryClient, subcategoriesQueryOptions()),
     ])
 
     return {

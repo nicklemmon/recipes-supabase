@@ -16,6 +16,7 @@ import { categoryBySlugQueryOptions } from '../../../../queries/categories'
 import { subcategoryBySlugQueryOptions } from '../../../../queries/subcategories'
 import { dietaryPreferencesQueryOptions } from '../../../../queries/dietary-preferences'
 import { recipesQueryOptions } from '../../../../queries/recipes'
+import { loadQuery } from '../../../../queries/query-client'
 
 export const Route = createFileRoute('/recipes/$category/$subcategory/')({
   component: RouteComponent,
@@ -24,12 +25,13 @@ export const Route = createFileRoute('/recipes/$category/$subcategory/')({
     const { subcategory: subcategorySlug, category: categorySlug } = params
 
     const [category, subcategory, dietaryPreferences] = await Promise.all([
-      context.queryClient.ensureQueryData(categoryBySlugQueryOptions(categorySlug)),
-      context.queryClient.ensureQueryData(subcategoryBySlugQueryOptions(subcategorySlug)),
-      context.queryClient.ensureQueryData(dietaryPreferencesQueryOptions),
+      loadQuery(context.queryClient, categoryBySlugQueryOptions(categorySlug)),
+      loadQuery(context.queryClient, subcategoryBySlugQueryOptions(subcategorySlug)),
+      loadQuery(context.queryClient, dietaryPreferencesQueryOptions),
     ])
 
-    const recipes = await context.queryClient.ensureQueryData(
+    const recipes = await loadQuery(
+      context.queryClient,
       recipesQueryOptions({ categoryId: category.id, subcategoryId: subcategory.id }),
     )
 

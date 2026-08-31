@@ -29,6 +29,7 @@ import {
 } from '../../../../../queries/subcategories'
 import { dietaryPreferencesQueryOptions } from '../../../../../queries/dietary-preferences'
 import { recipeBySlugQueryOptions } from '../../../../../queries/recipes'
+import { loadQuery } from '../../../../../queries/query-client'
 
 export const Route = createFileRoute('/recipes/$category/$subcategory/$recipe/_private/edit')({
   component: RouteComponent,
@@ -37,13 +38,14 @@ export const Route = createFileRoute('/recipes/$category/$subcategory/$recipe/_p
     const { subcategory: subcategorySlug, category: categorySlug, recipe: recipeSlug } = params
     const [category, subcategory, categories, subcategories, dietaryPreferences] =
       await Promise.all([
-        context.queryClient.ensureQueryData(categoryBySlugQueryOptions(categorySlug)),
-        context.queryClient.ensureQueryData(subcategoryBySlugQueryOptions(subcategorySlug)),
-        context.queryClient.ensureQueryData(categoriesQueryOptions),
-        context.queryClient.ensureQueryData(subcategoriesQueryOptions()),
-        context.queryClient.ensureQueryData(dietaryPreferencesQueryOptions),
+        loadQuery(context.queryClient, categoryBySlugQueryOptions(categorySlug)),
+        loadQuery(context.queryClient, subcategoryBySlugQueryOptions(subcategorySlug)),
+        loadQuery(context.queryClient, categoriesQueryOptions),
+        loadQuery(context.queryClient, subcategoriesQueryOptions()),
+        loadQuery(context.queryClient, dietaryPreferencesQueryOptions),
       ])
-    const recipe = await context.queryClient.ensureQueryData(
+    const recipe = await loadQuery(
+      context.queryClient,
       recipeBySlugQueryOptions({
         slug: recipeSlug,
         categoryId: category.id,
@@ -150,7 +152,7 @@ function RouteComponent() {
           },
         ],
       })
-      await queryClient.invalidateQueries({ queryKey: ['recipes'] })
+      await queryClient.invalidateQueries({ queryKey: ['recipes'], refetchType: 'all' })
 
       // Navigate back to the view page after successful update
       router.navigate({

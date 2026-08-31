@@ -1,4 +1,4 @@
-import { fireEvent, screen, waitFor, within } from '@testing-library/react'
+import { act, fireEvent, screen, waitFor, within } from '@testing-library/react'
 import { describe, expect, it } from 'vitest'
 import { renderRoute } from '../../test-helpers/render-route'
 import { title } from '../../helpers/dom'
@@ -69,7 +69,22 @@ describe('Browse characterization', () => {
   })
 
   it('deleting a recipe navigates to the subcategory list without that recipe', async () => {
-    const { router } = await renderRoute('/recipes/desserts/cookies/chocolate-chip-cookies/view')
+    // Prime the subcategory list cache first — the stale-list bug only shows up when
+    // that query already exists and was invalidated while inactive.
+    const { router, queryClient } = await renderRoute('/recipes/desserts/cookies')
+
+    expect(await screen.findByRole('link', { name: 'Chocolate Chip Cookies' })).toBeInTheDocument()
+
+    await act(async () => {
+      await router.navigate({
+        to: '/recipes/$category/$subcategory/$recipe/view',
+        params: {
+          category: 'desserts',
+          subcategory: 'cookies',
+          recipe: 'chocolate-chip-cookies',
+        },
+      })
+    })
 
     await screen.findByRole('heading', { name: 'Chocolate Chip Cookies' })
 
@@ -86,5 +101,15 @@ describe('Browse characterization', () => {
     expect(await screen.findByRole('heading', { name: 'Cookies' })).toBeInTheDocument()
     expect(screen.queryByRole('link', { name: 'Chocolate Chip Cookies' })).not.toBeInTheDocument()
     expect(await screen.findByRole('link', { name: 'Sugar Cookies' })).toBeInTheDocument()
+
+    // Loader must wait for the invalidated list refetch — not paint the primed cache.
+    await waitFor(() => {
+      const cached = queryClient.getQueryData<{ slug: string }[]>([
+        'recipes',
+        { categoryId: 1, subcategoryId: 10 },
+      ])
+      expect(cached?.some((recipe) => recipe.slug === 'chocolate-chip-cookies')).toBe(false)
+      expect(cached?.some((recipe) => recipe.slug === 'sugar-cookies')).toBe(true)
+    })
   })
 })

@@ -36,6 +36,7 @@ import { categoryBySlugQueryOptions } from '../../../../../queries/categories'
 import { subcategoryBySlugQueryOptions } from '../../../../../queries/subcategories'
 import { dietaryPreferencesQueryOptions } from '../../../../../queries/dietary-preferences'
 import { recipeBySlugQueryOptions } from '../../../../../queries/recipes'
+import { loadQuery } from '../../../../../queries/query-client'
 
 const md = markdownit({
   breaks: true,
@@ -51,21 +52,21 @@ export const Route = createFileRoute('/recipes/$category/$subcategory/$recipe/vi
   validateSearch: SearchSchema,
   loader: async ({ context, params }) => {
     const { subcategory: subcategorySlug, category: categorySlug, recipe: recipeSlug } = params
-    const category = await context.queryClient.ensureQueryData(
-      categoryBySlugQueryOptions(categorySlug),
-    )
-    const subcategory = await context.queryClient.ensureQueryData(
+    const category = await loadQuery(context.queryClient, categoryBySlugQueryOptions(categorySlug))
+    const subcategory = await loadQuery(
+      context.queryClient,
       subcategoryBySlugQueryOptions(subcategorySlug),
     )
     const [recipe, dietaryPreferences] = await Promise.all([
-      context.queryClient.ensureQueryData(
+      loadQuery(
+        context.queryClient,
         recipeBySlugQueryOptions({
           slug: recipeSlug,
           categoryId: category.id,
           subcategoryId: subcategory.id,
         }),
       ),
-      context.queryClient.ensureQueryData(dietaryPreferencesQueryOptions),
+      loadQuery(context.queryClient, dietaryPreferencesQueryOptions),
     ])
 
     return {
@@ -135,7 +136,7 @@ function RouteComponent() {
           },
         ],
       })
-      await queryClient.invalidateQueries({ queryKey: ['recipes'] })
+      await queryClient.invalidateQueries({ queryKey: ['recipes'], refetchType: 'all' })
 
       await navigate({
         to: '/recipes/$category/$subcategory',

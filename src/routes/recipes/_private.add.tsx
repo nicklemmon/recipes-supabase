@@ -23,6 +23,7 @@ import { categoriesQueryOptions } from '../../queries/categories'
 import { subcategoriesQueryOptions } from '../../queries/subcategories'
 import { dietaryPreferencesQueryOptions } from '../../queries/dietary-preferences'
 import { RecipeDetailPending } from '../../components/recipe-detail-pending'
+import { loadQuery } from '../../queries/query-client'
 
 export const Route = createFileRoute('/recipes/_private/add')({
   head: () => ({
@@ -36,9 +37,9 @@ export const Route = createFileRoute('/recipes/_private/add')({
   pendingComponent: RecipeDetailPending,
   loader: async ({ context }) => {
     const [categories, subcategories, dietaryPreferences] = await Promise.all([
-      context.queryClient.ensureQueryData(categoriesQueryOptions),
-      context.queryClient.ensureQueryData(subcategoriesQueryOptions()),
-      context.queryClient.ensureQueryData(dietaryPreferencesQueryOptions),
+      loadQuery(context.queryClient, categoriesQueryOptions),
+      loadQuery(context.queryClient, subcategoriesQueryOptions()),
+      loadQuery(context.queryClient, dietaryPreferencesQueryOptions),
     ])
 
     return { categories, subcategories, dietaryPreferences }
@@ -95,7 +96,7 @@ function RouteComponent() {
       // Toast it up
       toast.success(`Recipe "${title}" added`)
 
-      await queryClient.invalidateQueries({ queryKey: ['recipes'] })
+      await queryClient.invalidateQueries({ queryKey: ['recipes'], refetchType: 'all' })
 
       const routeParams = toRecipeRouteParams({
         recipe: addedRecipe,
