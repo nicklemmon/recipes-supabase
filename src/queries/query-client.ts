@@ -31,5 +31,5 @@ export function loadQuery<
   queryClient: QueryClient,
   options: QueryExecuteOptions<TQueryFnData, TError, TData, TQueryFnData, TQueryKey>,
 ) {
-  return queryClient.query(options)
+  return queryClient.fetchQuery(options)
 }

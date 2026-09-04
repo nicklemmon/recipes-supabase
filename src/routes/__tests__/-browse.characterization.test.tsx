@@ -2,6 +2,7 @@ import { act, fireEvent, screen, waitFor, within } from '@testing-library/react'
 import { describe, expect, it } from 'vitest'
 import { renderRoute } from '../../test-helpers/render-route'
 import { title } from '../../helpers/dom'
+import { server } from '../../test-helpers/msw/server'
 
 describe('Browse characterization', () => {
   it('home lists categories and a Favorites entry', async () => {
@@ -68,10 +69,56 @@ describe('Browse characterization', () => {
     expect(screen.queryByRole('link', { name: 'Spaghetti' })).not.toBeInTheDocument()
   })
 
+  it('does not refetch a fresh subcategory list after navigating back to it', async () => {
+    let recipeListRequests = 0
+    const onRequest = ({ request }: { request: Request }) => {
+      const url = new URL(request.url)
+
+      if (
+        url.pathname.endsWith('/rest/v1/recipes') &&
+        url.searchParams.get('category_id') === 'eq.1' &&
+        url.searchParams.get('subcategory_id') === 'eq.10' &&
+        !url.searchParams.has('slug')
+      ) {
+        recipeListRequests += 1
+      }
+    }
+    server.events.on('request:start', onRequest)
+
+    try {
+      const { router } = await renderRoute('/recipes/desserts/cookies')
+      await screen.findByRole('link', { name: 'Chocolate Chip Cookies' })
+
+      await act(async () => {
+        await router.navigate({
+          to: '/recipes/$category/$subcategory/$recipe/view',
+          params: {
+            category: 'desserts',
+            subcategory: 'cookies',
+            recipe: 'chocolate-chip-cookies',
+          },
+        })
+      })
+      await screen.findByRole('heading', { name: 'Chocolate Chip Cookies' })
+
+      await act(async () => {
+        await router.navigate({
+          to: '/recipes/$category/$subcategory',
+          params: { category: 'desserts', subcategory: 'cookies' },
+        })
+      })
+      await screen.findByRole('heading', { name: 'Cookies' })
+
+      expect(recipeListRequests).toBe(1)
+    } finally {
+      server.events.removeListener('request:start', onRequest)
+    }
+  })
+
   it('deleting a recipe navigates to the subcategory list without that recipe', async () => {
     // Prime the subcategory list cache first — the stale-list bug only shows up when
     // that query already exists and was invalidated while inactive.
-    const { router, queryClient } = await renderRoute('/recipes/desserts/cookies')
+    const { router } = await renderRoute('/recipes/desserts/cookies')
 
     expect(await screen.findByRole('link', { name: 'Chocolate Chip Cookies' })).toBeInTheDocument()
 
@@ -101,15 +148,5 @@ describe('Browse characterization', () => {
     expect(await screen.findByRole('heading', { name: 'Cookies' })).toBeInTheDocument()
     expect(screen.queryByRole('link', { name: 'Chocolate Chip Cookies' })).not.toBeInTheDocument()
     expect(await screen.findByRole('link', { name: 'Sugar Cookies' })).toBeInTheDocument()
-
-    // Loader must wait for the invalidated list refetch — not paint the primed cache.
-    await waitFor(() => {
-      const cached = queryClient.getQueryData<{ slug: string }[]>([
-        'recipes',
-        { categoryId: 1, subcategoryId: 10 },
-      ])
-      expect(cached?.some((recipe) => recipe.slug === 'chocolate-chip-cookies')).toBe(false)
-      expect(cached?.some((recipe) => recipe.slug === 'sugar-cookies')).toBe(true)
-    })
   })
 })

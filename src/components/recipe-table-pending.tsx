@@ -11,7 +11,11 @@ export function RecipeTablePending({
   caption = 'Recipes',
 }: RecipeTablePendingProps) {
   return (
-    <div className="border border-x-0 border-slate-200 dark:border-slate-700 w-full">
+    <div
+      aria-busy="true"
+      aria-label={`Loading ${caption.toLowerCase()}`}
+      className="border border-x-0 border-slate-200 dark:border-slate-700 w-full"
+    >
       <table className="w-full text-left text-md border-collapse text-slate-700 dark:text-slate-300">
         <caption className="sr-only">{caption}</caption>
         <thead className="border-b-2 border-slate-200 dark:border-slate-700">

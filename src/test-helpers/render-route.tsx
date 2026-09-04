@@ -11,12 +11,16 @@ import { ThemeProvider } from '../hooks/use-theme'
 import { createAppQueryClient } from '../queries/query-client'
 
 type RenderRouteResult = RenderResult & { router: AnyRouter; queryClient: QueryClient }
+type RenderRouteOptions = { waitForLoad?: boolean }
 
 /**
  * Mounts the real app route tree at a memory-history path so loaders and
  * navigation run against MSW the same way they do in the browser.
  */
-export async function renderRoute(path: string): Promise<RenderRouteResult> {
+export async function renderRoute(
+  path: string,
+  { waitForLoad = true }: RenderRouteOptions = {},
+): Promise<RenderRouteResult> {
   const queryClient = createAppQueryClient()
   const history = createMemoryHistory({ initialEntries: [path] })
   const router = createRouter({
@@ -40,7 +44,7 @@ export async function renderRoute(path: string): Promise<RenderRouteResult> {
         <RouterProvider router={router} />
       </ThemeProvider>,
     )
-    await router.load()
+    if (waitForLoad) await router.load()
   })
 
   return { ...result, router, queryClient }
