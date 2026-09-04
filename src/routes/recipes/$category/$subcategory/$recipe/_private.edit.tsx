@@ -10,6 +10,7 @@ import { PageActions, PageBackLink, PageDeleteButton } from '../../../../../comp
 import { updateRecipe } from '../../../../../api/recipes'
 import { title } from '../../../../../helpers/dom'
 import { toDietaryPrefOptions } from '../../../../../helpers/dietary-preferences'
+import { toRecipeRouteParams } from '../../../../../helpers/recipes'
 import { Stack } from '../../../../../components/stack'
 import { FormControl } from '../../../../../components/form-control'
 import { FormLabel } from '../../../../../components/form-label'
@@ -135,33 +136,32 @@ function RouteComponent() {
         dietary_pref: selectedDietaryPrefs,
       })
 
+      const routeParams = toRecipeRouteParams({
+        recipe: {
+          ...recipe,
+          category_id: Number(category_id),
+          subcategory_id: Number(subcategory_id),
+        },
+        categories,
+        subcategories,
+      })
+
+      if (!routeParams) {
+        throw Error('Could not find the selected category or subcategory')
+      }
+
       setUpdateReqStatus('loading')
 
       await updateRecipe(partialRecipe)
 
       toast.success(`Recipe ${title} updated`)
 
-      await queryClient.invalidateQueries({
-        queryKey: [
-          'recipes',
-          'slug',
-          {
-            categoryId: category.id,
-            subcategoryId: subcategory.id,
-            slug: recipeSlug,
-          },
-        ],
-      })
-      await queryClient.invalidateQueries({ queryKey: ['recipes'], refetchType: 'all' })
+      await queryClient.invalidateQueries({ queryKey: ['recipes'], refetchType: 'none' })
 
       // Navigate back to the view page after successful update
       router.navigate({
         to: '/recipes/$category/$subcategory/$recipe/view',
-        params: {
-          recipe: recipeSlug,
-          category: categorySlug,
-          subcategory: subcategorySlug,
-        },
+        params: routeParams,
       })
     } catch (err) {
       toast.error(String(err))
