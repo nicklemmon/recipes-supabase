@@ -1,82 +1,18 @@
-import { render, screen, waitFor } from '@testing-library/react'
+import { screen, waitFor } from '@testing-library/react'
 import { userEvent } from '@testing-library/user-event'
-import { describe, it, expect, vi, beforeEach } from 'vitest'
-import { Category } from '../../../types/categories'
-import { SubCategory } from '../../../types/subcategories'
+import { describe, it, expect, beforeEach } from 'vitest'
+import { http, HttpResponse } from 'msw'
+import { renderRoute } from '../../../test-helpers/render-route'
+import { seedAuthenticatedSession } from '../../../test-helpers/auth'
+import { server } from '../../../test-helpers/msw/server'
+import { RECIPES } from '../../../test-helpers/msw/fixtures'
 
-const { navigate, addRecipe } = vi.hoisted(() => ({
-  navigate: vi.fn(),
-  addRecipe: vi.fn(),
-}))
-
-// The route component is rendered on its own, so the router is stubbed down to the two pieces it
-// uses: the loader data and `navigate`.
-vi.mock('@tanstack/react-router', () => ({
-  createFileRoute: () => (options: Record<string, unknown>) => ({
-    ...options,
-    useLoaderData: () => LOADER_DATA,
-  }),
-  useRouter: () => ({ navigate }),
-}))
-
-vi.mock('../../../api/recipes', () => ({ addRecipe }))
-vi.mock('../../../api/categories', () => ({ getCategories: vi.fn() }))
-vi.mock('../../../api/subcategories', () => ({ getSubcategories: vi.fn() }))
-vi.mock('../../../api/dietary-preferences', () => ({ getDietaryPreferences: vi.fn() }))
-vi.mock('sonner', () => ({ toast: { success: vi.fn(), error: vi.fn() } }))
-
-const CATEGORIES: Category[] = [
-  { id: 1, created_at: '2026-01-01', title: 'Desserts', emoji: '🍰', slug: 'desserts' },
-  { id: 2, created_at: '2026-01-01', title: 'Dinner', emoji: '🍽️', slug: 'dinner' },
-]
-
-const SUBCATEGORIES: SubCategory[] = [
-  {
-    id: 10,
-    created_at: '2026-01-01',
-    title: 'Cookies',
-    emoji: '🍪',
-    slug: 'cookies',
-    category_id: 1,
-  },
-  {
-    id: 20,
-    created_at: '2026-01-01',
-    title: 'Pasta',
-    emoji: '🍝',
-    slug: 'pasta',
-    category_id: 2,
-  },
-]
-
-const LOADER_DATA = {
-  categories: CATEGORIES,
-  subcategories: SUBCATEGORIES,
-  dietaryPreferences: [{ id: 1, created_at: '2026-01-01', label: 'Vegan', slug: 'vegan' }],
-}
-
-const ADDED_RECIPE = {
-  id: 100,
-  created_at: '2026-01-01',
-  title: 'Chocolate Chip Cookies',
-  slug: 'chocolate-chip-cookies',
-  category_id: 1,
-  subcategory_id: 10,
-  ingredients_md: 'Flour',
-  directions_md: 'Bake',
-  dietary_pref: [],
-  rating: null,
-}
-
-const { Route } = await import('../_private.add')
-
-const AddRecipeRoute = (Route as unknown as { component: () => React.JSX.Element }).component
+const supabaseUrl = import.meta.env.VITE_SUPABASE_PROJECT_URL as string
 
 async function fillOutForm() {
   const user = userEvent.setup()
 
   await user.type(screen.getByLabelText('Title'), 'Chocolate Chip Cookies')
-  // The subcategory select stays disabled until a category is picked
   await user.selectOptions(screen.getByLabelText('Category'), '1')
   await user.selectOptions(screen.getByLabelText('Subcategory'), '10')
   await user.type(screen.getByLabelText('Ingredients'), 'Flour')
@@ -86,51 +22,69 @@ async function fillOutForm() {
 
 describe('Add recipe route', () => {
   beforeEach(() => {
-    vi.clearAllMocks()
-    addRecipe.mockResolvedValue(ADDED_RECIPE)
+    seedAuthenticatedSession()
   })
 
   it('redirects to the new recipe after it is added', async () => {
-    render(<AddRecipeRoute />)
+    const { router } = await renderRoute('/recipes/add')
 
+    await screen.findByRole('heading', { name: 'Add recipe' })
     await fillOutForm()
 
     await waitFor(() => {
-      expect(navigate).toHaveBeenCalledWith({
-        to: '/recipes/$category/$subcategory/$recipe/view',
-        params: {
-          category: 'desserts',
-          subcategory: 'cookies',
-          recipe: 'chocolate-chip-cookies',
-        },
-      })
+      expect(router.state.location.pathname).toBe(
+        '/recipes/desserts/cookies/chocolate-chip-cookies/view',
+      )
     })
   })
 
   it('does not redirect when the added recipe cannot be matched to a category', async () => {
-    addRecipe.mockResolvedValue({ ...ADDED_RECIPE, category_id: 999 })
+    server.use(
+      http.post(`${supabaseUrl}/rest/v1/recipes`, async ({ request }) => {
+        const body = (await request.json()) as (typeof RECIPES)[number] | (typeof RECIPES)[number][]
+        const incoming = Array.isArray(body) ? body[0] : body
+        return HttpResponse.json({
+          ...incoming,
+          id: 999,
+          created_at: '2026-01-02T00:00:00Z',
+          category_id: 999,
+        })
+      }),
+    )
 
-    render(<AddRecipeRoute />)
+    const { router } = await renderRoute('/recipes/add')
 
+    await screen.findByRole('heading', { name: 'Add recipe' })
+    const pathBefore = router.state.location.pathname
     await fillOutForm()
 
-    await waitFor(() => expect(addRecipe).toHaveBeenCalled())
-    expect(navigate).not.toHaveBeenCalled()
+    await waitFor(() => {
+      expect(screen.getByRole('button', { name: 'Add recipe' })).not.toBeDisabled()
+    })
+    expect(router.state.location.pathname).toBe(pathBefore)
   })
 
   it('does not redirect when adding the recipe fails', async () => {
-    // The submit handler re-throws after toasting, which lands as an unhandled rejection
+    server.use(
+      http.post(`${supabaseUrl}/rest/v1/recipes`, () => {
+        return HttpResponse.json({ message: 'Insert failed' }, { status: 500 })
+      }),
+    )
+
+    const { router } = await renderRoute('/recipes/add')
+
+    await screen.findByRole('heading', { name: 'Add recipe' })
+    const pathBefore = router.state.location.pathname
+
     const ignoreRejection = () => {}
     process.on('unhandledRejection', ignoreRejection)
 
-    addRecipe.mockRejectedValue(new Error('Insert failed'))
-
-    render(<AddRecipeRoute />)
-
     await fillOutForm()
 
-    await waitFor(() => expect(addRecipe).toHaveBeenCalled())
-    expect(navigate).not.toHaveBeenCalled()
+    await waitFor(() => {
+      expect(screen.getByRole('button', { name: 'Add recipe' })).not.toBeDisabled()
+    })
+    expect(router.state.location.pathname).toBe(pathBefore)
 
     process.off('unhandledRejection', ignoreRejection)
   })

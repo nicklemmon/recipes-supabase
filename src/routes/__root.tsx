@@ -1,4 +1,5 @@
-import { HeadContent, Link, Outlet, createRootRoute } from '@tanstack/react-router'
+import { HeadContent, Link, Outlet, createRootRouteWithContext } from '@tanstack/react-router'
+import type { RouterContext } from '../queries/router-context'
 import { useScrollAndFocusOnNavigate } from '../hooks/use-scroll-and-focus-on-navigate'
 import { Citrus, LogIn, LogOut, Plus, User } from 'lucide-react'
 import { Toaster } from 'sonner'
@@ -14,7 +15,7 @@ import { NavTooltip, NavTooltipBody, NavTooltipTrigger } from '../components/nav
 import { title } from '../helpers/dom'
 import '../styles.css'
 
-export const Route = createRootRoute({
+export const Route = createRootRouteWithContext<RouterContext>()({
   head: () => ({
     meta: [
       {

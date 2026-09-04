@@ -1,4 +1,5 @@
-import { createFileRoute, Await } from '@tanstack/react-router'
+import { createFileRoute } from '@tanstack/react-router'
+import { useSuspenseQuery } from '@tanstack/react-query'
 import { z } from 'zod'
 import { Star } from 'lucide-react'
 import { title } from '../../helpers/dom'
@@ -7,15 +8,16 @@ import { TableLink } from '../../components/table-link'
 import { PageHeader } from '../../components/page-header'
 import { PageHeading } from '../../components/page-heading'
 import { PageBody } from '../../components/page-body'
-import { RecipeTableSkeleton } from '../../components/recipe-table-skeleton'
+import { RecipeTablePending } from '../../components/recipe-table-pending'
 import { EmptyCell } from '../../components/empty-cell'
-import { getRecipes } from '../../api/recipes'
-import { getCategories } from '../../api/categories'
-import { getSubcategories } from '../../api/subcategories'
-import { getDietaryPreferences } from '../../api/dietary-preferences'
 import { DietaryPreferenceTag } from '../../components/dietary-preference-tag'
 import { Stack } from '../../components/stack'
 import { findDietaryPrefLabel } from '../../helpers/dietary-preferences'
+import { categoriesQueryOptions } from '../../queries/categories'
+import { subcategoriesQueryOptions } from '../../queries/subcategories'
+import { dietaryPreferencesQueryOptions } from '../../queries/dietary-preferences'
+import { recipesQueryOptions } from '../../queries/recipes'
+import { loadQuery } from '../../queries/query-client'
 
 const SearchSchema = z.object({
   s: z.string().optional(),
@@ -23,6 +25,7 @@ const SearchSchema = z.object({
 
 export const Route = createFileRoute('/recipes/list')({
   component: RouteComponent,
+  pendingComponent: ListPending,
   head: () => ({
     meta: [
       {
@@ -30,33 +33,24 @@ export const Route = createFileRoute('/recipes/list')({
       },
     ],
   }),
-  loader: async ({ deps }) => {
-    // @ts-expect-error - unclear why this is happening...
-    const s = deps.s || ''
+  loader: async ({ context, deps }) => {
+    // TanStack Router types deps as {} unless the route module graph is fully inferred here
+    const s = (deps as { s?: string }).s || ''
+    const titleSearch = s || undefined
 
-    const dietaryPreferencesPromise = getDietaryPreferences()
-    const recipesData = (async () => {
-      const recipes = await getRecipes({ titleSearch: s })
-      const categories = await getCategories()
-      const subCategories = await getSubcategories()
-      const recipesWithSlugs = recipes.map((recipe) => {
-        return {
-          ...recipe,
-          categorySlug: categories.find((category) => category.id === recipe.category_id)?.slug,
-          subCategorySlug: subCategories.find(
-            (subCategory) => subCategory.id === recipe.subcategory_id,
-          )?.slug,
-        }
-      })
-
-      return recipesWithSlugs
-    })()
-    const dietaryPreferences = await dietaryPreferencesPromise
+    const [dietaryPreferences, recipes, categories, subCategories] = await Promise.all([
+      loadQuery(context.queryClient, dietaryPreferencesQueryOptions),
+      loadQuery(context.queryClient, recipesQueryOptions({ titleSearch })),
+      loadQuery(context.queryClient, categoriesQueryOptions),
+      loadQuery(context.queryClient, subcategoriesQueryOptions()),
+    ])
 
     return {
       searchStr: s,
       dietaryPreferences,
-      recipesData,
+      recipes,
+      categories,
+      subCategories,
     }
   },
   loaderDeps: ({ search }) => {
@@ -67,8 +61,46 @@ export const Route = createFileRoute('/recipes/list')({
   validateSearch: SearchSchema,
 })
 
+function ListPending() {
+  const { s } = Route.useSearch()
+  const searchStr = s ?? ''
+
+  return (
+    <div>
+      <PageHeader>
+        <PageHeading>Recipes</PageHeading>
+      </PageHeader>
+      <PageBody>
+        <Stack spacing="lg">
+          <p className="text-slate-600 dark:text-slate-400">
+            Showing results for search <span className="font-bold">&quot;{searchStr}&quot;</span>{' '}
+            &mdash; loading...
+          </p>
+          <RecipeTablePending showDietaryPref={false} />
+        </Stack>
+      </PageBody>
+    </div>
+  )
+}
+
 function RouteComponent() {
-  const { recipesData, searchStr, dietaryPreferences } = Route.useLoaderData()
+  const { s } = Route.useSearch()
+  const searchStr = s ?? ''
+  const titleSearch = searchStr || undefined
+
+  const { data: dietaryPreferences } = useSuspenseQuery(dietaryPreferencesQueryOptions)
+  const { data: recipes } = useSuspenseQuery(recipesQueryOptions({ titleSearch }))
+  const { data: categories } = useSuspenseQuery(categoriesQueryOptions)
+  const { data: subCategories } = useSuspenseQuery(subcategoriesQueryOptions())
+
+  const recipesWithSlugs = recipes.map((recipe) => {
+    return {
+      ...recipe,
+      categorySlug: categories.find((category) => category.id === recipe.category_id)?.slug,
+      subCategorySlug: subCategories.find((subCategory) => subCategory.id === recipe.subcategory_id)
+        ?.slug,
+    }
+  })
 
   return (
     <div>
@@ -77,127 +109,90 @@ function RouteComponent() {
       </PageHeader>
 
       <PageBody>
-        <Await
-          promise={recipesData}
-          fallback={
-            <Stack spacing="lg">
-              <p className="text-slate-600 dark:text-slate-400">
-                Showing results for search{' '}
-                <span className="font-bold">&quot;{searchStr}&quot;</span> &mdash; loading...
-              </p>
+        {recipesWithSlugs.length === 0 ? (
+          <p className="text-slate-600 dark:text-slate-400">
+            Showing results for search <span className="font-bold">&quot;{searchStr}&quot;</span>{' '}
+            &mdash; no recipes found.
+          </p>
+        ) : (
+          <Stack spacing="lg">
+            <p className="text-slate-600 dark:text-slate-400">
+              Showing results for search <span className="font-bold">&quot;{searchStr}&quot;</span>{' '}
+              &mdash; {recipesWithSlugs.length} recipes found.
+            </p>
 
-              <div className="border border-x-0 border-slate-200 dark:border-slate-700 w-full">
-                <table className="w-full text-left text-md border-collapse text-slate-700 dark:text-slate-300">
-                  <caption className="sr-only">Recipes</caption>
+            <div className="border border-x-0 border-slate-200 dark:border-slate-700 w-full">
+              <table className="w-full text-left text-md border-collapse text-slate-700 dark:text-slate-300">
+                <caption className="sr-only">Recipes</caption>
 
-                  <thead className="border-b-2 border-slate-200 dark:border-slate-700">
-                    <tr>
-                      <th className="font-medium p-4 dark:text-slate-200">Recipe</th>
-                      <th className="font-medium p-4 dark:text-slate-200">Dietary pref.</th>
-                      <th className="font-medium p-4 dark:text-slate-200">Rating</th>
-                    </tr>
-                  </thead>
-                  <tbody>
-                    {Array.from({ length: 5 }).map((_, index) => (
-                      <RecipeTableSkeleton key={index} showDietaryPref={false} />
-                    ))}
-                  </tbody>
-                </table>
-              </div>
-            </Stack>
-          }
-        >
-          {(recipesWithSlugs) => (
-            <>
-              {recipesWithSlugs.length === 0 ? (
-                <p className="text-slate-600 dark:text-slate-400">
-                  Showing results for search{' '}
-                  <span className="font-bold">&quot;{searchStr}&quot;</span> &mdash; no recipes
-                  found.
-                </p>
-              ) : (
-                <Stack spacing="lg">
-                  <p className="text-slate-600 dark:text-slate-400">
-                    Showing results for search{' '}
-                    <span className="font-bold">&quot;{searchStr}&quot;</span> &mdash;{' '}
-                    {recipesWithSlugs.length} recipes found.
-                  </p>
+                <thead className="border-b-2 border-slate-200 dark:border-slate-700">
+                  <tr>
+                    <th className="font-medium p-4 dark:text-slate-200">Recipe</th>
+                    <th className="font-medium p-4 dark:text-slate-200">Dietary pref.</th>
+                    <th className="font-medium p-4 dark:text-slate-200">Rating</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  {recipesWithSlugs.map((recipe) => {
+                    if (
+                      typeof recipe.categorySlug !== 'string' ||
+                      typeof recipe.subCategorySlug !== 'string'
+                    ) {
+                      return null
+                    }
 
-                  <div className="border border-x-0 border-slate-200 dark:border-slate-700 w-full">
-                    <table className="w-full text-left text-md border-collapse text-slate-700 dark:text-slate-300">
-                      <caption className="sr-only">Recipes</caption>
+                    return (
+                      <tr
+                        key={recipe.id}
+                        className="group border-b border-slate-200 dark:border-slate-800"
+                      >
+                        <td className="p-4">
+                          <TableLink
+                            to="/recipes/$category/$subcategory/$recipe/view"
+                            params={{
+                              category: recipe.categorySlug,
+                              subcategory: recipe.subCategorySlug,
+                              recipe: recipe.slug,
+                            }}
+                          >
+                            {recipe.title}
+                          </TableLink>
+                        </td>
 
-                      <thead className="border-b-2 border-slate-200 dark:border-slate-700">
-                        <tr>
-                          <th className="font-medium p-4 dark:text-slate-200">Recipe</th>
-                          <th className="font-medium p-4 dark:text-slate-200">Dietary pref.</th>
-                          <th className="font-medium p-4 dark:text-slate-200">Rating</th>
-                        </tr>
-                      </thead>
-                      <tbody>
-                        {recipesWithSlugs.map((recipe) => {
-                          if (
-                            typeof recipe.categorySlug !== 'string' ||
-                            typeof recipe.subCategorySlug !== 'string'
-                          ) {
-                            return null
-                          }
+                        <td className="p-4">
+                          <Inline spacing="xs">
+                            {recipe.dietary_pref.map((slug) => (
+                              <DietaryPreferenceTag
+                                key={slug}
+                                label={findDietaryPrefLabel(dietaryPreferences, slug)}
+                              />
+                            ))}
+                          </Inline>
+                        </td>
 
-                          return (
-                            <tr
-                              key={recipe.id}
-                              className="group border-b border-slate-200 dark:border-slate-800"
-                            >
-                              <td className="p-4">
-                                <TableLink
-                                  to="/recipes/$category/$subcategory/$recipe/view"
-                                  params={{
-                                    category: recipe.categorySlug,
-                                    subcategory: recipe.subCategorySlug,
-                                    recipe: recipe.slug,
-                                  }}
-                                >
-                                  {recipe.title}
-                                </TableLink>
-                              </td>
-
-                              <td className="p-4">
-                                <Inline spacing="xs">
-                                  {recipe.dietary_pref.map((slug) => (
-                                    <DietaryPreferenceTag
-                                      key={slug}
-                                      label={findDietaryPrefLabel(dietaryPreferences, slug)}
-                                    />
-                                  ))}
-                                </Inline>
-                              </td>
-
-                              <td className="p-4">
-                                {recipe.rating == null ? (
-                                  <EmptyCell label="No rating" />
-                                ) : (
-                                  <Inline spacing="xs">
-                                    {[...new Array(recipe.rating)].map((_star, index) => (
-                                      <Star
-                                        key={`${recipe.id}-start-${index}`}
-                                        size={16}
-                                        className="text-yellow-500 fill-yellow-200"
-                                      />
-                                    ))}
-                                  </Inline>
-                                )}
-                              </td>
-                            </tr>
-                          )
-                        })}
-                      </tbody>
-                    </table>
-                  </div>
-                </Stack>
-              )}
-            </>
-          )}
-        </Await>
+                        <td className="p-4">
+                          {recipe.rating == null ? (
+                            <EmptyCell label="No rating" />
+                          ) : (
+                            <Inline spacing="xs">
+                              {[...new Array(recipe.rating)].map((_star, index) => (
+                                <Star
+                                  key={`${recipe.id}-start-${index}`}
+                                  size={16}
+                                  className="text-yellow-500 fill-yellow-200"
+                                />
+                              ))}
+                            </Inline>
+                          )}
+                        </td>
+                      </tr>
+                    )
+                  })}
+                </tbody>
+              </table>
+            </div>
+          </Stack>
+        )}
       </PageBody>
     </div>
   )

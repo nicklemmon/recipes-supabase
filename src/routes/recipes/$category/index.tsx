@@ -1,19 +1,29 @@
 import { createFileRoute } from '@tanstack/react-router'
-import { getSubcategories } from '../../../api/subcategories'
-import { getCategoryBySlug } from '../../../api/categories'
+import { useSuspenseQuery } from '@tanstack/react-query'
 import { CategoryLink } from '../../../components/category-link'
+import { CategoryGridPending } from '../../../components/category-grid-pending'
 import { Stack } from '../../../components/stack'
 import { PageBody } from '../../../components/page-body'
 import { PageHeading } from '../../../components/page-heading'
 import { PageHeader } from '../../../components/page-header'
 import { PageBackLink } from '../../../components/page-actions'
 import { title } from '../../../helpers/dom'
+import { categoryBySlugQueryOptions } from '../../../queries/categories'
+import { subcategoriesQueryOptions } from '../../../queries/subcategories'
+import { loadQuery } from '../../../queries/query-client'
 
 export const Route = createFileRoute('/recipes/$category/')({
   component: RouteComponent,
-  loader: async ({ params }) => {
-    const category = await getCategoryBySlug(params.category)
-    const subcategories = await getSubcategories(category.id)
+  pendingComponent: CategoryPending,
+  loader: async ({ context, params }) => {
+    const category = await loadQuery(
+      context.queryClient,
+      categoryBySlugQueryOptions(params.category),
+    )
+    const subcategories = await loadQuery(
+      context.queryClient,
+      subcategoriesQueryOptions(category.id),
+    )
 
     return {
       category,
@@ -31,8 +41,23 @@ export const Route = createFileRoute('/recipes/$category/')({
   },
 })
 
+function CategoryPending() {
+  return (
+    <div>
+      <PageHeader>
+        <div className="h-8 w-48 bg-gray-200 dark:bg-zinc-800 rounded animate-pulse" />
+      </PageHeader>
+      <PageBody>
+        <CategoryGridPending />
+      </PageBody>
+    </div>
+  )
+}
+
 function RouteComponent() {
-  const { category, subcategories } = Route.useLoaderData()
+  const { category: categorySlug } = Route.useParams()
+  const { data: category } = useSuspenseQuery(categoryBySlugQueryOptions(categorySlug))
+  const { data: subcategories } = useSuspenseQuery(subcategoriesQueryOptions(category.id))
 
   return (
     <div>

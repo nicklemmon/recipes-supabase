@@ -1,4 +1,5 @@
 import { createFileRoute, useRouter } from '@tanstack/react-router'
+import { useQueryClient, useSuspenseQuery } from '@tanstack/react-query'
 import { useState } from 'react'
 import { toast } from 'sonner'
 import { RecipeSchema } from '../../../../../types/recipes'
@@ -6,14 +7,10 @@ import { PageBody } from '../../../../../components/page-body'
 import { PageHeader } from '../../../../../components/page-header'
 import { PageHeading } from '../../../../../components/page-heading'
 import { PageActions, PageBackLink, PageDeleteButton } from '../../../../../components/page-actions'
-import { getCategoryBySlug } from '../../../../../api/categories'
-import { getSubcategoryBySlug } from '../../../../../api/subcategories'
-import { getCategories } from '../../../../../api/categories'
-import { getSubcategories } from '../../../../../api/subcategories'
-import { getRecipeBySlug, updateRecipe } from '../../../../../api/recipes'
-import { getDietaryPreferences } from '../../../../../api/dietary-preferences'
+import { updateRecipe } from '../../../../../api/recipes'
 import { title } from '../../../../../helpers/dom'
 import { toDietaryPrefOptions } from '../../../../../helpers/dietary-preferences'
+import { toRecipeRouteParams } from '../../../../../helpers/recipes'
 import { Stack } from '../../../../../components/stack'
 import { FormControl } from '../../../../../components/form-control'
 import { FormLabel } from '../../../../../components/form-label'
@@ -22,24 +19,40 @@ import { Button } from '../../../../../components/button'
 import { FormSelect } from '../../../../../components/form-select'
 import { FormTextarea } from '../../../../../components/form-textarea'
 import { FormCombobox } from '../../../../../components/form-combobox'
+import { RecipeDetailPending } from '../../../../../components/recipe-detail-pending'
+import {
+  categoriesQueryOptions,
+  categoryBySlugQueryOptions,
+} from '../../../../../queries/categories'
+import {
+  subcategoriesQueryOptions,
+  subcategoryBySlugQueryOptions,
+} from '../../../../../queries/subcategories'
+import { dietaryPreferencesQueryOptions } from '../../../../../queries/dietary-preferences'
+import { recipeBySlugQueryOptions } from '../../../../../queries/recipes'
+import { loadQuery } from '../../../../../queries/query-client'
 
 export const Route = createFileRoute('/recipes/$category/$subcategory/$recipe/_private/edit')({
   component: RouteComponent,
-  loader: async ({ params }) => {
+  pendingComponent: RecipeDetailPending,
+  loader: async ({ context, params }) => {
     const { subcategory: subcategorySlug, category: categorySlug, recipe: recipeSlug } = params
     const [category, subcategory, categories, subcategories, dietaryPreferences] =
       await Promise.all([
-        getCategoryBySlug(categorySlug),
-        getSubcategoryBySlug(subcategorySlug),
-        getCategories(),
-        getSubcategories(),
-        getDietaryPreferences(),
+        loadQuery(context.queryClient, categoryBySlugQueryOptions(categorySlug)),
+        loadQuery(context.queryClient, subcategoryBySlugQueryOptions(subcategorySlug)),
+        loadQuery(context.queryClient, categoriesQueryOptions),
+        loadQuery(context.queryClient, subcategoriesQueryOptions()),
+        loadQuery(context.queryClient, dietaryPreferencesQueryOptions),
       ])
-    const recipe = await getRecipeBySlug({
-      slug: recipeSlug,
-      categoryId: category.id,
-      subcategoryId: subcategory.id,
-    })
+    const recipe = await loadQuery(
+      context.queryClient,
+      recipeBySlugQueryOptions({
+        slug: recipeSlug,
+        categoryId: category.id,
+        subcategoryId: subcategory.id,
+      }),
+    )
 
     return {
       category,
@@ -72,8 +85,20 @@ function RouteComponent() {
     subcategory: subcategorySlug,
     category: categorySlug,
   } = Route.useParams()
-  const { recipe, categories, subcategories, dietaryPreferences } = Route.useLoaderData()
+  const { data: category } = useSuspenseQuery(categoryBySlugQueryOptions(categorySlug))
+  const { data: subcategory } = useSuspenseQuery(subcategoryBySlugQueryOptions(subcategorySlug))
+  const { data: recipe } = useSuspenseQuery(
+    recipeBySlugQueryOptions({
+      slug: recipeSlug,
+      categoryId: category.id,
+      subcategoryId: subcategory.id,
+    }),
+  )
+  const { data: categories } = useSuspenseQuery(categoriesQueryOptions)
+  const { data: subcategories } = useSuspenseQuery(subcategoriesQueryOptions())
+  const { data: dietaryPreferences } = useSuspenseQuery(dietaryPreferencesQueryOptions)
   const router = useRouter()
+  const queryClient = useQueryClient()
   const [selectedCategory, setSelectedCategory] = useState<number>(recipe.category_id)
   const [selectedDietaryPrefs, setSelectedDietaryPrefs] = useState<string[]>(recipe.dietary_pref)
   const [updateReqStatus, setUpdateReqStatus] = useState<'loading' | 'idle'>('idle')
@@ -111,20 +136,32 @@ function RouteComponent() {
         dietary_pref: selectedDietaryPrefs,
       })
 
+      const routeParams = toRecipeRouteParams({
+        recipe: {
+          ...recipe,
+          category_id: Number(category_id),
+          subcategory_id: Number(subcategory_id),
+        },
+        categories,
+        subcategories,
+      })
+
+      if (!routeParams) {
+        throw Error('Could not find the selected category or subcategory')
+      }
+
       setUpdateReqStatus('loading')
 
       await updateRecipe(partialRecipe)
 
       toast.success(`Recipe ${title} updated`)
 
+      await queryClient.invalidateQueries({ queryKey: ['recipes'], refetchType: 'none' })
+
       // Navigate back to the view page after successful update
       router.navigate({
         to: '/recipes/$category/$subcategory/$recipe/view',
-        params: {
-          recipe: recipeSlug,
-          category: categorySlug,
-          subcategory: subcategorySlug,
-        },
+        params: routeParams,
       })
     } catch (err) {
       toast.error(String(err))

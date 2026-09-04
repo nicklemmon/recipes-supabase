@@ -1,4 +1,5 @@
 import { createFileRoute, useRouter } from '@tanstack/react-router'
+import { useQueryClient, useSuspenseQuery } from '@tanstack/react-query'
 import { toast } from 'sonner'
 import { useRef, useState } from 'react'
 import { PageHeader } from '../../components/page-header'
@@ -7,9 +8,6 @@ import { PageBody } from '../../components/page-body'
 import { title } from '../../helpers/dom'
 import { slugify } from '../../helpers/string'
 import { NewRecipeSchema } from '../../types/recipes'
-import { getCategories } from '../../api/categories'
-import { getSubcategories } from '../../api/subcategories'
-import { getDietaryPreferences } from '../../api/dietary-preferences'
 import { FormCombobox } from '../../components/form-combobox'
 import { toDietaryPrefOptions } from '../../helpers/dietary-preferences'
 import { toRecipeRouteParams } from '../../helpers/recipes'
@@ -21,6 +19,11 @@ import { Button } from '../../components/button'
 import { FormSelect } from '../../components/form-select'
 import { FormTextarea } from '../../components/form-textarea'
 import { addRecipe } from '../../api/recipes'
+import { categoriesQueryOptions } from '../../queries/categories'
+import { subcategoriesQueryOptions } from '../../queries/subcategories'
+import { dietaryPreferencesQueryOptions } from '../../queries/dietary-preferences'
+import { RecipeDetailPending } from '../../components/recipe-detail-pending'
+import { loadQuery } from '../../queries/query-client'
 
 export const Route = createFileRoute('/recipes/_private/add')({
   head: () => ({
@@ -31,11 +34,12 @@ export const Route = createFileRoute('/recipes/_private/add')({
     ],
   }),
   component: RouteComponent,
-  loader: async () => {
+  pendingComponent: RecipeDetailPending,
+  loader: async ({ context }) => {
     const [categories, subcategories, dietaryPreferences] = await Promise.all([
-      getCategories(),
-      getSubcategories(),
-      getDietaryPreferences(),
+      loadQuery(context.queryClient, categoriesQueryOptions),
+      loadQuery(context.queryClient, subcategoriesQueryOptions()),
+      loadQuery(context.queryClient, dietaryPreferencesQueryOptions),
     ])
 
     return { categories, subcategories, dietaryPreferences }
@@ -48,7 +52,10 @@ function RouteComponent() {
   const [selectedDietaryPrefs, setSelectedDietaryPrefs] = useState<string[]>([])
   const formRef = useRef<HTMLFormElement>(null)
   const router = useRouter()
-  const { categories, subcategories, dietaryPreferences } = Route.useLoaderData()
+  const queryClient = useQueryClient()
+  const { data: categories } = useSuspenseQuery(categoriesQueryOptions)
+  const { data: subcategories } = useSuspenseQuery(subcategoriesQueryOptions())
+  const { data: dietaryPreferences } = useSuspenseQuery(dietaryPreferencesQueryOptions)
   const subcategoriesByCategory = subcategories.filter((subcategory) => {
     // The category list is empty until a category is selected
     if (!selectedCategory) return false
@@ -88,6 +95,8 @@ function RouteComponent() {
 
       // Toast it up
       toast.success(`Recipe "${title}" added`)
+
+      await queryClient.invalidateQueries({ queryKey: ['recipes'], refetchType: 'all' })
 
       const routeParams = toRecipeRouteParams({
         recipe: addedRecipe,

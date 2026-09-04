@@ -1,5 +1,7 @@
 # Instructions for AI agents
 
+Also read **[AGENTS.md](./AGENTS.md)** for testing rules (MSW for network, no tautological tests).
+
 - Before considering a task complete, run QA scripts:
 
 ```bash

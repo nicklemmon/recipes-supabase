@@ -1,4 +1,5 @@
-import { createFileRoute, useNavigate, useRouter } from '@tanstack/react-router'
+import { createFileRoute, useNavigate } from '@tanstack/react-router'
+import { useQueryClient, useSuspenseQuery } from '@tanstack/react-query'
 import { z } from 'zod'
 import markdownit from 'markdown-it'
 import { Star } from 'lucide-react'
@@ -6,10 +7,7 @@ import { useState } from 'react'
 import { Drawer } from 'vaul'
 import DOMPurify from 'dompurify'
 import { toast } from 'sonner'
-import { getCategoryBySlug } from '../../../../../api/categories'
-import { getSubcategoryBySlug } from '../../../../../api/subcategories'
-import { deleteRecipe, getRecipeBySlug } from '../../../../../api/recipes'
-import { getDietaryPreferences } from '../../../../../api/dietary-preferences'
+import { deleteRecipe } from '../../../../../api/recipes'
 import { DEVICE_CAN_SLEEP } from '../../../../../constants/device'
 import { title } from '../../../../../helpers/dom'
 import { Inline } from '../../../../../components/inline'
@@ -27,12 +25,18 @@ import { PageBody } from '../../../../../components/page-body'
 import { PageHeader } from '../../../../../components/page-header'
 import { PageHeading } from '../../../../../components/page-heading'
 import { Stack } from '../../../../../components/stack'
+import { RecipeDetailPending } from '../../../../../components/recipe-detail-pending'
 import { toLegibleDate } from '../../../../../helpers/date'
 import { allowSleep, preventSleep } from '../../../../../helpers/device'
 import { FormControl } from '../../../../../components/form-control'
 import { FormLabel } from '../../../../../components/form-label'
 import { DietaryPreferenceTag } from '../../../../../components/dietary-preference-tag'
 import { findDietaryPrefLabel } from '../../../../../helpers/dietary-preferences'
+import { categoryBySlugQueryOptions } from '../../../../../queries/categories'
+import { subcategoryBySlugQueryOptions } from '../../../../../queries/subcategories'
+import { dietaryPreferencesQueryOptions } from '../../../../../queries/dietary-preferences'
+import { recipeBySlugQueryOptions } from '../../../../../queries/recipes'
+import { loadQuery } from '../../../../../queries/query-client'
 
 const md = markdownit({
   breaks: true,
@@ -44,18 +48,25 @@ const SearchSchema = z.object({
 
 export const Route = createFileRoute('/recipes/$category/$subcategory/$recipe/view')({
   component: RouteComponent,
+  pendingComponent: RecipeDetailPending,
   validateSearch: SearchSchema,
-  loader: async ({ params }) => {
+  loader: async ({ context, params }) => {
     const { subcategory: subcategorySlug, category: categorySlug, recipe: recipeSlug } = params
-    const category = await getCategoryBySlug(categorySlug)
-    const subcategory = await getSubcategoryBySlug(subcategorySlug)
+    const category = await loadQuery(context.queryClient, categoryBySlugQueryOptions(categorySlug))
+    const subcategory = await loadQuery(
+      context.queryClient,
+      subcategoryBySlugQueryOptions(subcategorySlug),
+    )
     const [recipe, dietaryPreferences] = await Promise.all([
-      getRecipeBySlug({
-        slug: recipeSlug,
-        categoryId: category.id,
-        subcategoryId: subcategory.id,
-      }),
-      getDietaryPreferences(),
+      loadQuery(
+        context.queryClient,
+        recipeBySlugQueryOptions({
+          slug: recipeSlug,
+          categoryId: category.id,
+          subcategoryId: subcategory.id,
+        }),
+      ),
+      loadQuery(context.queryClient, dietaryPreferencesQueryOptions),
     ])
 
     return {
@@ -81,12 +92,25 @@ export const Route = createFileRoute('/recipes/$category/$subcategory/$recipe/vi
 })
 
 function RouteComponent() {
-  const { subcategory: subcategorySlug, category: categorySlug } = Route.useParams()
-  const { recipe, subcategory, dietaryPreferences } = Route.useLoaderData()
+  const {
+    subcategory: subcategorySlug,
+    category: categorySlug,
+    recipe: recipeSlug,
+  } = Route.useParams()
+  const { data: category } = useSuspenseQuery(categoryBySlugQueryOptions(categorySlug))
+  const { data: subcategory } = useSuspenseQuery(subcategoryBySlugQueryOptions(subcategorySlug))
+  const { data: recipe } = useSuspenseQuery(
+    recipeBySlugQueryOptions({
+      slug: recipeSlug,
+      categoryId: category.id,
+      subcategoryId: subcategory.id,
+    }),
+  )
+  const { data: dietaryPreferences } = useSuspenseQuery(dietaryPreferencesQueryOptions)
   const { from } = Route.useSearch()
   const [delStatus, setDelStatus] = useState<'pending' | 'idle'>('idle')
   const navigate = useNavigate()
-  const router = useRouter()
+  const queryClient = useQueryClient()
   const ingredients = md.render(recipe.ingredients_md)
   const directions = md.render(recipe.directions_md)
 
@@ -101,7 +125,18 @@ function RouteComponent() {
 
       toast.success(`Successfully deleted "${recipeTitle}"`)
 
-      await router.invalidate()
+      queryClient.removeQueries({
+        queryKey: [
+          'recipes',
+          'slug',
+          {
+            categoryId: category.id,
+            subcategoryId: subcategory.id,
+            slug: recipeSlug,
+          },
+        ],
+      })
+      await queryClient.invalidateQueries({ queryKey: ['recipes'], refetchType: 'all' })
 
       await navigate({
         to: '/recipes/$category/$subcategory',
