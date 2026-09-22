@@ -27,7 +27,7 @@ import { PageHeading } from '../../../../../components/page-heading'
 import { Stack } from '../../../../../components/stack'
 import { RecipeDetailPending } from '../../../../../components/recipe-detail-pending'
 import { toLegibleDate } from '../../../../../helpers/date'
-import { allowSleep, preventSleep } from '../../../../../helpers/device'
+import { useWakeLock } from '../../../../../hooks/use-wake-lock'
 import { FormControl } from '../../../../../components/form-control'
 import { FormLabel } from '../../../../../components/form-label'
 import { DietaryPreferenceTag } from '../../../../../components/dietary-preference-tag'
@@ -109,6 +109,7 @@ function RouteComponent() {
   const { data: dietaryPreferences } = useSuspenseQuery(dietaryPreferencesQueryOptions)
   const { from } = Route.useSearch()
   const [delStatus, setDelStatus] = useState<'pending' | 'idle'>('idle')
+  const [cookingMode, setCookingMode] = useState(false)
   const navigate = useNavigate()
   const queryClient = useQueryClient()
   const ingredients = md.render(recipe.ingredients_md)
@@ -150,17 +151,11 @@ function RouteComponent() {
 
       toast.error('Failed to delete recipe')
 
-      throw err
+      console.error(err)
     }
   }
 
-  const handleSleepToggle = async (checked: boolean) => {
-    if (checked) {
-      return await preventSleep()
-    }
-
-    return await allowSleep()
-  }
+  useWakeLock(cookingMode)
 
   return (
     <div>
@@ -188,7 +183,11 @@ function RouteComponent() {
             {DEVICE_CAN_SLEEP ? (
               <FormControl className="items-end">
                 <FormLabel htmlFor="prevent-sleep-toggle">Cooking mode</FormLabel>
-                <Switch id="prevent-sleep-toggle" onCheckedChange={handleSleepToggle} />
+                <Switch
+                  id="prevent-sleep-toggle"
+                  checked={cookingMode}
+                  onCheckedChange={setCookingMode}
+                />
               </FormControl>
             ) : null}
 
@@ -287,7 +286,9 @@ function RouteComponent() {
                   <div className="text-md font-semibold text-slate-900 dark:text-slate-100">
                     Source
                   </div>
-                  <div className="text-slate-600 dark:text-slate-400">{recipe.source}</div>
+                  <div className="text-slate-600 dark:text-slate-400">
+                    {recipe.source ? recipe.source : <EmptyCell label="No source" />}
+                  </div>
                 </Stack>
 
                 <Stack spacing="xs">

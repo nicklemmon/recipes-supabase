@@ -8,9 +8,7 @@ export function FormSelect({ className, children, ...props }: React.ComponentPro
       <select
         className={cn(
           'h-full appearance-none text-sm flex w-full bg-white dark:bg-zinc-800 border border-slate-300 dark:border-zinc-700 px-4 rounded-lg text-slate-700 dark:text-zinc-50 focus:outline-0 focus-visible:ring-2 ring-indigo-700 dark:ring-indigo-500 transition',
-          props.disabled === true
-            ? 'bg-slate-100 dark:bg-zinc-700 pointer-none cursor-not-allowed'
-            : '',
+          props.disabled === true ? 'bg-slate-100 dark:bg-zinc-700 cursor-not-allowed' : '',
         )}
         {...props}
       >
