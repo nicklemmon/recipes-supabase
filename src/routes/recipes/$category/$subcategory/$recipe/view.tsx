@@ -151,7 +151,7 @@ function RouteComponent() {
 
       toast.error('Failed to delete recipe')
 
-      throw err
+      console.error(err)
     }
   }
 
