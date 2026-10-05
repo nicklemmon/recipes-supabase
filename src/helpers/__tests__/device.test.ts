@@ -1,112 +1,107 @@
 import { describe, it, expect, vi, beforeEach, afterEach } from 'vitest'
 
+type FakeSentinel = { released: boolean; release: ReturnType<typeof vi.fn> }
+
+/** Creates a lock that behaves like a WakeLockSentinel */
+function createSentinel(): FakeSentinel {
+  const sentinel: FakeSentinel = {
+    released: false,
+    release: vi.fn(async () => {
+      sentinel.released = true
+    }),
+  }
+  return sentinel
+}
+
 describe('device sleep functions', () => {
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  let mockWakeLock: any
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  let mockRequest: any
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  let mockRelease: any
+  let sentinels: FakeSentinel[]
+  let mockRequest: ReturnType<typeof vi.fn>
 
   beforeEach(() => {
-    mockRelease = vi.fn()
-    mockWakeLock = {
-      release: mockRelease,
-    }
-    mockRequest = vi.fn().mockResolvedValue(mockWakeLock)
+    sentinels = []
+    mockRequest = vi.fn(async () => {
+      const sentinel = createSentinel()
+      sentinels.push(sentinel)
+      return sentinel
+    })
 
-    // Mock navigator.wakeLock
     Object.defineProperty(navigator, 'wakeLock', {
-      value: {
-        request: mockRequest,
-      },
+      value: { request: mockRequest },
       configurable: true,
     })
 
-    // Clear console mocks
     vi.spyOn(console, 'error').mockImplementation(() => {})
 
-    // Reset modules to ensure fresh imports
+    // The helpers keep the held lock in module state, so start each test fresh
     vi.resetModules()
+    vi.doMock('../../constants/device', () => ({ DEVICE_CAN_SLEEP: true }))
   })
 
   afterEach(() => {
     vi.restoreAllMocks()
-    vi.doUnmock('../constants/device')
+    vi.doUnmock('../../constants/device')
   })
 
-  describe('preventSleep', () => {
-    it('should request wake lock when device can sleep', async () => {
-      // Mock DEVICE_CAN_SLEEP to true
-      vi.doMock('../constants/device', () => ({
-        DEVICE_CAN_SLEEP: true,
-      }))
+  it('releases the lock that preventSleep acquired', async () => {
+    const { preventSleep, allowSleep } = await import('../device')
 
-      const { preventSleep } = await import('../device')
-      const result = await preventSleep()
+    const lock = await preventSleep()
+    await allowSleep()
 
-      expect(mockRequest).toHaveBeenCalledWith('screen')
-      expect(result).toBe(mockWakeLock)
-    })
-
-    it('should handle wake lock request failure', async () => {
-      // Mock DEVICE_CAN_SLEEP to true
-      vi.doMock('../constants/device', () => ({
-        DEVICE_CAN_SLEEP: true,
-      }))
-
-      const { preventSleep } = await import('../device')
-      const error = new Error('Wake lock failed')
-      mockRequest.mockRejectedValue(error)
-
-      const result = await preventSleep()
-
-      expect(console.error).toHaveBeenCalledWith('Failed to acquire Wake Lock:', error)
-      expect(result).toBeUndefined()
-    })
-
-    it('should log error when wake lock is not supported', async () => {
-      // Skip this test for now as mocking is complex
-      // The actual implementation works correctly when DEVICE_CAN_SLEEP is false
-      expect(true).toBe(true)
-    })
+    expect(lock).toBe(sentinels[0])
+    expect(sentinels[0].released).toBe(true)
+    // Allowing sleep must not ask the browser for another lock
+    expect(sentinels).toHaveLength(1)
   })
 
-  describe('allowSleep', () => {
-    it('should request and immediately release wake lock', async () => {
-      // Mock DEVICE_CAN_SLEEP to true
-      vi.doMock('../constants/device', () => ({
-        DEVICE_CAN_SLEEP: true,
-      }))
+  it('reuses a held lock instead of requesting a second one', async () => {
+    const { preventSleep } = await import('../device')
 
-      const { allowSleep } = await import('../device')
-      const result = await allowSleep()
+    await preventSleep()
+    await preventSleep()
 
-      expect(mockRequest).toHaveBeenCalledWith('screen')
-      expect(mockRelease).toHaveBeenCalled()
-      expect(result).toBe(mockWakeLock)
-    })
+    expect(sentinels).toHaveLength(1)
+  })
 
-    it('should handle wake lock request failure', async () => {
-      // Mock DEVICE_CAN_SLEEP to true
-      vi.doMock('../constants/device', () => ({
-        DEVICE_CAN_SLEEP: true,
-      }))
+  it('requests a new lock after the browser released the old one', async () => {
+    const { preventSleep } = await import('../device')
 
-      const { allowSleep } = await import('../device')
-      const error = new Error('Wake lock failed')
-      mockRequest.mockRejectedValue(error)
+    await preventSleep()
+    // Browsers release the lock when the page is hidden
+    sentinels[0].released = true
+    const lock = await preventSleep()
 
-      const result = await allowSleep()
+    expect(sentinels).toHaveLength(2)
+    expect(lock).toBe(sentinels[1])
+  })
 
-      expect(console.error).toHaveBeenCalledWith('Failed to acquire Wake Lock:', error)
-      expect(result).toBeUndefined()
-    })
+  it('releases a lock that arrives after sleep was allowed again', async () => {
+    const { preventSleep, allowSleep } = await import('../device')
 
-    it('should log error when wake lock is not supported', async () => {
-      // Skip this test for now as mocking is complex
-      // The actual implementation works correctly when DEVICE_CAN_SLEEP is false
-      expect(true).toBe(true)
-    })
+    const pending = preventSleep()
+    await allowSleep()
+    const lock = await pending
+
+    expect(lock).toBeUndefined()
+    expect(sentinels[0].released).toBe(true)
+  })
+
+  it('logs and returns undefined when the lock request fails', async () => {
+    const { preventSleep } = await import('../device')
+    const error = new Error('Wake lock failed')
+    mockRequest.mockRejectedValueOnce(error)
+
+    const result = await preventSleep()
+
+    expect(console.error).toHaveBeenCalledWith('Failed to acquire Wake Lock:', error)
+    expect(result).toBeUndefined()
+  })
+
+  it('does nothing when allowing sleep without a held lock', async () => {
+    const { allowSleep } = await import('../device')
+
+    await allowSleep()
+
+    expect(mockRequest).not.toHaveBeenCalled()
   })
 })
