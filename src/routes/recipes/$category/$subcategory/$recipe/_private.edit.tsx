@@ -290,7 +290,7 @@ function RouteComponent() {
                   <FormInput
                     id="source-input"
                     name="source"
-                    defaultValue={recipe.source}
+                    defaultValue={recipe.source ?? ''}
                     disabled={updateReqStatus === 'loading'}
                   />
                 </FormControl>

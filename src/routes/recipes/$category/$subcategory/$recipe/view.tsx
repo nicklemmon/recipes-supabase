@@ -286,7 +286,9 @@ function RouteComponent() {
                   <div className="text-md font-semibold text-slate-900 dark:text-slate-100">
                     Source
                   </div>
-                  <div className="text-slate-600 dark:text-slate-400">{recipe.source}</div>
+                  <div className="text-slate-600 dark:text-slate-400">
+                    {recipe.source ? recipe.source : <EmptyCell label="No source" />}
+                  </div>
                 </Stack>
 
                 <Stack spacing="xs">
