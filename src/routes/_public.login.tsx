@@ -30,7 +30,7 @@ export const Route = createFileRoute('/_public/login')({
 })
 
 function RouteComponent() {
-  const [, setLoginStatus] = useState<'idle' | 'loading'>('idle')
+  const [loginStatus, setLoginStatus] = useState<'idle' | 'loading'>('idle')
   const router = useRouter()
   const search = Route.useSearch()
   const navigate = Route.useNavigate()
@@ -50,11 +50,10 @@ function RouteComponent() {
         throw new Error('Password is required')
       }
 
+      // Stays busy until navigation finishes so the form cannot be sent again
       setLoginStatus('loading')
 
       const res = await signIn({ email, password })
-
-      setLoginStatus('idle')
 
       router.update({
         context: {
@@ -70,9 +69,10 @@ function RouteComponent() {
 
       await navigate({ to: search.redirect || FALLBACK_ROUTE })
     } catch (err) {
+      setLoginStatus('idle')
       toast.error(String(err))
 
-      throw err
+      console.error(err)
     }
   }
 
@@ -102,14 +102,16 @@ function RouteComponent() {
 
               <FormInput
                 type="password"
-                autoComplete="password"
+                autoComplete="current-password"
                 id="pw-input"
                 name="password"
                 required
               />
             </FormControl>
 
-            <Button type="submit">Log in</Button>
+            <Button type="submit" loading={loginStatus === 'loading'}>
+              Log in
+            </Button>
           </Stack>
         </form>
       </PageBody>
