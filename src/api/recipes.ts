@@ -16,23 +16,25 @@ export async function getRecipes({
   titleSearch?: string
   onlyFavorites?: boolean
 } = {}) {
-  const query = supabase.from(RECIPES_TABLE_ID).select()
+  let query = supabase.from(RECIPES_TABLE_ID).select('*')
 
-  if (categoryId && subcategoryId) {
-    query.eq('category_id', categoryId).eq('subcategory_id', subcategoryId)
+  if (categoryId) {
+    query = query.eq('category_id', categoryId)
+  }
+
+  if (subcategoryId) {
+    query = query.eq('subcategory_id', subcategoryId)
   }
 
   if (titleSearch) {
-    query.ilike('title', `%${titleSearch}%`)
+    query = query.ilike('title', `%${titleSearch}%`)
   }
 
   if (onlyFavorites) {
-    query.eq('rating', 5)
+    query = query.eq('rating', 5)
   }
 
-  query.select('*').throwOnError()
-
-  const res = await query
+  const res = await query.throwOnError()
 
   return z.array(RecipeSchema).parse(res.data)
 }
