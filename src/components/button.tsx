@@ -64,7 +64,7 @@ const buttonClasses = cva(
       },
       loading: {
         false: null,
-        true: ['cursor-wait', 'pointer-none', 'opacity-75'],
+        true: ['cursor-wait', 'opacity-75'],
       },
       disabled: {
         false: null,
@@ -83,6 +83,7 @@ export function Button({
   disabled,
   asChild,
   children,
+  onClick,
   ...props
 }: React.ComponentProps<'button'> & {
   size?: ButtonSize
@@ -107,6 +108,7 @@ export function Button({
 
     return React.cloneElement(child, {
       ...(props as Record<string, unknown>),
+      onClick,
       ...(child.props as Record<string, unknown>),
       className: cn(
         buttonClasses({ disabled, loading, size, variant }),
@@ -120,6 +122,18 @@ export function Button({
     <button
       className={cn(buttonClasses({ disabled, loading, size, variant }), className)}
       disabled={disabled}
+      // Stay focusable while loading (a disabled button drops focus), but block clicks and
+      // submits so a form cannot be sent twice
+      aria-disabled={loading || undefined}
+      aria-busy={loading || undefined}
+      onClick={(e) => {
+        if (loading) {
+          e.preventDefault()
+          return
+        }
+
+        onClick?.(e)
+      }}
       {...props}
     >
       {content}

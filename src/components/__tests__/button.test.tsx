@@ -1,5 +1,5 @@
-import { render, screen } from '@testing-library/react'
-import { describe, it, expect } from 'vitest'
+import { fireEvent, render, screen } from '@testing-library/react'
+import { describe, it, expect, vi } from 'vitest'
 import { Button } from '../button'
 
 describe('Button', () => {
@@ -30,6 +30,35 @@ describe('Button', () => {
     render(<Button loading>Loading</Button>)
     const button = screen.getByRole('button')
     expect(button).toHaveClass('cursor-wait', 'opacity-75')
+  })
+
+  it('ignores clicks while loading so a form cannot be submitted twice', () => {
+    const onClick = vi.fn()
+    const onSubmit = vi.fn((e: React.FormEvent) => e.preventDefault())
+    render(
+      <form onSubmit={onSubmit}>
+        <Button type="submit" loading onClick={onClick}>
+          Save
+        </Button>
+      </form>,
+    )
+
+    fireEvent.click(screen.getByRole('button'))
+
+    expect(onClick).not.toHaveBeenCalled()
+    expect(onSubmit).not.toHaveBeenCalled()
+  })
+
+  it('stays focusable while loading so keyboard focus is not lost', () => {
+    render(<Button loading>Save</Button>)
+    const button = screen.getByRole('button', { name: 'Save' })
+
+    button.focus()
+
+    // A natively disabled button drops focus to the page body in browsers
+    expect(button).toHaveFocus()
+    expect(button).toHaveAttribute('aria-disabled', 'true')
+    expect(button).toHaveAttribute('aria-busy', 'true')
   })
 
   it('shows disabled state', () => {
