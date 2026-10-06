@@ -115,7 +115,7 @@ function RouteComponent() {
       toast.error(String(err))
       setAddReqStatus('idle')
 
-      throw err
+      console.error(err)
     }
   }
 

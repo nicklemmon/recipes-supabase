@@ -6,7 +6,7 @@ import { RecipeSchema } from '../../../../../types/recipes'
 import { PageBody } from '../../../../../components/page-body'
 import { PageHeader } from '../../../../../components/page-header'
 import { PageHeading } from '../../../../../components/page-heading'
-import { PageActions, PageBackLink, PageDeleteButton } from '../../../../../components/page-actions'
+import { PageActions, PageBackLink } from '../../../../../components/page-actions'
 import { updateRecipe } from '../../../../../api/recipes'
 import { title } from '../../../../../helpers/dom'
 import { toDietaryPrefOptions } from '../../../../../helpers/dietary-preferences'
@@ -167,7 +167,7 @@ function RouteComponent() {
       toast.error(String(err))
       setUpdateReqStatus('idle')
 
-      throw err
+      console.error(err)
     }
   }
 
@@ -187,9 +187,6 @@ function RouteComponent() {
           >
             Back to recipe
           </PageBackLink>
-
-          {/** TODO: This should only render for admins */}
-          <PageDeleteButton>Delete</PageDeleteButton>
         </PageActions>
       </PageHeader>
 
