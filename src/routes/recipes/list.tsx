@@ -76,7 +76,7 @@ function ListPending() {
             Showing results for search <span className="font-bold">&quot;{searchStr}&quot;</span>{' '}
             &mdash; loading...
           </p>
-          <RecipeTablePending showDietaryPref={false} />
+          <RecipeTablePending />
         </Stack>
       </PageBody>
     </div>
@@ -93,13 +93,16 @@ function RouteComponent() {
   const { data: categories } = useSuspenseQuery(categoriesQueryOptions)
   const { data: subCategories } = useSuspenseQuery(subcategoriesQueryOptions())
 
-  const recipesWithSlugs = recipes.map((recipe) => {
-    return {
-      ...recipe,
-      categorySlug: categories.find((category) => category.id === recipe.category_id)?.slug,
-      subCategorySlug: subCategories.find((subCategory) => subCategory.id === recipe.subcategory_id)
-        ?.slug,
-    }
+  // Recipes whose category or subcategory can't be found have no URL, so they are left out
+  const recipesWithSlugs = recipes.flatMap((recipe) => {
+    const categorySlug = categories.find((category) => category.id === recipe.category_id)?.slug
+    const subCategorySlug = subCategories.find(
+      (subCategory) => subCategory.id === recipe.subcategory_id,
+    )?.slug
+
+    if (!categorySlug || !subCategorySlug) return []
+
+    return [{ ...recipe, categorySlug, subCategorySlug }]
   })
 
   return (
@@ -118,7 +121,8 @@ function RouteComponent() {
           <Stack spacing="lg">
             <p className="text-slate-600 dark:text-slate-400">
               Showing results for search <span className="font-bold">&quot;{searchStr}&quot;</span>{' '}
-              &mdash; {recipesWithSlugs.length} recipes found.
+              &mdash; {recipesWithSlugs.length}{' '}
+              {recipesWithSlugs.length === 1 ? 'recipe' : 'recipes'} found.
             </p>
 
             <div className="border border-x-0 border-slate-200 dark:border-slate-700 w-full">
@@ -128,19 +132,14 @@ function RouteComponent() {
                 <thead className="border-b-2 border-slate-200 dark:border-slate-700">
                   <tr>
                     <th className="font-medium p-4 dark:text-slate-200">Recipe</th>
-                    <th className="font-medium p-4 dark:text-slate-200">Dietary pref.</th>
-                    <th className="font-medium p-4 dark:text-slate-200">Rating</th>
+                    <th className="font-medium p-4 hidden md:table-cell dark:text-slate-200">
+                      Dietary pref.
+                    </th>
+                    <th className="font-medium p-4 text-right dark:text-slate-200">Rating</th>
                   </tr>
                 </thead>
                 <tbody>
                   {recipesWithSlugs.map((recipe) => {
-                    if (
-                      typeof recipe.categorySlug !== 'string' ||
-                      typeof recipe.subCategorySlug !== 'string'
-                    ) {
-                      return null
-                    }
-
                     return (
                       <tr
                         key={recipe.id}
@@ -154,12 +153,13 @@ function RouteComponent() {
                               subcategory: recipe.subCategorySlug,
                               recipe: recipe.slug,
                             }}
+                            hideChevronOnMobile
                           >
                             {recipe.title}
                           </TableLink>
                         </td>
 
-                        <td className="p-4">
+                        <td className="p-4 hidden md:table-cell">
                           <Inline spacing="xs">
                             {recipe.dietary_pref.map((slug) => (
                               <DietaryPreferenceTag
@@ -170,19 +170,23 @@ function RouteComponent() {
                           </Inline>
                         </td>
 
-                        <td className="p-4">
+                        <td className="p-4 text-right">
                           {recipe.rating == null ? (
                             <EmptyCell label="No rating" />
                           ) : (
-                            <Inline spacing="xs">
-                              {[...new Array(recipe.rating)].map((_star, index) => (
-                                <Star
-                                  key={`${recipe.id}-start-${index}`}
-                                  size={16}
-                                  className="text-yellow-500 fill-yellow-200"
-                                />
-                              ))}
-                            </Inline>
+                            <>
+                              <span className="md:hidden">{recipe.rating}&nbsp;stars</span>
+
+                              <Inline spacing="xs" className="hidden md:inline-flex">
+                                {[...new Array(recipe.rating)].map((_star, index) => (
+                                  <Star
+                                    key={`${recipe.id}-start-${index}`}
+                                    size={16}
+                                    className="text-yellow-500 fill-yellow-200"
+                                  />
+                                ))}
+                              </Inline>
+                            </>
                           )}
                         </td>
                       </tr>
