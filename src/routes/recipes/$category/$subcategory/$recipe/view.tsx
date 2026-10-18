@@ -2,7 +2,6 @@ import { createFileRoute, useNavigate } from '@tanstack/react-router'
 import { useQueryClient, useSuspenseQuery } from '@tanstack/react-query'
 import { z } from 'zod'
 import markdownit from 'markdown-it'
-import { Star } from 'lucide-react'
 import { useState } from 'react'
 import { Drawer } from 'vaul'
 import DOMPurify from 'dompurify'
@@ -11,6 +10,7 @@ import { deleteRecipe } from '../../../../../api/recipes'
 import { DEVICE_CAN_SLEEP } from '../../../../../constants/device'
 import { title } from '../../../../../helpers/dom'
 import { Inline } from '../../../../../components/inline'
+import { RecipeRating } from '../../../../../components/recipe-rating'
 import { EmptyCell } from '../../../../../components/empty-cell'
 import {
   PageActions,
@@ -296,19 +296,7 @@ function RouteComponent() {
                     Rating
                   </div>
                   <div className="text-slate-600 dark:text-slate-400">
-                    {recipe.rating == null ? (
-                      <EmptyCell label="No rating" />
-                    ) : (
-                      <Inline spacing="xs">
-                        {[...new Array(recipe.rating)].map((_star, index) => (
-                          <Star
-                            key={`${recipe.id}-start-${index}`}
-                            size={16}
-                            className="text-yellow-500 fill-yellow-200"
-                          />
-                        ))}
-                      </Inline>
-                    )}
+                    <RecipeRating rating={recipe.rating} />
                   </div>
                 </Stack>
 
