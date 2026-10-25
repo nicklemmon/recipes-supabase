@@ -20,7 +20,7 @@ export function TableLink({ className, children, ...props }: TableLinkProps) {
         render={
           <Link
             className={cn(
-              'flex min-w-0 items-center text-indigo-600 dark:text-indigo-400 font-medium underline underline-offset-4',
+              'flex min-w-0 items-center text-indigo-600 dark:text-indigo-400 font-medium underline decoration-indigo-400/70 dark:decoration-indigo-500/70 underline-offset-4',
               className,
             )}
             {...props}

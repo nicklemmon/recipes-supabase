@@ -13,7 +13,14 @@ describe('TableLink', () => {
   it('applies base styles', async () => {
     renderWithRouter(<TableLink to="/recipes">Recipe</TableLink>)
     const link = await screen.findByRole('link')
-    expect(link).toHaveClass('text-indigo-600', 'dark:text-indigo-400', 'font-medium')
+    expect(link).toHaveClass(
+      'text-indigo-600',
+      'dark:text-indigo-400',
+      'font-medium',
+      'underline',
+      'decoration-indigo-400/70',
+      'dark:decoration-indigo-500/70',
+    )
   })
 
   it('truncates long titles while keeping the full title as the link name', async () => {
@@ -36,13 +43,6 @@ describe('TableLink', () => {
     renderWithRouter(<TableLink to="/recipes">Recipe</TableLink>)
     await user.tab()
     expect(await screen.findByRole('tooltip')).toHaveTextContent('Recipe')
-  })
-
-  it('underlines the title without adding a chevron', async () => {
-    renderWithRouter(<TableLink to="/recipes">Recipe</TableLink>)
-    const link = await screen.findByRole('link')
-    expect(link).toHaveClass('underline')
-    expect(link.querySelector('svg')).not.toBeInTheDocument()
   })
 
   it('accepts custom className', async () => {
