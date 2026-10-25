@@ -8,7 +8,9 @@ function mockTruncatedTitle() {
   vi.spyOn(Element.prototype, 'scrollWidth', 'get').mockImplementation(function (this: Element) {
     return this.classList.contains('truncate') ? 300 : 0
   })
-  vi.spyOn(Element.prototype, 'clientWidth', 'get').mockImplementation(function (this: Element) {
+  vi.spyOn(HTMLElement.prototype, 'clientWidth', 'get').mockImplementation(function (
+    this: HTMLElement,
+  ) {
     return this.classList.contains('truncate') ? 100 : 0
   })
 }
