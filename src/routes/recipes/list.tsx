@@ -2,14 +2,13 @@ import { createFileRoute } from '@tanstack/react-router'
 import { useSuspenseQuery } from '@tanstack/react-query'
 import { z } from 'zod'
 import { title } from '../../helpers/dom'
-import { Inline } from '../../components/inline'
 import { TableLink } from '../../components/table-link'
 import { PageHeader } from '../../components/page-header'
 import { PageHeading } from '../../components/page-heading'
 import { PageBody } from '../../components/page-body'
 import { RecipeTablePending } from '../../components/recipe-table-pending'
 import { RecipeRating } from '../../components/recipe-rating'
-import { DietaryPreferenceTag } from '../../components/dietary-preference-tag'
+import { DietaryPreferenceSummary } from '../../components/dietary-preference-summary'
 import { Stack } from '../../components/stack'
 import { findDietaryPrefLabel } from '../../helpers/dietary-preferences'
 import { categoriesQueryOptions } from '../../queries/categories'
@@ -160,14 +159,11 @@ function RouteComponent() {
                         </td>
 
                         <td className="p-4 hidden md:table-cell">
-                          <Inline spacing="xs">
-                            {recipe.dietary_pref.map((slug) => (
-                              <DietaryPreferenceTag
-                                key={slug}
-                                label={findDietaryPrefLabel(dietaryPreferences, slug)}
-                              />
-                            ))}
-                          </Inline>
+                          <DietaryPreferenceSummary
+                            labels={recipe.dietary_pref.map((slug) =>
+                              findDietaryPrefLabel(dietaryPreferences, slug),
+                            )}
+                          />
                         </td>
 
                         <td className="p-4 text-right">

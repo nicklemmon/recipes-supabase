@@ -3,12 +3,11 @@ import { useSuspenseQuery } from '@tanstack/react-query'
 import { PageHeader } from '../../components/page-header'
 import { PageHeading } from '../../components/page-heading'
 import { PageBody } from '../../components/page-body'
-import { Inline } from '../../components/inline'
 import { TableLink } from '../../components/table-link'
 import { RecipeTablePending } from '../../components/recipe-table-pending'
 import { RecipeRating } from '../../components/recipe-rating'
 import { title } from '../../helpers/dom'
-import { DietaryPreferenceTag } from '../../components/dietary-preference-tag'
+import { DietaryPreferenceSummary } from '../../components/dietary-preference-summary'
 import { findDietaryPrefLabel } from '../../helpers/dietary-preferences'
 import { categoriesQueryOptions } from '../../queries/categories'
 import { subcategoriesQueryOptions } from '../../queries/subcategories'
@@ -113,14 +112,11 @@ function RouteComponent() {
                       </td>
 
                       <td className="p-4 hidden md:table-cell">
-                        <Inline spacing="xs">
-                          {recipe.dietary_pref.map((slug) => (
-                            <DietaryPreferenceTag
-                              key={slug}
-                              label={findDietaryPrefLabel(dietaryPreferences, slug)}
-                            />
-                          ))}
-                        </Inline>
+                        <DietaryPreferenceSummary
+                          labels={recipe.dietary_pref.map((slug) =>
+                            findDietaryPrefLabel(dietaryPreferences, slug),
+                          )}
+                        />
                       </td>
 
                       <td className="p-4 text-right">
