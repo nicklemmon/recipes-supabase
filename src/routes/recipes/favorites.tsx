@@ -1,13 +1,12 @@
 import { createFileRoute } from '@tanstack/react-router'
 import { useSuspenseQuery } from '@tanstack/react-query'
-import { Star } from 'lucide-react'
 import { PageHeader } from '../../components/page-header'
 import { PageHeading } from '../../components/page-heading'
 import { PageBody } from '../../components/page-body'
 import { Inline } from '../../components/inline'
 import { TableLink } from '../../components/table-link'
 import { RecipeTablePending } from '../../components/recipe-table-pending'
-import { EmptyCell } from '../../components/empty-cell'
+import { RecipeRating } from '../../components/recipe-rating'
 import { title } from '../../helpers/dom'
 import { DietaryPreferenceTag } from '../../components/dietary-preference-tag'
 import { findDietaryPrefLabel } from '../../helpers/dietary-preferences'
@@ -129,23 +128,7 @@ function RouteComponent() {
                       </td>
 
                       <td className="p-4 text-right">
-                        {recipe.rating == null ? (
-                          <EmptyCell label="No rating" />
-                        ) : (
-                          <>
-                            <span className="md:hidden">{recipe.rating}&nbsp;stars</span>
-
-                            <Inline spacing="xs" className="hidden md:inline-flex">
-                              {[...new Array(recipe.rating)].map((_star, index) => (
-                                <Star
-                                  key={`${recipe.id}-start-${index}`}
-                                  size={16}
-                                  className="text-yellow-500 fill-yellow-200"
-                                />
-                              ))}
-                            </Inline>
-                          </>
-                        )}
+                        <RecipeRating rating={recipe.rating} compactOnMobile />
                       </td>
                     </tr>
                   )
