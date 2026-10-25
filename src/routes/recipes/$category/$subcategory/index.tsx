@@ -108,7 +108,7 @@ function RouteComponent() {
                       key={recipe.id}
                       className="group border-b border-slate-200 dark:border-slate-800"
                     >
-                      <td className="p-4">
+                      <td className="p-4 max-w-0">
                         <TableLink
                           to="/recipes/$category/$subcategory/$recipe/view"
                           params={{

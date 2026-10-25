@@ -1,6 +1,9 @@
 import { Link, type LinkProps } from '@tanstack/react-router'
 import { ChevronRight } from 'lucide-react'
+import { Tooltip } from '@base-ui/react/tooltip'
+import { useId } from 'react'
 import { cn } from '../helpers/dom'
+import { NavTooltipBody } from './nav-tooltip'
 
 type TableLinkProps = {
   className?: string
@@ -9,48 +12,40 @@ type TableLinkProps = {
   hideChevronOnMobile?: boolean
 } & Omit<LinkProps<'a'>, 'children'>
 
-/**
- * Splits off the last word so it can be wrapped together with the chevron.
- * A non-breaking space alone isn't enough to keep an inline-block icon from
- * wrapping onto its own line in Chromium/Firefox, so the icon is grouped
- * with the last word inside a `white-space: nowrap` span instead, which both
- * browsers do treat as one atomic unit.
- */
-function splitLastWord(text: string) {
-  const lastSpaceIndex = text.lastIndexOf(' ')
-
-  if (lastSpaceIndex === -1) {
-    return { leading: '', lastWord: text }
-  }
-
-  return { leading: text.slice(0, lastSpaceIndex + 1), lastWord: text.slice(lastSpaceIndex + 1) }
-}
-
-/**
- * Styled link for table cells. Keeps its trailing chevron from wrapping onto
- * its own line by wrapping it and the link text's last word together.
- */
+/** Truncated recipe link that shows the full title on hover or keyboard focus. */
 export function TableLink({
   className,
   hideChevronOnMobile = false,
   children,
   ...props
 }: TableLinkProps) {
-  const { leading, lastWord } = splitLastWord(children)
+  const tooltipId = useId()
 
   return (
-    <Link className={cn('text-indigo-600 dark:text-indigo-400 font-medium', className)} {...props}>
-      {leading}
-      <span className="whitespace-nowrap">
-        {lastWord}{' '}
-        <ChevronRight
-          size={16}
-          className={cn(
-            'inline-block align-middle group-hover:translate-x-1 transition-transform',
-            hideChevronOnMobile && 'hidden md:inline-block',
-          )}
-        />
-      </span>
-    </Link>
+    <Tooltip.Root>
+      <Tooltip.Trigger
+        aria-describedby={tooltipId}
+        render={
+          <Link
+            className={cn(
+              'flex min-w-0 items-center gap-1 text-indigo-600 dark:text-indigo-400 font-medium',
+              className,
+            )}
+            {...props}
+          >
+            <span className="min-w-0 flex-1 truncate">{children}</span>
+            <ChevronRight
+              size={16}
+              aria-hidden="true"
+              className={cn(
+                'shrink-0 transition-transform group-hover:translate-x-1',
+                hideChevronOnMobile && 'hidden md:inline-block',
+              )}
+            />
+          </Link>
+        }
+      />
+      <NavTooltipBody id={tooltipId}>{children}</NavTooltipBody>
+    </Tooltip.Root>
   )
 }

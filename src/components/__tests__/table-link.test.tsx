@@ -1,4 +1,5 @@
 import { screen } from '@testing-library/react'
+import userEvent from '@testing-library/user-event'
 import { describe, it, expect } from 'vitest'
 import { TableLink } from '../table-link'
 import { renderWithRouter } from '../../test-helpers/render-with-router'
@@ -15,21 +16,26 @@ describe('TableLink', () => {
     expect(link).toHaveClass('text-indigo-600', 'dark:text-indigo-400', 'font-medium')
   })
 
-  it('wraps the last word and chevron together so the chevron never wraps alone', async () => {
+  it('truncates long titles while keeping the full title as the link name', async () => {
     renderWithRouter(<TableLink to="/recipes">A Very Long Recipe Title</TableLink>)
     const link = await screen.findByRole('link')
-    const nowrapSpan = link.querySelector('span')
-    expect(nowrapSpan).toHaveClass('whitespace-nowrap')
-    expect(nowrapSpan).toContainElement(link.querySelector('svg'))
-    expect(nowrapSpan?.textContent).toBe('Title ')
-    expect(link.textContent).toBe('A Very Long Recipe Title ')
+    const title = link.querySelector('span')
+    expect(title).toHaveClass('truncate')
+    expect(link).toHaveAccessibleName('A Very Long Recipe Title')
   })
 
-  it('wraps a single-word title with the chevron too', async () => {
+  it('shows the full title in a tooltip on hover', async () => {
+    const user = userEvent.setup()
     renderWithRouter(<TableLink to="/recipes">Recipe</TableLink>)
-    const link = await screen.findByRole('link')
-    const nowrapSpan = link.querySelector('span')
-    expect(nowrapSpan?.textContent).toBe('Recipe ')
+    await user.hover(await screen.findByRole('link'))
+    expect(await screen.findByRole('tooltip')).toHaveTextContent('Recipe')
+  })
+
+  it('shows the full title in a tooltip on keyboard focus', async () => {
+    const user = userEvent.setup()
+    renderWithRouter(<TableLink to="/recipes">Recipe</TableLink>)
+    await user.tab()
+    expect(await screen.findByRole('tooltip')).toHaveTextContent('Recipe')
   })
 
   it('shows the chevron by default', async () => {
