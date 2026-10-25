@@ -17,7 +17,7 @@ describe('DietaryPreferenceSummary', () => {
     expect(screen.queryByText('Nut Free')).not.toBeInTheDocument()
   })
 
-  it('shows every preference in a tooltip on hover', async () => {
+  it('shows only the hidden preferences in a tooltip on hover', async () => {
     const user = userEvent.setup()
     renderWithRouter(
       <DietaryPreferenceSummary labels={['Gluten Free', 'Dairy Free', 'Nut Free', 'Vegan']} />,
@@ -25,9 +25,10 @@ describe('DietaryPreferenceSummary', () => {
 
     await user.hover(await screen.findByText('+2'))
 
-    expect(await screen.findByRole('tooltip')).toHaveTextContent(
-      'Gluten Free, Dairy Free, Nut Free, Vegan',
-    )
+    const tooltip = await screen.findByRole('tooltip')
+    expect(tooltip).toHaveTextContent('Nut Free, Vegan')
+    expect(tooltip).not.toHaveTextContent('Gluten Free')
+    expect(tooltip).not.toHaveTextContent('Dairy Free')
   })
 
   it('shows every preference in a tooltip on keyboard focus', async () => {
@@ -39,8 +40,9 @@ describe('DietaryPreferenceSummary', () => {
     await screen.findByText('+2')
     await user.tab()
 
-    expect(await screen.findByRole('tooltip')).toHaveTextContent(
-      'Gluten Free, Dairy Free, Nut Free, Vegan',
-    )
+    const tooltip = await screen.findByRole('tooltip')
+    expect(tooltip).toHaveTextContent('Nut Free, Vegan')
+    expect(tooltip).not.toHaveTextContent('Gluten Free')
+    expect(tooltip).not.toHaveTextContent('Dairy Free')
   })
 })

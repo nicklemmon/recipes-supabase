@@ -28,7 +28,11 @@ export function DietaryPreferenceSummary({ labels }: { labels: string[] }) {
     return <div className="flex min-w-0 flex-nowrap gap-1 overflow-hidden">{tags}</div>
   }
 
-  return <DietaryPreferenceSummaryTooltip labels={labels}>{tags}</DietaryPreferenceSummaryTooltip>
+  return (
+    <DietaryPreferenceSummaryTooltip labels={labels.slice(visibleLabels.length)}>
+      {tags}
+    </DietaryPreferenceSummaryTooltip>
+  )
 }
 
 function DietaryPreferenceSummaryTooltip({
