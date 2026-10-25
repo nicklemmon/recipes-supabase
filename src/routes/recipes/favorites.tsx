@@ -80,12 +80,12 @@ function RouteComponent() {
           <p className="text-slate-700 dark:text-slate-300">No favorite recipes yet.</p>
         ) : (
           <div className="border border-x-0 border-slate-200 dark:border-slate-700">
-            <table className="w-full text-left text-md border-collapse text-slate-700 dark:text-slate-300">
+            <table className="w-full table-fixed text-left text-md border-collapse text-slate-700 dark:text-slate-300">
               <caption className="sr-only">Recipes</caption>
 
               <thead className="border-b-2 border-slate-200 dark:border-slate-700">
                 <tr>
-                  <th className="font-medium p-4 dark:text-slate-200">Recipe</th>
+                  <th className="w-[65%] md:w-[45%] font-medium p-4 dark:text-slate-200">Recipe</th>
                   <th className="font-medium p-4 hidden md:table-cell dark:text-slate-200">
                     Dietary pref.
                   </th>
