@@ -125,12 +125,14 @@ function RouteComponent() {
             </p>
 
             <div className="border border-x-0 border-slate-200 dark:border-slate-700 w-full">
-              <table className="w-full text-left text-md border-collapse text-slate-700 dark:text-slate-300">
+              <table className="w-full table-fixed text-left text-md border-collapse text-slate-700 dark:text-slate-300">
                 <caption className="sr-only">Recipes</caption>
 
                 <thead className="border-b-2 border-slate-200 dark:border-slate-700">
                   <tr>
-                    <th className="font-medium p-4 dark:text-slate-200">Recipe</th>
+                    <th className="w-[65%] md:w-[45%] font-medium p-4 dark:text-slate-200">
+                      Recipe
+                    </th>
                     <th className="font-medium p-4 hidden md:table-cell dark:text-slate-200">
                       Dietary pref.
                     </th>
@@ -142,9 +144,9 @@ function RouteComponent() {
                     return (
                       <tr
                         key={recipe.id}
-                        className="group border-b border-slate-200 dark:border-slate-800"
+                        className="border-b border-slate-200 dark:border-slate-800"
                       >
-                        <td className="p-4">
+                        <td className="p-4 max-w-0">
                           <TableLink
                             to="/recipes/$category/$subcategory/$recipe/view"
                             params={{
@@ -152,7 +154,6 @@ function RouteComponent() {
                               subcategory: recipe.subCategorySlug,
                               recipe: recipe.slug,
                             }}
-                            hideChevronOnMobile
                           >
                             {recipe.title}
                           </TableLink>

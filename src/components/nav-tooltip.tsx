@@ -17,11 +17,15 @@ export function NavTooltipTrigger({
 }
 
 /** Popup content for a nav bar tooltip */
-export function NavTooltipBody({ children }: { children: React.ReactNode }) {
+export function NavTooltipBody({ children, id }: { children: React.ReactNode; id?: string }) {
   return (
     <Tooltip.Portal>
       <Tooltip.Positioner sideOffset={10}>
-        <Tooltip.Popup className="flex origin-[var(--transform-origin)] flex-col rounded-md bg-slate-900 dark:bg-zinc-800 text-slate-50 dark:text-zinc-50 px-2 py-1 text-xs shadow-lg transition-[transform,scale,opacity] data-[ending-style]:scale-90 data-[ending-style]:opacity-0 data-[instant]:duration-0 data-[starting-style]:scale-90 data-[starting-style]:opacity-0">
+        <Tooltip.Popup
+          id={id}
+          role="tooltip"
+          className="flex origin-[var(--transform-origin)] flex-col rounded-md bg-slate-900 dark:bg-zinc-800 text-slate-50 dark:text-zinc-50 px-2 py-1 text-xs shadow-lg transition-[transform,scale,opacity] data-[ending-style]:scale-90 data-[ending-style]:opacity-0 data-[instant]:duration-0 data-[starting-style]:scale-90 data-[starting-style]:opacity-0"
+        >
           <Tooltip.Arrow className="data-[side=bottom]:top-[-8px] data-[side=left]:right-[-13px] data-[side=left]:rotate-90 data-[side=right]:left-[-13px] data-[side=right]:-rotate-90 data-[side=top]:bottom-[-8px] data-[side=top]:rotate-180">
             <ArrowSvg />
           </Tooltip.Arrow>
