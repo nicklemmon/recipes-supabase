@@ -1,8 +1,21 @@
 import { screen } from '@testing-library/react'
 import userEvent from '@testing-library/user-event'
-import { describe, it, expect } from 'vitest'
+import { afterEach, describe, it, expect, vi } from 'vitest'
 import { TableLink } from '../table-link'
 import { renderWithRouter } from '../../test-helpers/render-with-router'
+
+function mockTruncatedTitle() {
+  vi.spyOn(Element.prototype, 'scrollWidth', 'get').mockImplementation(function (this: Element) {
+    return this.classList.contains('truncate') ? 300 : 0
+  })
+  vi.spyOn(HTMLElement.prototype, 'clientWidth', 'get').mockImplementation(function (
+    this: HTMLElement,
+  ) {
+    return this.classList.contains('truncate') ? 100 : 0
+  })
+}
+
+afterEach(() => vi.restoreAllMocks())
 
 describe('TableLink', () => {
   it('renders with children', async () => {
@@ -31,18 +44,27 @@ describe('TableLink', () => {
     expect(link).toHaveAccessibleName('A Very Long Recipe Title')
   })
 
-  it('shows the full title in a tooltip on hover', async () => {
+  it('does not show a tooltip when the title is not truncated', async () => {
     const user = userEvent.setup()
     renderWithRouter(<TableLink to="/recipes">Recipe</TableLink>)
     await user.hover(await screen.findByRole('link'))
-    expect(await screen.findByRole('tooltip')).toHaveTextContent('Recipe')
+    expect(screen.queryByRole('tooltip')).not.toBeInTheDocument()
   })
 
-  it('shows the full title in a tooltip on keyboard focus', async () => {
+  it('shows the full title in a tooltip on hover when truncated', async () => {
+    mockTruncatedTitle()
     const user = userEvent.setup()
-    renderWithRouter(<TableLink to="/recipes">Recipe</TableLink>)
+    renderWithRouter(<TableLink to="/recipes">A Long Recipe Title</TableLink>)
+    await user.hover(await screen.findByRole('link'))
+    expect(await screen.findByRole('tooltip')).toHaveTextContent('A Long Recipe Title')
+  })
+
+  it('shows the full title in a tooltip on keyboard focus when truncated', async () => {
+    mockTruncatedTitle()
+    const user = userEvent.setup()
+    renderWithRouter(<TableLink to="/recipes">A Long Recipe Title</TableLink>)
     await user.tab()
-    expect(await screen.findByRole('tooltip')).toHaveTextContent('Recipe')
+    expect(await screen.findByRole('tooltip')).toHaveTextContent('A Long Recipe Title')
   })
 
   it('accepts custom className', async () => {
