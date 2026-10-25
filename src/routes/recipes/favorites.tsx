@@ -110,7 +110,6 @@ function RouteComponent() {
                           search={{
                             from: 'favorites',
                           }}
-                          hideChevronOnMobile
                         >
                           {recipe.title}
                         </TableLink>

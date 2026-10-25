@@ -38,22 +38,11 @@ describe('TableLink', () => {
     expect(await screen.findByRole('tooltip')).toHaveTextContent('Recipe')
   })
 
-  it('shows the chevron by default', async () => {
+  it('underlines the title without adding a chevron', async () => {
     renderWithRouter(<TableLink to="/recipes">Recipe</TableLink>)
-    await screen.findByRole('link')
-    const chevron = document.querySelector('svg')
-    expect(chevron).not.toHaveClass('hidden')
-  })
-
-  it('hides the chevron below md when hideChevronOnMobile is set', async () => {
-    renderWithRouter(
-      <TableLink to="/recipes" hideChevronOnMobile>
-        Recipe
-      </TableLink>,
-    )
-    await screen.findByRole('link')
-    const chevron = document.querySelector('svg')
-    expect(chevron).toHaveClass('hidden', 'md:inline-block')
+    const link = await screen.findByRole('link')
+    expect(link).toHaveClass('underline')
+    expect(link.querySelector('svg')).not.toBeInTheDocument()
   })
 
   it('accepts custom className', async () => {

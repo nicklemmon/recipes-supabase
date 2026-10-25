@@ -116,7 +116,6 @@ function RouteComponent() {
                             subcategory: subcategory.slug,
                             recipe: recipe.slug,
                           }}
-                          hideChevronOnMobile
                         >
                           {recipe.title}
                         </TableLink>
