@@ -20,6 +20,25 @@ const FormSchema = z.object({
   s: z.string(),
 })
 
+function trackVisualViewport(frame: HTMLDivElement | null) {
+  const viewport = window.visualViewport
+  if (!frame || !viewport) return
+
+  // Safari can pan the visible area as well as shrink it when the keyboard opens.
+  const update = () => {
+    frame.style.top = `${viewport.offsetTop}px`
+    frame.style.height = `${viewport.height}px`
+  }
+
+  update()
+  viewport.addEventListener('resize', update)
+  viewport.addEventListener('scroll', update)
+  return () => {
+    viewport.removeEventListener('resize', update)
+    viewport.removeEventListener('scroll', update)
+  }
+}
+
 /** Nav bar button that opens a drawer for searching recipes */
 export function NavSearch() {
   const [open, setOpen] = useState(false)
@@ -59,7 +78,7 @@ export function NavSearch() {
   }
 
   return (
-    <Drawer.Root autoFocus open={open} onOpenChange={setOpen}>
+    <Drawer.Root autoFocus repositionInputs={false} noBodyStyles open={open} onOpenChange={setOpen}>
       <Tooltip.Root>
         <Tooltip.Trigger
           render={
@@ -77,45 +96,50 @@ export function NavSearch() {
       <Drawer.Portal>
         <Drawer.Overlay className="fixed inset-0 bg-black/40 dark:bg-black/60 backdrop-blur-lg" />
 
-        <Drawer.Content className="bg-gray-100 dark:bg-zinc-950 fixed bottom-0 left-0 right-0 h-[85dvh] md:h-[50dvh] outline-none">
-          <div
-            ref={observeScrollArea}
-            className="h-full overflow-y-auto overscroll-contain py-8 bg-white dark:bg-zinc-900"
-          >
-            <Container>
-              <form onSubmit={handleSubmit}>
-                <Stack>
-                  <Drawer.Title asChild>
-                    <h3 className="font-bold text-slate-800 dark:text-zinc-50 text-xl">
-                      Search for recipes
-                    </h3>
-                  </Drawer.Title>
+        <div
+          ref={trackVisualViewport}
+          className="pointer-events-none fixed inset-x-0 top-0 h-dvh overflow-hidden"
+        >
+          <Drawer.Content className="pointer-events-auto bg-gray-100 dark:bg-zinc-950 absolute bottom-0 inset-x-0 h-[85dvh] md:h-[50dvh] max-h-full outline-none data-[state=open]:animate-none!">
+            <div
+              ref={observeScrollArea}
+              className="h-full overflow-y-auto overscroll-contain py-8 bg-white dark:bg-zinc-900"
+            >
+              <Container>
+                <form onSubmit={handleSubmit}>
+                  <Stack>
+                    <Drawer.Title asChild>
+                      <h3 className="font-bold text-slate-800 dark:text-zinc-50 text-xl">
+                        Search for recipes
+                      </h3>
+                    </Drawer.Title>
 
-                  <FormControl className="max-w-140">
-                    <FormLabel htmlFor="header-search-input">Search by title</FormLabel>
+                    <FormControl className="max-w-140">
+                      <FormLabel htmlFor="header-search-input">Search by title</FormLabel>
 
-                    <FormInput
-                      ref={inputRef}
-                      type="text"
-                      id="header-search-input"
-                      name="s"
-                      autoComplete="off"
-                      required
-                    />
-                  </FormControl>
+                      <FormInput
+                        ref={inputRef}
+                        type="text"
+                        id="header-search-input"
+                        name="s"
+                        autoComplete="off"
+                        required
+                      />
+                    </FormControl>
 
-                  <Inline spacing="sm">
-                    <Button type="submit">Search</Button>
+                    <Inline spacing="sm">
+                      <Button type="submit">Search</Button>
 
-                    <Drawer.Close asChild>
-                      <Button variant="secondary">Cancel</Button>
-                    </Drawer.Close>
-                  </Inline>
-                </Stack>
-              </form>
-            </Container>
-          </div>
-        </Drawer.Content>
+                      <Drawer.Close asChild>
+                        <Button variant="secondary">Cancel</Button>
+                      </Drawer.Close>
+                    </Inline>
+                  </Stack>
+                </form>
+              </Container>
+            </div>
+          </Drawer.Content>
+        </div>
       </Drawer.Portal>
     </Drawer.Root>
   )
