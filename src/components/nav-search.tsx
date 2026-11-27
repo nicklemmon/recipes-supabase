@@ -11,7 +11,7 @@ import { SrOnly } from './sr-only'
 import { Inline } from './inline'
 import { NavButton } from './nav-actions'
 import { useNavigate } from '@tanstack/react-router'
-import { useRef, useState } from 'react'
+import { useCallback, useRef, useState } from 'react'
 import { NavTooltipBody } from './nav-tooltip'
 import { NAV_ICON_SIZE } from './nav-actions'
 import { z } from 'zod'
@@ -25,6 +25,22 @@ export function NavSearch() {
   const [open, setOpen] = useState(false)
   const inputRef = useRef<HTMLInputElement>(null)
   const navigate = useNavigate()
+
+  const observeScrollArea = useCallback((scrollArea: HTMLDivElement | null) => {
+    if (!scrollArea) return
+
+    // A keyboard resize can clip the focused field inside the drawer.
+    const observer = new ResizeObserver(() => {
+      const input = inputRef.current
+      if (!input || document.activeElement !== input) return
+
+      const overflow =
+        input.getBoundingClientRect().bottom - scrollArea.getBoundingClientRect().bottom
+      if (overflow > 0) scrollArea.scrollTop += Math.ceil(overflow)
+    })
+    observer.observe(scrollArea)
+    return () => observer.disconnect()
+  }, [])
 
   const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault()
@@ -42,12 +58,8 @@ export function NavSearch() {
     setOpen(false)
   }
 
-  const handleAnimEnd = () => {
-    inputRef.current?.focus()
-  }
-
   return (
-    <Drawer.Root onAnimationEnd={handleAnimEnd} open={open} onOpenChange={setOpen}>
+    <Drawer.Root autoFocus open={open} onOpenChange={setOpen}>
       <Tooltip.Root>
         <Tooltip.Trigger
           render={
@@ -65,8 +77,11 @@ export function NavSearch() {
       <Drawer.Portal>
         <Drawer.Overlay className="fixed inset-0 bg-black/40 dark:bg-black/60 backdrop-blur-lg" />
 
-        <Drawer.Content className="bg-gray-100 dark:bg-zinc-950 fixed bottom-0 left-0 right-0 outline-none">
-          <div className="h-[85vh] md:h-[50vh] py-8 bg-white dark:bg-zinc-900">
+        <Drawer.Content className="bg-gray-100 dark:bg-zinc-950 fixed bottom-0 left-0 right-0 h-[85dvh] md:h-[50dvh] outline-none">
+          <div
+            ref={observeScrollArea}
+            className="h-full overflow-y-auto overscroll-contain py-8 bg-white dark:bg-zinc-900"
+          >
             <Container>
               <form onSubmit={handleSubmit}>
                 <Stack>
@@ -80,12 +95,12 @@ export function NavSearch() {
                     <FormLabel htmlFor="header-search-input">Search by title</FormLabel>
 
                     <FormInput
+                      ref={inputRef}
                       type="text"
                       id="header-search-input"
                       name="s"
                       autoComplete="off"
                       required
-                      ref={inputRef}
                     />
                   </FormControl>
 
