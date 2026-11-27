@@ -10,3 +10,29 @@ html {
 html.dark {
   color-scheme: dark;
 }
+
+.search-drawer {
+  --search-drawer-size: min(
+    var(--search-drawer-height, 85dvh),
+    var(--search-viewport-height, 100dvh)
+  );
+  top: calc(var(--search-viewport-bottom, 100dvh) - var(--search-drawer-size));
+  height: var(--search-drawer-size);
+}
+
+@media (pointer: coarse) and (prefers-reduced-motion: no-preference) {
+  .search-drawer[data-state='open'] {
+    /* Reveal the panel without moving the input that Safari focuses. */
+    animation: search-drawer-slide-in 220ms cubic-bezier(0.32, 0.72, 0, 1) !important;
+  }
+}
+
+@keyframes search-drawer-slide-in {
+  from {
+    clip-path: inset(100% 0 0);
+  }
+
+  to {
+    clip-path: inset(0);
+  }
+}
