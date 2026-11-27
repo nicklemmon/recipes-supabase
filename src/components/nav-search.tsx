@@ -97,11 +97,11 @@ export function NavSearch() {
       </Tooltip.Root>
 
       <Drawer.Portal>
-        <Drawer.Overlay className="fixed inset-0 bg-black/40 dark:bg-black/60 backdrop-blur-lg" />
+        <Drawer.Overlay className="fixed inset-0 bg-black/40 dark:bg-black/60 backdrop-blur-lg max-md:animate-none! motion-reduce:animate-none!" />
 
         <Drawer.Content
           ref={trackVisualViewport}
-          className="search-drawer fixed inset-x-0 bg-gray-100 dark:bg-zinc-950 outline-none md:[--search-drawer-height:50dvh] motion-reduce:animate-none!"
+          className="search-drawer fixed inset-x-0 bg-gray-100 dark:bg-zinc-950 outline-none md:[--search-drawer-height:50dvh] max-md:animate-none! motion-reduce:animate-none!"
         >
           <div
             ref={observeScrollArea}
