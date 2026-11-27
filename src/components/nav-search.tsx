@@ -20,14 +20,17 @@ const FormSchema = z.object({
   s: z.string(),
 })
 
-function trackVisualViewport(frame: HTMLDivElement | null) {
+function trackVisualViewport(drawer: HTMLDivElement | null) {
   const viewport = window.visualViewport
-  if (!frame || !viewport) return
+  if (!drawer || !viewport) return
 
   // Safari can pan the visible area as well as shrink it when the keyboard opens.
   const update = () => {
-    frame.style.top = `${viewport.offsetTop}px`
-    frame.style.height = `${viewport.height}px`
+    drawer.style.setProperty('--search-viewport-height', `${viewport.height}px`)
+    drawer.style.setProperty(
+      '--search-viewport-bottom',
+      `${viewport.offsetTop + viewport.height}px`,
+    )
   }
 
   update()
@@ -96,50 +99,48 @@ export function NavSearch() {
       <Drawer.Portal>
         <Drawer.Overlay className="fixed inset-0 bg-black/40 dark:bg-black/60 backdrop-blur-lg" />
 
-        <div
+        <Drawer.Content
           ref={trackVisualViewport}
-          className="pointer-events-none fixed inset-x-0 top-0 h-dvh overflow-hidden"
+          className="search-drawer fixed inset-x-0 bg-gray-100 dark:bg-zinc-950 outline-none md:[--search-drawer-height:50dvh] motion-reduce:animate-none!"
         >
-          <Drawer.Content className="pointer-events-auto bg-gray-100 dark:bg-zinc-950 absolute bottom-0 inset-x-0 h-[85dvh] md:h-[50dvh] max-h-full outline-none data-[state=open]:animate-none!">
-            <div
-              ref={observeScrollArea}
-              className="h-full overflow-y-auto overscroll-contain py-8 bg-white dark:bg-zinc-900"
-            >
-              <Container>
-                <form onSubmit={handleSubmit}>
-                  <Stack>
-                    <Drawer.Title asChild>
-                      <h3 className="font-bold text-slate-800 dark:text-zinc-50 text-xl">
-                        Search for recipes
-                      </h3>
-                    </Drawer.Title>
+          <div
+            ref={observeScrollArea}
+            className="h-full overflow-y-auto overscroll-contain py-8 bg-white dark:bg-zinc-900"
+          >
+            <Container>
+              <form onSubmit={handleSubmit}>
+                <Stack>
+                  <Drawer.Title asChild>
+                    <h3 className="font-bold text-slate-800 dark:text-zinc-50 text-xl">
+                      Search for recipes
+                    </h3>
+                  </Drawer.Title>
 
-                    <FormControl className="max-w-140">
-                      <FormLabel htmlFor="header-search-input">Search by title</FormLabel>
+                  <FormControl className="max-w-140">
+                    <FormLabel htmlFor="header-search-input">Search by title</FormLabel>
 
-                      <FormInput
-                        ref={inputRef}
-                        type="text"
-                        id="header-search-input"
-                        name="s"
-                        autoComplete="off"
-                        required
-                      />
-                    </FormControl>
+                    <FormInput
+                      ref={inputRef}
+                      type="text"
+                      id="header-search-input"
+                      name="s"
+                      autoComplete="off"
+                      required
+                    />
+                  </FormControl>
 
-                    <Inline spacing="sm">
-                      <Button type="submit">Search</Button>
+                  <Inline spacing="sm">
+                    <Button type="submit">Search</Button>
 
-                      <Drawer.Close asChild>
-                        <Button variant="secondary">Cancel</Button>
-                      </Drawer.Close>
-                    </Inline>
-                  </Stack>
-                </form>
-              </Container>
-            </div>
-          </Drawer.Content>
-        </div>
+                    <Drawer.Close asChild>
+                      <Button variant="secondary">Cancel</Button>
+                    </Drawer.Close>
+                  </Inline>
+                </Stack>
+              </form>
+            </Container>
+          </div>
+        </Drawer.Content>
       </Drawer.Portal>
     </Drawer.Root>
   )
