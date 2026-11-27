@@ -20,9 +20,9 @@ const FormSchema = z.object({
   s: z.string(),
 })
 
-function trackVisualViewport(drawer: HTMLDivElement | null) {
+function trackVisualViewport(drawer: HTMLDivElement) {
   const viewport = window.visualViewport
-  if (!drawer || !viewport) return
+  if (!viewport) return
 
   // Safari can pan the visible area as well as shrink it when the keyboard opens.
   const update = () => {
@@ -46,7 +46,14 @@ function trackVisualViewport(drawer: HTMLDivElement | null) {
 export function NavSearch() {
   const [open, setOpen] = useState(false)
   const inputRef = useRef<HTMLInputElement>(null)
+  const stopTrackingViewport = useRef<(() => void) | undefined>(undefined)
   const navigate = useNavigate()
+
+  const setDrawerRef = useCallback((drawer: HTMLDivElement | null) => {
+    // Vaul calls this ref with null on detach and discards returned cleanup functions.
+    stopTrackingViewport.current?.()
+    stopTrackingViewport.current = drawer ? trackVisualViewport(drawer) : undefined
+  }, [])
 
   const observeScrollArea = useCallback((scrollArea: HTMLDivElement | null) => {
     if (!scrollArea) return
@@ -100,7 +107,7 @@ export function NavSearch() {
         <Drawer.Overlay className="fixed inset-0 bg-black/40 dark:bg-black/60 backdrop-blur-lg max-md:animate-none! motion-reduce:animate-none!" />
 
         <Drawer.Content
-          ref={trackVisualViewport}
+          ref={setDrawerRef}
           className="search-drawer fixed inset-x-0 bg-gray-100 dark:bg-zinc-950 outline-none md:[--search-drawer-height:50dvh] max-md:animate-none! motion-reduce:animate-none!"
         >
           <div
